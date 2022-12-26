@@ -1,4 +1,4 @@
-export interface CoinTrackerTransaction {
+export interface Transaction {
     date: string,
     receivedQuantity: number,
     receivedCurrency: string,

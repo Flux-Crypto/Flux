@@ -1,12 +1,12 @@
 import fs from "fs";
 import readline from "readline";
 
-import { CoinTrackerTransaction } from "./types";
+import { Transaction } from "./types";
 
 const stream = fs.createReadStream("./__tests__/cointracker.csv");
 const reader = readline.createInterface({ input: stream });
 
-const data: CoinTrackerTransaction[] = [];
+const data: Transaction[] = [];
 
 let idx = 0;
 reader.on("line", (row: string) => {
@@ -17,7 +17,7 @@ reader.on("line", (row: string) => {
 
     const rawTxn = row.split(",")
 
-    const txn: CoinTrackerTransaction = {
+    const txn: Transaction = {
         date: rawTxn[0],
         receivedQuantity: parseFloat(rawTxn[1]) || 0,
         receivedCurrency: rawTxn[2] || "",
