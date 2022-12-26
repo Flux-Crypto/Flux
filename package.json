@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "@types/node": "^18.11.18"
+  },
+  "dependencies": {
+    "fs": "^0.0.1-security",
+    "readline": "^1.3.0",
+    "ts-node": "^10.9.1"
+  }
+}
