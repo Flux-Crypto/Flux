@@ -1,0 +1,19 @@
+{
+   "compilerOptions": {
+      "module": "commonjs",
+      "target": "es2019",
+      "sourceMap": true,
+      "declaration": true,
+      "strict": true,
+      "declarationMap": true,
+      "noEmitOnError": true,
+      "skipLibCheck": true,
+      "esModuleInterop": true,
+      "forceConsistentCasingInFileNames": true,
+      "strictNullChecks": true,
+      "types": [],
+      "jsx": "react",
+      "noEmit": false
+   },
+   "exclude": ["node_modules", "dist", "build", "**/*.d.ts", "**/*.spec.ts"]
+}

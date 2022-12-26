@@ -1,0 +1,32 @@
+{
+   "name": "backend",
+   "version": "0.1.0",
+   "description": "",
+   "main": "index.js",
+   "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "start": "npm run build && node build/index.js",
+      "start:dev": "npx nodemon",
+      "build": "rimraf ./build && tsc"
+   },
+   "repository": {
+      "type": "git",
+      "url": "git+https://github.com/tot/aurora.git"
+   },
+   "author": "",
+   "license": "ISC",
+   "bugs": {
+      "url": "https://github.com/tot/aurora/issues"
+   },
+   "homepage": "https://github.com/tot/aurora#readme",
+   "dependencies": {
+      "@types/node": "^18.11.18",
+      "fastify": "^4.10.2",
+      "nodemon": "^2.0.20",
+      "typescript": "^4.9.4"
+   },
+   "devDependencies": {
+      "rimraf": "^3.0.2",
+      "ts-node": "^10.9.1"
+   }
+}

@@ -1,10 +1,25 @@
 {
-  "devDependencies": {
-    "@types/node": "^18.11.18"
-  },
-  "dependencies": {
-    "fs": "^0.0.1-security",
-    "readline": "^1.3.0",
-    "ts-node": "^10.9.1"
-  }
+   "name": "aurora",
+   "version": "1.0.0",
+   "description": "making crypto management accessible for small businesses",
+   "main": "index.js",
+   "workspaces": [
+      "apps/*",
+      "packages/*"
+   ],
+   "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "dev:frontend": "npm run dev --workspace=frontend",
+      "dev:backend": "npm run dev --workspace=backend"
+   },
+   "repository": {
+      "type": "git",
+      "url": "git+https://github.com/tot/aurora.git"
+   },
+   "author": "",
+   "license": "ISC",
+   "bugs": {
+      "url": "https://github.com/tot/aurora/issues"
+   },
+   "homepage": "https://github.com/tot/aurora#readme"
 }
