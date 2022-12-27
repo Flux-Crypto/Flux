@@ -1,13 +1,16 @@
 import { ChangeEvent, DragEvent, useRef, useState } from "react";
+
 import { Transaction } from "../lib/types";
 
-function CSVImport() {
+const CSVImport = () => {
     const fileInput = useRef<HTMLInputElement>(null);
     const [txns, setTxns] = useState<Transaction[]>([]);
 
     const handleDrop = (e: DragEvent<HTMLDivElement>) => {
         e.preventDefault();
+
         const file = e.dataTransfer?.files[0];
+        // TODO: implement error handling for invalid file type
         if (file?.type === "text/csv") {
             readFile(file);
         }
@@ -17,6 +20,7 @@ function CSVImport() {
         if (!e.target.files) return;
 
         const file = e.target.files[0];
+        // TODO: implement error handling for invalid file type
         if (file.type === "text/csv") {
             readFile(file);
         }
@@ -25,6 +29,7 @@ function CSVImport() {
     const readFile = (file: File) => {
         const reader = new FileReader();
 
+        // TODO: extract callback function
         reader.onload = (e) => {
             if (!e.target?.result) return;
 
@@ -106,6 +111,6 @@ function CSVImport() {
             )}
         </div>
     );
-}
+};
 
 export default CSVImport;

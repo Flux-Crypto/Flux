@@ -1,4 +1,3 @@
-import React from "react";
 import CSVImport from "../components/CSVImport";
 
 const Import = () => {
