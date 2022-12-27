@@ -2,6 +2,30 @@ import { ChangeEvent, DragEvent, useRef, useState } from "react";
 
 import { Transaction } from "../lib/types";
 
+const parseCSV = (csvData: string) => {
+    const rawData = csvData.split("\n");
+
+    const txns = [];
+    for (let i = 1; i < rawData.length; i++) {
+        const rawTxn = rawData[i].split(",");
+
+        const txn: Transaction = {
+            date: rawTxn[0],
+            receivedQuantity: parseFloat(rawTxn[1]) || 0,
+            receivedCurrency: rawTxn[2] || "",
+            sentQuantity: parseFloat(rawTxn[3]) || 0,
+            sentCurrency: rawTxn[4] || "",
+            feeAmount: parseFloat(rawTxn[5]) || 0,
+            feeCurrency: rawTxn[6] || "",
+            tag: rawTxn[7] || ""
+        };
+
+        txns.push(txn);
+    }
+
+    return txns;
+};
+
 const CSVImport = () => {
     const fileInput = useRef<HTMLInputElement>(null);
     const [txns, setTxns] = useState<Transaction[]>([]);
@@ -29,31 +53,10 @@ const CSVImport = () => {
     const readFile = (file: File) => {
         const reader = new FileReader();
 
-        // TODO: extract callback function
         reader.onload = (e) => {
             if (!e.target?.result) return;
 
-            const csvData = e.target?.result as string;
-            const rawData = csvData.split("\n");
-
-            const txns = [];
-            for (let i = 1; i < rawData.length; i++) {
-                const rawTxn = rawData[i].split(",");
-
-                const txn: Transaction = {
-                    date: rawTxn[0],
-                    receivedQuantity: parseFloat(rawTxn[1]) || 0,
-                    receivedCurrency: rawTxn[2] || "",
-                    sentQuantity: parseFloat(rawTxn[3]) || 0,
-                    sentCurrency: rawTxn[4] || "",
-                    feeAmount: parseFloat(rawTxn[5]) || 0,
-                    feeCurrency: rawTxn[6] || "",
-                    tag: rawTxn[7] || ""
-                };
-
-                txns.push(txn);
-            }
-
+            const txns = parseCSV(e.target?.result as string);
             setTxns(txns);
         };
 
