@@ -8,7 +8,8 @@
       "start": "doppler run npm run build && node build/index.js",
       "dev": "doppler run npx nodemon",
       "build": "rimraf ./build && tsc",
-      "generate": "doppler run npx prisma generate"
+      "generate": "doppler run npx prisma generate",
+      "reset": "tsc --out build/seed.js src/seed.ts && doppler run prisma seed --reset build/seed.js"
    },
    "repository": {
       "type": "git",
@@ -24,8 +25,8 @@
       "@prisma/client": "^4.8.0",
       "@types/node": "^18.11.18",
       "fastify": "^4.10.2",
-      "fs": "^0.0.1-security",
       "fastify-plugin": "^4.4.0",
+      "fs": "^0.0.1-security",
       "nodemon": "^2.0.20",
       "readline": "^1.3.0",
       "typescript": "^4.9.4"

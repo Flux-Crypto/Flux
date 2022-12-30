@@ -10,7 +10,9 @@
    "scripts": {
       "test": "echo \"Error: no test specified\" && exit 1",
       "dev:frontend": "npm run dev --workspace=frontend",
-      "dev:backend": "npm run dev --workspace=backend"
+      "dev:backend": "npm run dev --workspace=backend",
+      "generate": "npm run generate --workspace=backend",
+      "reset": "npm run reset --workspace=backend"
    },
    "repository": {
       "type": "git",
