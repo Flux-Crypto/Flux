@@ -49,6 +49,12 @@ Update Prisma schema after changes
 npm run generate
 ```
 
+Reset and seed Prisma database
+
+```sh
+npm run reset
+```
+
 ### Running the frontend
 
 ```sh
