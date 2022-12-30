@@ -1,6 +1,8 @@
 import fastify from "fastify"
+import { prisma } from "./plugins"
 
 const server = fastify()
+server.register(prisma)
 
 server.get("/ping", async (request, reply) => {
    return "pong\n"
