@@ -8,7 +8,8 @@
       "start": "doppler run npm run build && node build/index.js",
       "dev": "doppler run npx nodemon",
       "build": "rimraf ./build && tsc",
-      "generate": "doppler run npx prisma generate"
+      "generate": "doppler run npx prisma generate",
+      "reset": "tsc --out build/seed.js src/seed.ts && doppler run prisma seed --reset build/seed.js"
    },
    "repository": {
       "type": "git",
