@@ -35,17 +35,28 @@ const user = (server: FastifyInstance, _: any, done: () => void) => {
 
         if (!userId) logError(reply, 400, "missing user id param");
 
-        const { walletAddress } = request.body as UserWalletsRequestBody;
+        const { walletAddress, operation } =
+            request.body as UserWalletsRequestBody;
 
         try {
-            const wallet = await prisma.wallet.create({
-                data: {
-                    address: walletAddress,
-                    userId
+            if (operation === "link") {
+                const wallet = await prisma.wallet.create({
+                    data: {
+                        address: walletAddress,
+                        userId
+                    }
+                });
+
+                return wallet;
+            }
+
+            const deletedWallet = await prisma.wallet.delete({
+                where: {
+                    address: walletAddress
                 }
             });
 
-            return wallet;
+            return deletedWallet;
         } catch (e) {
             if (e instanceof PrismaClientKnownRequestError)
                 logError(reply, 500, e.message);
