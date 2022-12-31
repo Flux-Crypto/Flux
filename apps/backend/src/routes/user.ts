@@ -1,7 +1,6 @@
 import { FastifyInstance } from "fastify";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 
-import { prisma } from "../index";
 import {
     UserRequestParams,
     UserWalletsRequestBody
@@ -9,6 +8,8 @@ import {
 import { logError } from "src/utils/utils";
 
 const user = (server: FastifyInstance, _: any, done: () => void) => {
+    const { prisma } = server;
+
     server.get("/:userId", async (request, reply) => {
         const { userId } = request.params as UserRequestParams;
 

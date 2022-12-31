@@ -1,11 +1,12 @@
 import { FastifyInstance } from "fastify";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 
-import { prisma } from "../index";
 import { UsersRequestBody } from "src/types/routeParams";
 import { logError } from "src/utils/utils";
 
 const users = (server: FastifyInstance, _: any, done: () => void) => {
+    const { prisma } = server;
+
     server.post("/users", async (request, reply) => {
         const { email, name } = request.body as UsersRequestBody;
 

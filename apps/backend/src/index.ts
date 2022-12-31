@@ -6,7 +6,6 @@ import users from "./routes/users";
 
 const server = fastify();
 server.register(prismaPlugin);
-const { prisma } = server;
 
 server.register(user, { prefix: "/user" });
 server.register(users, { prefix: "/users" });
@@ -23,4 +22,4 @@ server.listen({ port: 8000 }, (err, address) => {
     console.log(`Server listening at ${address}`);
 });
 
-export { server, prisma };
+export { server };
