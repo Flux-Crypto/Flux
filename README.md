@@ -1,6 +1,6 @@
 # Aurora
 
-Making crypto finances accessible for businesses
+Making crypto finances accessible for businesses.
 
 ## Services and Technologies
 
@@ -17,25 +17,37 @@ Making crypto finances accessible for businesses
 
 ## Local Development
 
-First, install project dependencies
+### Adding Dependencies
+
+First, install project dependencies. This project is defined as a monorepo, so the global `node_modules` folder is sym-linked to the individual apps and packages.
 
 ```sh
 npm install
 ```
 
-Login with Doppler, scoping it to this workspace directory
+To add new dependencies, run the following command based on the desired workspace to install in:
+
+```sh
+npm install <package> -w <workspace>
+```
+
+### Doppler 
+
+Doppler is the secrets manager for this application. Make sure you get invited to the Doppler team to have access to the secrets. Log in with Doppler as follows:
 
 ```sh
 doppler login
 ```
 
-Setup Doppler environment for local development
+> Make sure to scope the workspace directory to the project root directory.
+
+Set up Doppler environment for local development.
 
 ```sh
 doppler setup
 ```
 
-> Select the `dev` environment
+> Select the `dev` environment.
 
 ### Running the backend
 
@@ -43,13 +55,17 @@ doppler setup
 npm run dev:backend
 ```
 
-Update Prisma schema after changes
+### Database
+
+**On project initialization**, generate the Prisma scheme with the command:
 
 ```sh
 npm run generate
 ```
 
-Reset and seed Prisma database
+> Re-run it to persist changes and update the schema.
+
+To reset and seed Prisma database:
 
 ```sh
 npm run reset
