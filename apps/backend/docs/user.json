@@ -1,0 +1,110 @@
+{
+    "userIdSchema": {
+        "schema": {
+            "description": "Gets user data based on supplied user id.",
+            "tags": ["user"],
+            "summary": "Get user data.",
+            "params": {
+                "type": "object",
+                "properties": {
+                    "userId": {
+                        "type": "string",
+                        "description": "user id"
+                    }
+                }
+            },
+            "response": {
+                "200": {
+                    "description": "OK",
+                    "type": "object",
+                    "properties": {
+                        "id": { "type": "string" },
+                        "email": { "type": "string" },
+                        "name": { "type": "string" },
+                        "wallets": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Bad request. Missing user id parameter.",
+                    "type": "object",
+                    "properties": {
+                        "code": { "type": "number" },
+                        "message": { "type": "string" }
+                    }
+                },
+                "5XX": {
+                    "description": "Unexpected error.",
+                    "type": "object",
+                    "properties": {
+                        "code": { "type": "number" },
+                        "message": { "type": "string" }
+                    }
+                }
+            }
+        }
+    },
+    "walletsSchema": {
+        "schema": {
+            "description": "Inserts or deletes (links/unlinks) a wallet based on supplied user id and wallet address.",
+            "tags": ["user"],
+            "summary": "Updates user wallet.",
+            "params": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "user id"
+                    }
+                }
+            },
+            "body": {
+                "type": "object",
+                "properties": {
+                    "walletAddress": { "type": "string" },
+                    "operation": { "type": "string" }
+                }
+            },
+            "response": {
+                "201": {
+                    "description": "Successful creation and linking.",
+                    "type": "object",
+                    "properties": {
+                        "id": { "type": "string" },
+                        "address": { "type": "string" },
+                        "userId": { "type": "string" },
+                        "readOnly": { "type": "boolean" },
+                        "seedPhrase": { "type": "string" }
+                    }
+                },
+                "204": {
+                    "description": "Successful deletion and unlinking.",
+                    "type": "object",
+                    "properties": {
+                        "code": { "type": "number" }
+                    }
+                },
+                "400": {
+                    "description": "Bad request. Missing user id parameter.",
+                    "type": "object",
+                    "properties": {
+                        "code": { "type": "number" },
+                        "message": { "type": "string" }
+                    }
+                },
+                "5XX": {
+                    "description": "Unexpected error.",
+                    "type": "object",
+                    "properties": {
+                        "code": { "type": "number" },
+                        "message": { "type": "string" }
+                    }
+                }
+            }
+        }
+    }
+}

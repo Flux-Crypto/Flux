@@ -8,6 +8,7 @@ import users from "./routes/users";
 
 const runServer = async () => {
     const server = fastify();
+
     await server.register(prismaPlugin);
     await server.register(swagger);
     await server.register(swaggerUI, {
