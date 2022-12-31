@@ -53,3 +53,4 @@ To work on the database, here's how to get started:
 ```sh
     npm run generate
 ```
+

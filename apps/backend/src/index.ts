@@ -2,6 +2,7 @@ import fastify, { FastifyInstance } from "fastify";
 import swagger from "@fastify/swagger";
 import swaggerUI from "@fastify/swagger-ui";
 
+import SwaggerOptions from "../docs/options";
 import { prismaPlugin } from "./plugins";
 import user from "./routes/user";
 import users from "./routes/users";
@@ -10,28 +11,11 @@ const runServer = async () => {
     const server = fastify();
 
     await server.register(prismaPlugin);
-    await server.register(swagger);
-    await server.register(swaggerUI, {
-        routePrefix: "/docs",
-        uiConfig: {
-            docExpansion: "full",
-            deepLinking: false
-        },
-        uiHooks: {
-            onRequest: function (request, reply, next) {
-                next();
-            },
-            preHandler: function (request, reply, next) {
-                next();
-            }
-        },
-        staticCSP: true,
-        transformStaticCSP: (header) => header,
-        transformSpecification: (swaggerObject, request, reply) => {
-            return swaggerObject;
-        },
-        transformSpecificationClone: true
-    });
+
+    const { swaggerOptions, swaggerUIOptions } = SwaggerOptions;
+    // @ts-ignore
+    await server.register(swagger, swaggerOptions);
+    await server.register(swaggerUI, swaggerUIOptions);
 
     server.register(
         (server: FastifyInstance, _: any, done: () => void) => {

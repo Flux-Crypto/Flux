@@ -1,13 +1,16 @@
 import { FastifyInstance } from "fastify";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 
-import { UsersRequestBody } from "src/types/routeParams";
-import { logError } from "src/utils/utils";
+import UsersSchema from "../../docs/schemas/users.json";
+import { UsersRequestBody } from "../types/routeParams";
+import { logError } from "../lib/utils";
 
 const users = (server: FastifyInstance, _: any, done: () => void) => {
     const { prisma } = server;
 
-    server.post("/users", async (request, reply) => {
+    const { GetUsersSchema, PostUsersSchema } = UsersSchema;
+
+    server.post("/", PostUsersSchema, async (request, reply) => {
         const { email, name } = request.body as UsersRequestBody;
 
         if (!email) logError(reply, 400, "missing user id param");

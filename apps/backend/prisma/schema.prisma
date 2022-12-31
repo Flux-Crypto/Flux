@@ -2,6 +2,12 @@ generator client {
     provider = "prisma-client-js"
 }
 
+generator jsonSchema {
+    provider              = "prisma-json-schema-generator"
+    output                = "../src/lib/docs/schemas"
+    includeRequiredFields = "true"
+}
+
 datasource db {
     provider = "mongodb"
     url      = env("DB_URL")

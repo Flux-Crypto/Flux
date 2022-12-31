@@ -1,5 +1,5 @@
 {
-    "userIdSchema": {
+    "GetUserSchema": {
         "schema": {
             "description": "Gets user data based on supplied user id.",
             "tags": ["user"],
@@ -48,15 +48,15 @@
             }
         }
     },
-    "walletsSchema": {
+    "PostUserWalletSchema": {
         "schema": {
-            "description": "Inserts or deletes (links/unlinks) a wallet based on supplied user id and wallet address.",
+            "description": "Creates a wallet based on supplied wallet address and links to provided user id.",
             "tags": ["user"],
-            "summary": "Updates user wallet.",
+            "summary": "Creates user wallet.",
             "params": {
                 "type": "object",
                 "properties": {
-                    "id": {
+                    "userId": {
                         "type": "string",
                         "description": "user id"
                     }
@@ -65,8 +65,7 @@
             "body": {
                 "type": "object",
                 "properties": {
-                    "walletAddress": { "type": "string" },
-                    "operation": { "type": "string" }
+                    "walletAddress": { "type": "string" }
                 }
             },
             "response": {
@@ -81,15 +80,52 @@
                         "seedPhrase": { "type": "string" }
                     }
                 },
-                "204": {
-                    "description": "Successful deletion and unlinking.",
+                "400": {
+                    "description": "Bad request. Missing user id or wallet address parameter.",
                     "type": "object",
                     "properties": {
-                        "code": { "type": "number" }
+                        "code": { "type": "number" },
+                        "message": { "type": "string" }
                     }
                 },
+                "5XX": {
+                    "description": "Unexpected error.",
+                    "type": "object",
+                    "properties": {
+                        "code": { "type": "number" },
+                        "message": { "type": "string" }
+                    }
+                }
+            }
+        }
+    },
+    "DeleteUserWalletSchema": {
+        "schema": {
+            "description": "Deletes (unlinks) a wallet based on supplied user id and wallet address.",
+            "tags": ["user"],
+            "summary": "Deletes user wallet.",
+            "params": {
+                "type": "object",
+                "properties": {
+                    "userId": {
+                        "type": "string",
+                        "description": "user id"
+                    }
+                }
+            },
+            "body": {
+                "type": "object",
+                "properties": {
+                    "walletAddress": { "type": "string" }
+                }
+            },
+            "response": {
+                "204": {
+                    "description": "Successful deletion and unlinking.",
+                    "type": "null"
+                },
                 "400": {
-                    "description": "Bad request. Missing user id parameter.",
+                    "description": "Bad request. Missing user id or wallet address parameter.",
                     "type": "object",
                     "properties": {
                         "code": { "type": "number" },
