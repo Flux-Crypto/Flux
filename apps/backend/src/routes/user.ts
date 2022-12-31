@@ -1,24 +1,20 @@
 import { FastifyInstance } from "fastify";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 
 import { prisma } from "../index";
 import {
     UserRequestParams,
-    UserWalletsRequestParams
+    UserWalletsRequestBody
 } from "src/types/routeParams";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
+import { logError } from "src/utils/utils";
 
 const user = (server: FastifyInstance, _: any, done: () => void) => {
     server.post("/:userId/wallets", async (request, reply) => {
         const { userId } = request.params as UserRequestParams;
 
-        if (!userId) {
-            console.error(
-                `[${new Date().toISOString()}] error: missing user id param`
-            );
-            reply.code(400).send("error: missing user id param");
-        }
+        if (!userId) logError(reply, 400, "missing user id param");
 
-        const { walletAddress } = request.body as UserWalletsRequestParams;
+        const { walletAddress } = request.body as UserWalletsRequestBody;
 
         try {
             const wallet = await prisma.wallet.create({
@@ -30,14 +26,10 @@ const user = (server: FastifyInstance, _: any, done: () => void) => {
 
             return wallet;
         } catch (e) {
-            if (e instanceof PrismaClientKnownRequestError) {
-                const message = `error: ${e.message}`;
-                console.error(`[${new Date().toISOString()}] ${message}`);
-                reply.code(500).send(`error: ${message}`);
-            }
-            const message = "error: creating wallet";
-            console.error(`[${new Date().toISOString()}] ${message}`);
-            reply.code(500).send(message);
+            if (e instanceof PrismaClientKnownRequestError)
+                logError(reply, 500, e.message);
+
+            logError(reply, 500, "creating wallet");
         }
     });
 

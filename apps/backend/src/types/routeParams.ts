@@ -1,7 +1,12 @@
+export interface UsersRequestBody {
+    email: string;
+    name?: string;
+}
+
 export interface UserRequestParams {
     userId: string;
 }
 
-export interface UserWalletsRequestParams {
+export interface UserWalletsRequestBody {
     walletAddress: string;
 }
