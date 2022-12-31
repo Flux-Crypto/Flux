@@ -3,6 +3,8 @@ import swagger from "@fastify/swagger";
 import swaggerUI from "@fastify/swagger-ui";
 
 import { prismaPlugin } from "./plugins";
+import user from "./routes/user";
+import users from "./routes/users";
 
 const runServer = async () => {
     const server = fastify();
@@ -29,6 +31,8 @@ const runServer = async () => {
         },
         transformSpecificationClone: true
     });
+server.register(users, { prefix: "/users" });
+server.register(user, { prefix: "/user" });
 
     server.get("/ping", async (_request, _reply) => {
         return "pong\n";
