@@ -1,4 +1,4 @@
-import fastify from "fastify";
+import fastify, { FastifyInstance } from "fastify";
 import swagger from "@fastify/swagger";
 import swaggerUI from "@fastify/swagger-ui";
 
@@ -32,8 +32,15 @@ const runServer = async () => {
         transformSpecificationClone: true
     });
 
-    server.register(users, { prefix: "/api/v1/users" });
-    server.register(user, { prefix: "/api/v1/user" });
+    server.register(
+        (server: FastifyInstance, _: any, done: () => void) => {
+            server.register(users, { prefix: "/users" });
+            server.register(user, { prefix: "/user" });
+
+            done();
+        },
+        { prefix: "/api/v1" }
+    );
 
     server.get("/ping", async (_request, _reply) => {
         return "pong\n";
