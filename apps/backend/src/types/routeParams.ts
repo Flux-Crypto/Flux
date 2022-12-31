@@ -9,5 +9,4 @@ export interface UserRequestParams {
 
 export interface UserWalletsRequestBody {
     walletAddress: string;
-    operation: "link" | "unlink";
 }

@@ -6,7 +6,9 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "doppler run npm run build && node build/index.js",
-        "dev": "doppler run npx nodemon",
+        "dev": "doppler run npx nodemon && npm run open_docs_mac",
+        "open_docs_win": "start http://localhost:8000/docs",
+        "open_docs_mac": "open http://localhost:8000/docs",
         "build": "rimraf ./build && tsc",
         "generate": "doppler run npx prisma generate",
         "reset": "tsc --out build/seed.js src/seed.ts && doppler run prisma seed --reset build/seed.js",
@@ -33,7 +35,10 @@
         "typescript": "^4.9.4"
     },
     "devDependencies": {
+        "@fastify/swagger": "^8.2.1",
+        "@fastify/swagger-ui": "^1.3.0",
         "prisma": "^4.8.0",
+        "prisma-json-schema-generator": "^3.1.1",
         "rimraf": "^3.0.2",
         "ts-node": "^10.9.1"
     }

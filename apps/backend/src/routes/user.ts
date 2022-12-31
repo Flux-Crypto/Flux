@@ -4,16 +4,23 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import {
     UserRequestParams,
     UserWalletsRequestBody
-} from "src/types/routeParams";
-import { logError } from "src/utils/utils";
+} from "../types/routeParams";
+import UserSchema from "../../docs/schemas/user.json";
+import { logError } from "../lib/utils";
 
 const user = (server: FastifyInstance, _: any, done: () => void) => {
     const { prisma } = server;
 
-    server.get("/:userId", async (request, reply) => {
+    const { GetUserSchema, PostUserWalletSchema, DeleteUserWalletSchema } =
+        UserSchema;
+
+    server.get("/:userId", GetUserSchema, async (request, reply) => {
         const { userId } = request.params as UserRequestParams;
 
-        if (!userId) logError(reply, 400, "missing user id param");
+        if (!userId) {
+            logError(reply, 400, "missing user id param");
+            return;
+        }
 
         try {
             const user = await prisma.user.findUnique({
@@ -31,16 +38,23 @@ const user = (server: FastifyInstance, _: any, done: () => void) => {
         }
     });
 
-    server.post("/:userId/wallets", async (request, reply) => {
-        const { userId } = request.params as UserRequestParams;
+    server.post(
+        "/:userId/wallets",
+        PostUserWalletSchema,
+        async (request, reply) => {
+            const { userId } = request.params as UserRequestParams;
+            if (!userId) {
+                logError(reply, 400, "missing user id param");
+                return;
+            }
 
-        if (!userId) logError(reply, 400, "missing user id param");
+            const { walletAddress } = request.body as UserWalletsRequestBody;
+            if (!walletAddress) {
+                logError(reply, 400, "missing wallet address param");
+                return;
+            }
 
-        const { walletAddress, operation } =
-            request.body as UserWalletsRequestBody;
-
-        try {
-            if (operation === "link") {
+            try {
                 const wallet = await prisma.wallet.create({
                     data: {
                         address: walletAddress,
@@ -49,22 +63,45 @@ const user = (server: FastifyInstance, _: any, done: () => void) => {
                 });
 
                 return wallet;
+            } catch (e) {
+                if (e instanceof PrismaClientKnownRequestError)
+                    logError(reply, 500, e.message);
+
+                logError(reply, 500, "creating wallet");
+            }
+        }
+    );
+
+    server.delete(
+        "/:userId/wallets",
+        DeleteUserWalletSchema,
+        async (request, reply) => {
+            const { userId } = request.params as UserRequestParams;
+            if (!userId) {
+                logError(reply, 400, "missing user id param");
+                return;
             }
 
-            const deletedWallet = await prisma.wallet.delete({
-                where: {
-                    address: walletAddress
-                }
-            });
+            const { walletAddress } = request.body as UserWalletsRequestBody;
+            if (!walletAddress) {
+                logError(reply, 400, "missing wallet address param");
+                return;
+            }
 
-            return deletedWallet;
-        } catch (e) {
-            if (e instanceof PrismaClientKnownRequestError)
-                logError(reply, 500, e.message);
+            try {
+                await prisma.wallet.delete({
+                    where: {
+                        address: walletAddress
+                    }
+                });
+            } catch (e) {
+                if (e instanceof PrismaClientKnownRequestError)
+                    logError(reply, 500, e.message);
 
-            logError(reply, 500, "creating wallet");
+                logError(reply, 500, "deleting wallet");
+            }
         }
-    });
+    );
 
     done();
 };
