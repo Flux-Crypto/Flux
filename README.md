@@ -49,7 +49,7 @@ doppler setup
 
 > Select the `dev` environment.
 
-### Running the backend
+### Running the Backend
 
 ```sh
 npm run dev:backend
@@ -71,7 +71,13 @@ To reset and seed Prisma database:
 npm run reset
 ```
 
-### Running the frontend
+You can view the Prisma schema and MongoDB using Prisma Studio. To launch it:
+
+```sh
+npm run studio
+```
+
+### Running the Frontend
 
 ```sh
 npm run dev:frontend
