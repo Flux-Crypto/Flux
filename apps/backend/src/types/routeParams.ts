@@ -11,3 +11,7 @@ export interface UserWalletsRequestBody {
     walletAddress: string;
     operation: "link" | "unlink";
 }
+
+export interface AddressRequestParams {
+    address: string;
+}
