@@ -1,6 +1,6 @@
 {
+    "$schema": "https://json.schemastore.org/tsconfig",
     "compilerOptions": {
-        "module": "commonjs",
         "target": "ES2018",
         "sourceMap": true,
         "declaration": true,
@@ -10,8 +10,8 @@
         "skipLibCheck": true,
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
+        "moduleResolution": "node",
         "strictNullChecks": true,
-        "types": [],
         "jsx": "react",
         "noEmit": false
     },
