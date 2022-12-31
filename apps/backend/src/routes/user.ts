@@ -9,6 +9,27 @@ import {
 import { logError } from "src/utils/utils";
 
 const user = (server: FastifyInstance, _: any, done: () => void) => {
+    server.get("/:userId", async (request, reply) => {
+        const { userId } = request.params as UserRequestParams;
+
+        if (!userId) logError(reply, 400, "missing user id param");
+
+        try {
+            const user = await prisma.user.findUnique({
+                where: {
+                    id: userId
+                }
+            });
+
+            return user;
+        } catch (e) {
+            if (e instanceof PrismaClientKnownRequestError)
+                logError(reply, 500, e.message);
+
+            logError(reply, 500, "fetching user");
+        }
+    });
+
     server.post("/:userId/wallets", async (request, reply) => {
         const { userId } = request.params as UserRequestParams;
 
