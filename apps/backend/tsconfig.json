@@ -2,8 +2,14 @@
     "extends": "../../tsconfig.build.json",
 
     "compilerOptions": {
-        "baseUrl": "src",
+        "baseUrl": "./src",
+        "paths": {
+            "@backend/*": ["*"]
+        },
         "outDir": "build",
         "strictNullChecks": true
+    },
+    "ts-node": {
+        "require": ["tsconfig-paths/register"]
     }
 }
