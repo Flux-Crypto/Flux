@@ -1,27 +1,28 @@
 {
-   "name": "aurora",
-   "version": "1.0.0",
-   "description": "making crypto management accessible for small businesses",
-   "main": "index.js",
-   "workspaces": [
-      "apps/*",
-      "packages/*"
-   ],
-   "scripts": {
-      "test": "echo \"Error: no test specified\" && exit 1",
-      "dev:frontend": "npm run dev --workspace=frontend",
-      "dev:backend": "npm run dev --workspace=backend",
-      "generate": "npm run generate --workspace=backend",
-      "reset": "npm run reset --workspace=backend"
-   },
-   "repository": {
-      "type": "git",
-      "url": "git+https://github.com/tot/aurora.git"
-   },
-   "author": "",
-   "license": "ISC",
-   "bugs": {
-      "url": "https://github.com/tot/aurora/issues"
-   },
-   "homepage": "https://github.com/tot/aurora#readme"
+    "name": "aurora",
+    "version": "1.0.0",
+    "description": "making crypto management accessible for small businesses",
+    "main": "index.js",
+    "workspaces": [
+        "apps/*",
+        "packages/*"
+    ],
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev:frontend": "npm run dev --workspace=frontend",
+        "dev:backend": "npm run dev --workspace=backend",
+        "generate": "npm run generate --workspace=backend",
+        "reset": "npm run reset --workspace=backend",
+        "studio": "npm run studio --workspace=backend"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/tot/aurora.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/tot/aurora/issues"
+    },
+    "homepage": "https://github.com/tot/aurora#readme"
 }
