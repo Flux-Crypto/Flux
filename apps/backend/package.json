@@ -33,6 +33,8 @@
         "typescript": "^4.9.4"
     },
     "devDependencies": {
+        "@fastify/swagger": "^8.2.1",
+        "@fastify/swagger-ui": "^1.3.0",
         "prisma": "^4.8.0",
         "rimraf": "^3.0.2",
         "ts-node": "^10.9.1"

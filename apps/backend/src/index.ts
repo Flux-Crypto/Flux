@@ -1,18 +1,47 @@
-import fastify from "fastify"
-import { prismaPlugin } from "./plugins"
+import fastify from "fastify";
+import swagger from "@fastify/swagger";
+import swaggerUI from "@fastify/swagger-ui";
 
-const server = fastify()
-server.register(prismaPlugin)
-const { prisma } = server
+import { prismaPlugin } from "./plugins";
 
-server.get("/ping", async (_request, _reply) => {
-    return "pong\n";
-});
+const runServer = async () => {
+    const server = fastify();
+    await server.register(prismaPlugin);
+    await server.register(swagger);
+    await server.register(swaggerUI, {
+        routePrefix: "/documentation",
+        uiConfig: {
+            docExpansion: "full",
+            deepLinking: false
+        },
+        uiHooks: {
+            onRequest: function (request, reply, next) {
+                next();
+            },
+            preHandler: function (request, reply, next) {
+                next();
+            }
+        },
+        staticCSP: true,
+        transformStaticCSP: (header) => header,
+        transformSpecification: (swaggerObject, request, reply) => {
+            return swaggerObject;
+        },
+        transformSpecificationClone: true
+    });
 
-server.listen({ port: 8000 }, (err, address) => {
-    if (err) {
-        console.error(err);
-        process.exit(1);
-    }
-    console.log(`Server listening at ${address}`);
-});
+    server.get("/ping", async (_request, _reply) => {
+        return "pong\n";
+    });
+
+    await server.ready();
+    server.listen({ port: 8000 }, (err, address) => {
+        if (err) {
+            console.error(err);
+            process.exit(1);
+        }
+        console.log(`Server listening at ${address}`);
+    });
+};
+
+runServer();

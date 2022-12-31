@@ -1,9 +1,9 @@
 {
-   "extends": "../../tsconfig.build.json",
+    "extends": "../../tsconfig.build.json",
 
-   "compilerOptions": {
-      "baseUrl": ".",
-      "outDir": "build",
-      "strictNullChecks": true
-   }
+    "compilerOptions": {
+        "baseUrl": ".",
+        "outDir": "build",
+        "strictNullChecks": true
+    }
 }
