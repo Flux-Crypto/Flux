@@ -2,7 +2,7 @@
     "extends": "../../tsconfig.build.json",
 
     "compilerOptions": {
-        "baseUrl": ".",
+        "baseUrl": "src",
         "outDir": "build",
         "strictNullChecks": true
     }
