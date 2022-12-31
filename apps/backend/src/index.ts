@@ -1,5 +1,6 @@
 import fastify, { FastifyInstance } from "fastify";
 import swagger from "@fastify/swagger";
+// @ts-ignore:next-line
 import swaggerUI from "@fastify/swagger-ui";
 
 import { prismaPlugin } from "./plugins";
