@@ -11,7 +11,7 @@ const runServer = async () => {
     await server.register(prismaPlugin);
     await server.register(swagger);
     await server.register(swaggerUI, {
-        routePrefix: "/documentation",
+        routePrefix: "/docs",
         uiConfig: {
             docExpansion: "full",
             deepLinking: false
@@ -31,8 +31,9 @@ const runServer = async () => {
         },
         transformSpecificationClone: true
     });
-server.register(users, { prefix: "/users" });
-server.register(user, { prefix: "/user" });
+
+    server.register(users, { prefix: "/api/v1/users" });
+    server.register(user, { prefix: "/api/v1/user" });
 
     server.get("/ping", async (_request, _reply) => {
         return "pong\n";
