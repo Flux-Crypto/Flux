@@ -48,7 +48,7 @@ To work on the database, here's how to get started:
     npm run studio
 ```
 
-3. Run the following command (from the project root directory) to commit your changes to MongoDB:
+3. Run the following command (from the project root directory) to commit your changes to the Prisma schema:
 
 ```sh
     npm run generate
