@@ -4,7 +4,7 @@ import swaggerUI from "@fastify/swagger-ui";
 
 import SwaggerOptions from "../docs/options";
 import { prismaPlugin } from "./plugins";
-import user from "./routes/user";
+import user from "./routes/user/base";
 import users from "./routes/users";
 
 const runServer = async () => {
@@ -18,9 +18,9 @@ const runServer = async () => {
     await server.register(swaggerUI, swaggerUIOptions);
 
     server.register(
-        (server: FastifyInstance, _: any, done: () => void) => {
+        (server: FastifyInstance, _opts: any, done: () => void) => {
             server.register(users, { prefix: "/users" });
-            server.register(user, { prefix: "/user" });
+            server.register(user, { prefix: "/user/:userId" });
 
             done();
         },

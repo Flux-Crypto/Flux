@@ -1,58 +1,142 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "definitions": {
-        "User": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": ["string", "null"]
-                },
-                "wallets": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Wallet"
-                    }
-                }
-            },
-            "required": ["email"]
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
         },
-        "Wallet": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string"
-                },
-                "address": {
-                    "type": "string"
-                },
-                "user": {
-                    "$ref": "#/definitions/User"
-                },
-                "readOnly": {
-                    "type": ["boolean", "null"],
-                    "default": true
-                },
-                "seedPhrase": {
-                    "type": ["string", "null"],
-                    "default": ""
-                }
-            },
-            "required": ["address", "userId"]
-        }
-    },
-    "type": "object",
-    "properties": {
-        "user": {
-            "$ref": "#/definitions/User"
+        "email": {
+          "type": "string"
         },
-        "wallet": {
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "wallets": {
+          "type": "array",
+          "items": {
             "$ref": "#/definitions/Wallet"
+          }
+        },
+        "transactions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Transaction"
+          }
         }
+      },
+      "required": [
+        "email"
+      ]
+    },
+    "Wallet": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "user": {
+          "$ref": "#/definitions/User"
+        },
+        "readOnly": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": true
+        },
+        "seedPhrase": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": ""
+        }
+      },
+      "required": [
+        "address",
+        "userId"
+      ]
+    },
+    "Transaction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "receivedQuantity": {
+          "type": "number",
+          "default": 0
+        },
+        "receivedCurrency": {
+          "type": "string",
+          "default": ""
+        },
+        "sentQuantity": {
+          "type": "number",
+          "default": 0
+        },
+        "sentCurrency": {
+          "type": "string",
+          "default": ""
+        },
+        "feeAmount": {
+          "type": "number",
+          "default": 0
+        },
+        "feeCurrency": {
+          "type": "string",
+          "default": ""
+        },
+        "tag": {
+          "type": "string",
+          "default": "PAYMENT",
+          "enum": [
+            "GIFT",
+            "LOSS",
+            "DONATION",
+            "MARGIN_FEE",
+            "FORK",
+            "AIRDROP",
+            "MINED",
+            "PAYMENT",
+            "STAKED",
+            "MARGIN",
+            "MARGIN_REBATE",
+            "INTEREST",
+            "INCOME"
+          ]
+        },
+        "user": {
+          "$ref": "#/definitions/User"
+        }
+      },
+      "required": [
+        "userId"
+      ]
     }
+  },
+  "type": "object",
+  "properties": {
+    "user": {
+      "$ref": "#/definitions/User"
+    },
+    "wallet": {
+      "$ref": "#/definitions/Wallet"
+    },
+    "transaction": {
+      "$ref": "#/definitions/Transaction"
+    }
+  }
 }

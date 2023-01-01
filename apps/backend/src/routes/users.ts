@@ -5,7 +5,7 @@ import UsersSchema from "../../docs/schemas/users.json";
 import { UsersRequestBody } from "../types/routeParams";
 import { logError } from "../lib/utils";
 
-const users = (server: FastifyInstance, _: any, done: () => void) => {
+const users = (server: FastifyInstance, _opts: any, done: () => void) => {
     const { prisma } = server;
 
     const { GetUsersSchema, PostUsersSchema } = UsersSchema;
