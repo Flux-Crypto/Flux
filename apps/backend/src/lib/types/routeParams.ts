@@ -39,3 +39,10 @@ export interface UserWalletsRequestParams extends UserRequestParams {
 export interface UserTransactionsRequestBody {
     transaction: Transaction;
 }
+
+/**
+ * /explorer/transactions/:walletAddress
+ */
+export interface AddressRequestParams {
+    address: string;
+}

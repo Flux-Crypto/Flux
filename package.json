@@ -1,7 +1,7 @@
 {
     "name": "aurora",
     "version": "1.0.0",
-    "description": "making crypto management accessible for small businesses",
+    "description": "crypto finances made accessible for businesses.",
     "main": "index.js",
     "workspaces": [
         "apps/*",

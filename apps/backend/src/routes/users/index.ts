@@ -1,9 +1,8 @@
-import { FastifyInstance } from "fastify";
+import { UsersIndexSchema } from "@lib/types/jsonObjects";
+import { UsersRequestBody } from "@lib/types/routeParams";
+import { logError } from "@lib/utils";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
-
-import { logError } from "../../lib/utils";
-import { UsersIndexSchema } from "../../../types/jsonObjects";
-import { UsersRequestBody } from "../../../types/routeParams";
+import { FastifyInstance } from "fastify";
 
 const index = (
     server: FastifyInstance,
@@ -14,9 +13,9 @@ const index = (
 
     server.get("/", getSchema, async (_request, reply) => {
         try {
-            const user = await prisma.user.findMany();
+            const users = await prisma.user.findMany();
 
-            return user;
+            reply.send(users);
         } catch (e) {
             if (e instanceof PrismaClientKnownRequestError)
                 logError(reply, 500, e.message);

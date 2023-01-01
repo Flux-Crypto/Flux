@@ -1,19 +1,19 @@
 {
-   "compilerOptions": {
-      "module": "commonjs",
-      "target": "ES2018",
-      "sourceMap": true,
-      "declaration": true,
-      "strict": true,
-      "declarationMap": true,
-      "noEmitOnError": true,
-      "skipLibCheck": true,
-      "esModuleInterop": true,
-      "forceConsistentCasingInFileNames": true,
-      "strictNullChecks": true,
-      "types": [],
-      "jsx": "react",
-      "noEmit": false
-   },
-   "exclude": ["node_modules", "dist", "build", "**/*.d.ts", "**/*.spec.ts"]
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "compilerOptions": {
+        "target": "ES2018",
+        "sourceMap": true,
+        "declaration": true,
+        "strict": true,
+        "declarationMap": true,
+        "noEmitOnError": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "moduleResolution": "node",
+        "strictNullChecks": true,
+        "jsx": "react",
+        "noEmit": false
+    },
+    "exclude": ["node_modules", "dist", "build", "**/*.d.ts", "**/*.spec.ts"]
 }

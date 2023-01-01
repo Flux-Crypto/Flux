@@ -1,10 +1,18 @@
-import fastify, { FastifyInstance } from "fastify";
+import SwaggerOptions from "@docs/options";
+// eslint-disable-next-line import/no-extraneous-dependencies
 import swagger from "@fastify/swagger";
+// eslint-disable-next-line import/no-extraneous-dependencies
 import swaggerUI from "@fastify/swagger-ui";
-
-import SwaggerOptions from "../docs/options";
-import { prismaPlugin } from "./plugins";
-import users from "./routes/users/base";
+import { FastifyDone } from "@lib/types/fastifyTypes";
+import { prismaPlugin } from "@plugins/index";
+import users from "@routes/users/base";
+import transactions from "@src/routes/transactions";
+import fastify, {
+    FastifyInstance,
+    FastifyReply,
+    FastifyRequest,
+    FastifyServerOptions
+} from "fastify";
 
 const runServer = async () => {
     const server = fastify();
@@ -12,22 +20,29 @@ const runServer = async () => {
     await server.register(prismaPlugin);
 
     const { swaggerOptions, swaggerUIOptions } = SwaggerOptions;
-    // @ts-ignore
+
+    // @ts-ignore:next-line
     await server.register(swagger, swaggerOptions);
     await server.register(swaggerUI, swaggerUIOptions);
 
     server.register(
-        (server: FastifyInstance, _opts: any, done: () => void) => {
+        (
+            server: FastifyInstance,
+            _opts: FastifyServerOptions,
+            done: FastifyDone
+        ) => {
             server.register(users, { prefix: "/users" });
+            server.register(transactions, { prefix: "/transactions" });
 
             done();
         },
         { prefix: "/api/v1" }
     );
 
-    server.get("/ping", async (_request, _reply) => {
-        return "pong\n";
-    });
+    server.get(
+        "/ping",
+        async (_request: FastifyRequest, _reply: FastifyReply) => "pong\n"
+    );
 
     await server.ready();
     server.listen({ port: 8000 }, (err, address) => {
@@ -35,7 +50,7 @@ const runServer = async () => {
             console.error(err);
             process.exit(1);
         }
-        console.log(`Server listening at ${address}`);
+        console.info(`Server listening at ${address}`);
     });
 };
 
