@@ -5,6 +5,7 @@
         "outDir": "build",
         "strictNullChecks": true,
         "resolveJsonModule": true,
+        "types": ["node"]
         "esModuleInterop": true
     }
 }
