@@ -2,7 +2,7 @@
     "post": {
         "schema": {
             "description": "Creates a wallet based on supplied wallet address and links to provided user id.",
-            "tags": ["user"],
+            "tags": ["users"],
             "summary": "Creates user wallet.",
             "params": {
                 "type": "object",
@@ -53,7 +53,7 @@
     "delete": {
         "schema": {
             "description": "Deletes (unlinks) a wallet based on supplied user id and wallet address.",
-            "tags": ["user"],
+            "tags": ["users"],
             "summary": "Deletes user wallet.",
             "params": {
                 "type": "object",
@@ -61,13 +61,11 @@
                     "userId": {
                         "type": "string",
                         "description": "user id"
+                    },
+                    "walletAddress": {
+                        "type": "string",
+                        "description": "address of wallet"
                     }
-                }
-            },
-            "body": {
-                "type": "object",
-                "properties": {
-                    "walletAddress": { "type": "string" }
                 }
             },
             "response": {

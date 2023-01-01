@@ -3,8 +3,8 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 
 import {
     UserRequestParams,
-    UserTransactionsRequestBody,
-    UserWalletsRequestBody
+    UsersTransactionsRequestParams,
+    UserTransactionsRequestBody
 } from "../../../types/routeParams";
 import { logError } from "../../lib/utils";
 import { UserTransactionsSchema } from "../../../types/jsonObjects";
@@ -28,9 +28,12 @@ const transactions = (
         }
 
         try {
-            const transactions = await prisma.transaction.findMany({
+            const transactions = await prisma.user.findMany({
                 where: {
                     id: userId
+                },
+                select: {
+                    transactions: true
                 }
             });
 
@@ -58,14 +61,18 @@ const transactions = (
         }
 
         try {
-            const transaction = await prisma.transaction.create({
+            const transaction = await prisma.user.update({
+                where: {
+                    id: userId
+                },
                 data: {
-                    ...transactionData,
-                    userId
+                    transactions: {
+                        push: [{ ...transactionData }]
+                    }
                 }
             });
 
-            return transaction;
+            reply.code(201).send(transaction);
         } catch (e) {
             if (e instanceof PrismaClientKnownRequestError)
                 logError(reply, 500, e.message);
@@ -74,23 +81,27 @@ const transactions = (
         }
     });
 
-    server.delete("/", deleteSchema, async (request, reply) => {
-        const { userId } = request.params as UserRequestParams;
-        if (!userId) {
-            logError(reply, 404, "missing user id param");
-            return;
-        }
-
-        const { walletAddress } = request.body as UserWalletsRequestBody;
-        if (!walletAddress) {
-            logError(reply, 404, "missing wallet address param");
+    server.delete("/:transactionId", deleteSchema, async (request, reply) => {
+        const { userId, transactionId } =
+            request.params as UsersTransactionsRequestParams;
+        if (!userId || !transactionId) {
+            logError(reply, 404, "missing user id or transaction id param");
             return;
         }
 
         try {
-            await prisma.wallet.delete({
+            await prisma.user.update({
                 where: {
-                    address: walletAddress
+                    id: userId
+                },
+                data: {
+                    transactions: {
+                        deleteMany: {
+                            where: {
+                                id: transactionId
+                            }
+                        }
+                    }
                 }
             });
         } catch (e) {

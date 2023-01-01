@@ -1,11 +1,11 @@
 import { FastifyInstance } from "fastify";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 
-import { UsersRequestBody } from "../../../types/routeParams";
 import { logError } from "../../lib/utils";
 import { UsersIndexSchema } from "../../../types/jsonObjects";
+import { UsersRequestBody } from "../../../types/routeParams";
 
-const users = (
+const index = (
     server: FastifyInstance,
     { get: getSchema, post: postSchema }: UsersIndexSchema,
     done: () => void
@@ -28,7 +28,7 @@ const users = (
     server.post("/", postSchema, async (request, reply) => {
         const { email, name } = request.body as UsersRequestBody;
 
-        if (!email) logError(reply, 404, "missing user id param");
+        if (!email) logError(reply, 404, "missing email param");
 
         try {
             const user = await prisma.user.create({
@@ -38,7 +38,7 @@ const users = (
                 }
             });
 
-            return user;
+            reply.code(201).send(user);
         } catch (e) {
             if (e instanceof PrismaClientKnownRequestError)
                 logError(reply, 500, e.message);
@@ -50,4 +50,4 @@ const users = (
     done();
 };
 
-export default users;
+export default index;

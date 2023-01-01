@@ -13,6 +13,7 @@ const swaggerOptions = {
                 url: "http://localhost"
             }
         ],
+        tags: [{ name: "users", description: "User specific endpoints" }],
         components: {
             schemas: {
                 User: jsonSchema.definitions.User,

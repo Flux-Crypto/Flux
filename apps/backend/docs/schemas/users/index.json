@@ -3,7 +3,7 @@
         "schema": {
             "description": "Gets users data.",
             "tags": ["users"],
-            "summary": "Get users data.",
+            "summary": "Gets users data.",
             "response": {
                 "200": {
                     "description": "OK",

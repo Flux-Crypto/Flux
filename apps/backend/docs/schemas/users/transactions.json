@@ -2,8 +2,8 @@
     "get": {
         "schema": {
             "description": "Gets user transactions based on supplied user id.",
-            "tags": ["user"],
-            "summary": "Get user transactions.",
+            "tags": ["users"],
+            "summary": "Gets user transactions.",
             "params": {
                 "type": "object",
                 "properties": {
@@ -90,8 +90,8 @@
     },
     "post": {
         "schema": {
-            "description": "Creates a transaction based on supplied transaction details and links to provided user id.",
-            "tags": ["user"],
+            "description": "Creates a transaction for a provided user based on supplied transaction details.",
+            "tags": ["users"],
             "summary": "Creates user transaction.",
             "params": {
                 "type": "object",
@@ -152,7 +152,7 @@
             },
             "response": {
                 "201": {
-                    "description": "Successful creation and linking.",
+                    "description": "Successful creation.",
                     "type": "object",
                     "properties": {
                         "id": {
@@ -224,23 +224,25 @@
     },
     "delete": {
         "schema": {
-            "description": "Deletes (unlinks) a wallet based on supplied user id and wallet address.",
-            "tags": ["user"],
-            "summary": "Deletes user wallet.",
+            "description": "Deletes a transaction based on supplied user id and transaction id.",
+            "tags": ["users"],
+            "summary": "Deletes user transaction.",
             "params": {
                 "type": "object",
                 "properties": {
                     "userId": {
                         "type": "string",
                         "description": "user id"
+                    },
+                    "transactionId": {
+                        "type": "string",
+                        "description": "database id of transaction"
                     }
                 }
             },
             "body": {
                 "type": "object",
-                "properties": {
-                    "walletAddress": { "type": "string" }
-                }
+                "properties": {}
             },
             "response": {
                 "204": {

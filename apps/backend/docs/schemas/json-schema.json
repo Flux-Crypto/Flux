@@ -36,14 +36,8 @@
     "Wallet": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "string"
-        },
         "address": {
           "type": "string"
-        },
-        "user": {
-          "$ref": "#/definitions/User"
         },
         "readOnly": {
           "type": [
@@ -61,8 +55,7 @@
         }
       },
       "required": [
-        "address",
-        "userId"
+        "address"
       ]
     },
     "Transaction": {
@@ -117,26 +110,15 @@
             "INTEREST",
             "INCOME"
           ]
-        },
-        "user": {
-          "$ref": "#/definitions/User"
         }
       },
-      "required": [
-        "userId"
-      ]
+      "required": []
     }
   },
   "type": "object",
   "properties": {
     "user": {
       "$ref": "#/definitions/User"
-    },
-    "wallet": {
-      "$ref": "#/definitions/Wallet"
-    },
-    "transaction": {
-      "$ref": "#/definitions/Transaction"
     }
   }
 }

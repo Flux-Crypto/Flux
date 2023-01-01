@@ -9,28 +9,32 @@ export interface UsersRequestBody {
 }
 
 /**
- *  /user/:userId
+ *  /users/:userId
  */
 export interface UserRequestParams {
     userId: string;
 }
 
+export interface UsersTransactionsRequestParams extends UserRequestParams {
+    transactionId: string;
+}
+
 /**
- *  /user/:userId
+ *  /users/:userId/wallets
  */
 export interface UserWalletsRequestBody {
     walletAddress: string;
 }
 
 /**
- *  /user/:userId/wallets/:walletId
+ *  /users/:userId/wallets/:walletAddress
  */
-export interface UserWalletsRequestParams {
-    walletId: string;
+export interface UserWalletsRequestParams extends UserRequestParams {
+    walletAddress: string;
 }
 
 /**
- * /user/:userId/transactions
+ * /users/:userId/transactions
  */
 export interface UserTransactionsRequestBody {
     transaction: Transaction;

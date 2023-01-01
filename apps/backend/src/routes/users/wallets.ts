@@ -31,14 +31,18 @@ const wallets = (
 
         // TODO: check if wallet already exists, return 409 (Conflict)
         try {
-            const wallet = await prisma.wallet.create({
+            const wallet = await prisma.user.update({
+                where: {
+                    id: userId
+                },
                 data: {
-                    address: walletAddress,
-                    userId
+                    wallets: {
+                        push: [{ address: walletAddress }]
+                    }
                 }
             });
 
-            return wallet;
+            reply.code(201).send(wallet);
         } catch (e) {
             if (e instanceof PrismaClientKnownRequestError)
                 logError(reply, 500, e.message);
@@ -47,23 +51,27 @@ const wallets = (
         }
     });
 
-    server.delete("/", deleteSchema, async (request, reply) => {
-        const { userId } = request.params as UserRequestParams;
-        if (!userId) {
-            logError(reply, 404, "missing user id param");
-            return;
-        }
-
-        const { walletId } = request.params as UserWalletsRequestParams;
-        if (!walletId) {
-            logError(reply, 404, "missing wallet id param");
+    server.delete("/:walletAddress", deleteSchema, async (request, reply) => {
+        const { userId, walletAddress } =
+            request.params as UserWalletsRequestParams;
+        if (!userId || !walletAddress) {
+            logError(reply, 404, "missing user id or wallet address param");
             return;
         }
 
         try {
-            await prisma.wallet.delete({
+            await prisma.user.update({
                 where: {
-                    id: walletId
+                    id: userId
+                },
+                data: {
+                    wallets: {
+                        deleteMany: {
+                            where: {
+                                address: walletAddress
+                            }
+                        }
+                    }
                 }
             });
         } catch (e) {
