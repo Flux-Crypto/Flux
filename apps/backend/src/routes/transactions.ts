@@ -1,3 +1,4 @@
+import { AlchemyOptions } from "@backend/types/blockchain";
 import { AddressRequestParams } from "@backend/types/routeParams";
 import { alchemy } from "@backend/utils/blockchain";
 import { logError } from "@backend/utils/utils";
@@ -13,42 +14,50 @@ const transactions = (
 ) => {
     server.get("/:address", async (request, reply) => {
         const { address } = request.params as AddressRequestParams;
-
+        const { headers } = request;
+        // Check for wallet address parameter
         if (!address) {
             logError(reply, 400, "Missing address parameter");
         }
 
-        if (!address.match(/^0[xX][0-9a-fA-F]+$/g)) {
+        // Validate wallet address
+        const WALLET_ADDRESS_REGEX = /^0[xX][0-9a-fA-F]+$/g;
+        if (!address.match(WALLET_ADDRESS_REGEX)) {
             logError(reply, 400, "Invalid address");
         }
 
-        // Grabs at most 25 transactions
-        const response = await alchemy.core.getAssetTransfers({
+        const alchemyOpts: AlchemyOptions = {
             fromBlock: "0x0",
             fromAddress: address,
             excludeZeroValue: true,
             order: "desc",
+            withMetadata: true,
             maxCount: MAX_TWENTY_FIVE_TXNS_HEX,
             category: ["external", "erc20"]
-        });
+        };
 
+        // Multiple pages of data
+        // NOTE: Page key only lasts for 10 min before expiring!
+        const PAGE_KEY_REGEX =
+            /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
+        if (
+            headers["page-key"] &&
+            (headers["page-key"] as string).match(PAGE_KEY_REGEX)
+        ) {
+            alchemyOpts.pageKey = request.headers["page-key"] as string;
+        }
+
+        const response = await alchemy.core.getAssetTransfers(alchemyOpts);
         const { transfers } = response;
 
         // No transactions found
         if (transfers.length <= 0) {
-            reply.status(200).send({
+            reply.send({
                 success: true,
                 data: {
                     message: "No transactions for this wallet."
                 }
             });
-        }
-
-        // Multiple pages of data
-        // NOTE: Page key only lasts for 10 min before expiring!
-        let pageKey = "";
-        if (response.pageKey) {
-            pageKey = response.pageKey;
         }
 
         const results = transfers.map((transfer: unknown) =>
@@ -59,15 +68,15 @@ const transactions = (
                 "to",
                 "value",
                 "asset",
-                "metadata"
+                "metadata",
+                "pageKey"
             ])
         );
 
-        reply.status(200).send({
+        reply.send({
             success: true,
             data: {
-                results,
-                pageKey: pageKey || ""
+                results
             }
         });
     });
