@@ -57,7 +57,7 @@ npm run dev:backend
 
 ### Database
 
-**On project initialization**, generate the Prisma scheme with the command:
+**On project initialization**, generate the Prisma schema with the command:
 
 ```sh
 npm run generate
@@ -71,7 +71,7 @@ To reset and seed Prisma database:
 npm run reset
 ```
 
-You can view the Prisma schema and MongoDB using Prisma Studio. To launch it:
+You can view the Prisma MongoDB database using Prisma Studio. To launch it:
 
 ```sh
 npm run studio
