@@ -1,0 +1,271 @@
+{
+    "get": {
+        "schema": {
+            "description": "Gets user transactions based on supplied user id.",
+            "tags": ["users"],
+            "summary": "Gets user transactions.",
+            "params": {
+                "type": "object",
+                "properties": {
+                    "userId": {
+                        "type": "string",
+                        "description": "user id"
+                    }
+                }
+            },
+            "response": {
+                "200": {
+                    "description": "OK",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "date": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "receivedQuantity": {
+                                "type": "number"
+                            },
+                            "receivedCurrency": {
+                                "type": "string"
+                            },
+                            "sentQuantity": {
+                                "type": "number"
+                            },
+                            "sentCurrency": {
+                                "type": "string"
+                            },
+                            "feeAmount": {
+                                "type": "number"
+                            },
+                            "feeCurrency": {
+                                "type": "string"
+                            },
+                            "tag": {
+                                "type": "string",
+                                "enum": [
+                                    "GIFT",
+                                    "LOSS",
+                                    "DONATION",
+                                    "MARGIN_FEE",
+                                    "FORK",
+                                    "AIRDROP",
+                                    "MINED",
+                                    "PAYMENT",
+                                    "STAKED",
+                                    "MARGIN",
+                                    "MARGIN_REBATE",
+                                    "INTEREST",
+                                    "INCOME"
+                                ]
+                            },
+                            "user": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "404": {
+                    "description": "Not found. Missing user id or transaction id parameter.",
+                    "type": "object",
+                    "properties": {
+                        "code": { "type": "number" },
+                        "message": { "type": "string" }
+                    }
+                },
+                "5XX": {
+                    "description": "Unexpected error.",
+                    "type": "object",
+                    "properties": {
+                        "code": { "type": "number" },
+                        "message": { "type": "string" }
+                    }
+                }
+            }
+        }
+    },
+    "post": {
+        "schema": {
+            "description": "Creates a transaction for a provided user based on supplied transaction details.",
+            "tags": ["users"],
+            "summary": "Creates user transaction.",
+            "params": {
+                "type": "object",
+                "properties": {
+                    "userId": {
+                        "type": "string",
+                        "description": "user id"
+                    }
+                }
+            },
+            "body": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "receivedQuantity": {
+                        "type": "number"
+                    },
+                    "receivedCurrency": {
+                        "type": "string"
+                    },
+                    "sentQuantity": {
+                        "type": "number"
+                    },
+                    "sentCurrency": {
+                        "type": "string"
+                    },
+                    "feeAmount": {
+                        "type": "number"
+                    },
+                    "feeCurrency": {
+                        "type": "string"
+                    },
+                    "tag": {
+                        "type": "string",
+                        "enum": [
+                            "GIFT",
+                            "LOSS",
+                            "DONATION",
+                            "MARGIN_FEE",
+                            "FORK",
+                            "AIRDROP",
+                            "MINED",
+                            "PAYMENT",
+                            "STAKED",
+                            "MARGIN",
+                            "MARGIN_REBATE",
+                            "INTEREST",
+                            "INCOME"
+                        ]
+                    }
+                }
+            },
+            "response": {
+                "201": {
+                    "description": "Successful creation.",
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "string"
+                        },
+                        "date": {
+                            "type": "string",
+                            "format": "date-time"
+                        },
+                        "receivedQuantity": {
+                            "type": "number"
+                        },
+                        "receivedCurrency": {
+                            "type": "string"
+                        },
+                        "sentQuantity": {
+                            "type": "number"
+                        },
+                        "sentCurrency": {
+                            "type": "string"
+                        },
+                        "feeAmount": {
+                            "type": "number"
+                        },
+                        "feeCurrency": {
+                            "type": "string"
+                        },
+                        "tag": {
+                            "type": "string",
+                            "enum": [
+                                "GIFT",
+                                "LOSS",
+                                "DONATION",
+                                "MARGIN_FEE",
+                                "FORK",
+                                "AIRDROP",
+                                "MINED",
+                                "PAYMENT",
+                                "STAKED",
+                                "MARGIN",
+                                "MARGIN_REBATE",
+                                "INTEREST",
+                                "INCOME"
+                            ]
+                        },
+                        "user": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "404": {
+                    "description": "Not found. Missing user id or transaction parameter.",
+                    "type": "object",
+                    "properties": {
+                        "code": { "type": "number" },
+                        "message": { "type": "string" }
+                    }
+                },
+                "5XX": {
+                    "description": "Unexpected error.",
+                    "type": "object",
+                    "properties": {
+                        "code": { "type": "number" },
+                        "message": { "type": "string" }
+                    }
+                }
+            }
+        }
+    },
+    "delete": {
+        "schema": {
+            "description": "Deletes a transaction based on supplied user id and transaction id.",
+            "tags": ["users"],
+            "summary": "Deletes user transaction.",
+            "params": {
+                "type": "object",
+                "properties": {
+                    "userId": {
+                        "type": "string",
+                        "description": "user id"
+                    },
+                    "transactionId": {
+                        "type": "string",
+                        "description": "database id of transaction"
+                    }
+                }
+            },
+            "body": {
+                "type": "object",
+                "properties": {}
+            },
+            "response": {
+                "204": {
+                    "description": "Successful deletion and unlinking.",
+                    "type": "null"
+                },
+                "404": {
+                    "description": "Not found. Missing user id or wallet address parameter.",
+                    "type": "object",
+                    "properties": {
+                        "code": { "type": "number" },
+                        "message": { "type": "string" }
+                    }
+                },
+                "5XX": {
+                    "description": "Unexpected error.",
+                    "type": "object",
+                    "properties": {
+                        "code": { "type": "number" },
+                        "message": { "type": "string" }
+                    }
+                }
+            }
+        }
+    }
+}

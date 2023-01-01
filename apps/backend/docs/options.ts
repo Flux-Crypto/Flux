@@ -13,10 +13,12 @@ const swaggerOptions = {
                 url: "http://localhost"
             }
         ],
+        tags: [{ name: "users", description: "User specific endpoints" }],
         components: {
             schemas: {
                 User: jsonSchema.definitions.User,
-                Wallet: jsonSchema.definitions.Wallet
+                Wallet: jsonSchema.definitions.Wallet,
+                Transaction: jsonSchema.definitions.Transaction
             }
         }
     },

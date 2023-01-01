@@ -1,9 +1,9 @@
 {
-    "GetUsersSchema": {
+    "get": {
         "schema": {
             "description": "Gets users data.",
             "tags": ["users"],
-            "summary": "Get users data.",
+            "summary": "Gets users data.",
             "response": {
                 "200": {
                     "description": "OK",
@@ -15,6 +15,12 @@
                             "email": { "type": "string" },
                             "name": { "type": "string" },
                             "wallets": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "transactions": {
                                 "type": "array",
                                 "items": {
                                     "type": "string"
@@ -34,7 +40,7 @@
             }
         }
     },
-    "PostUsersSchema": {
+    "post": {
         "schema": {
             "description": "Creates a new user based on supplied email.",
             "tags": ["users"],
@@ -61,10 +67,16 @@
                             "items": {
                                 "type": "string"
                             }
+                        },
+                        "transactions": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
                         }
                     }
                 },
-                "400": {
+                "404": {
                     "description": "Bad request. Missing email parameter.",
                     "type": "object",
                     "properties": {

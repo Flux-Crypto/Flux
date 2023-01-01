@@ -4,6 +4,7 @@
         "baseUrl": "src",
         "outDir": "build",
         "strictNullChecks": true,
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
+        "esModuleInterop": true
     }
 }
