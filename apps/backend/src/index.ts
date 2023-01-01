@@ -33,7 +33,7 @@ const runServer = async () => {
     });
 
     server.register(
-        (server: FastifyInstance, _: any, done: () => void) => {
+        (server: FastifyInstance, _opts: any, done: () => void) => {
             server.register(users, { prefix: "/users" });
             server.register(user, { prefix: "/user" });
             server.register(transactions, { prefix: "/transactions" });
