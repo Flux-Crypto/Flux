@@ -1,54 +1,5 @@
 {
-    "GetUserSchema": {
-        "schema": {
-            "description": "Gets user data based on supplied user id.",
-            "tags": ["user"],
-            "summary": "Get user data.",
-            "params": {
-                "type": "object",
-                "properties": {
-                    "userId": {
-                        "type": "string",
-                        "description": "user id"
-                    }
-                }
-            },
-            "response": {
-                "200": {
-                    "description": "OK",
-                    "type": "object",
-                    "properties": {
-                        "id": { "type": "string" },
-                        "email": { "type": "string" },
-                        "name": { "type": "string" },
-                        "wallets": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                },
-                "400": {
-                    "description": "Bad request. Missing user id parameter.",
-                    "type": "object",
-                    "properties": {
-                        "code": { "type": "number" },
-                        "message": { "type": "string" }
-                    }
-                },
-                "5XX": {
-                    "description": "Unexpected error.",
-                    "type": "object",
-                    "properties": {
-                        "code": { "type": "number" },
-                        "message": { "type": "string" }
-                    }
-                }
-            }
-        }
-    },
-    "PostUserWalletSchema": {
+    "post": {
         "schema": {
             "description": "Creates a wallet based on supplied wallet address and links to provided user id.",
             "tags": ["user"],
@@ -80,8 +31,8 @@
                         "seedPhrase": { "type": "string" }
                     }
                 },
-                "400": {
-                    "description": "Bad request. Missing user id or wallet address parameter.",
+                "404": {
+                    "description": "Not found. Missing user id or wallet address parameter.",
                     "type": "object",
                     "properties": {
                         "code": { "type": "number" },
@@ -99,7 +50,7 @@
             }
         }
     },
-    "DeleteUserWalletSchema": {
+    "delete": {
         "schema": {
             "description": "Deletes (unlinks) a wallet based on supplied user id and wallet address.",
             "tags": ["user"],
@@ -124,8 +75,8 @@
                     "description": "Successful deletion and unlinking.",
                     "type": "null"
                 },
-                "400": {
-                    "description": "Bad request. Missing user id or wallet address parameter.",
+                "404": {
+                    "description": "Not found. Missing user id or wallet address parameter.",
                     "type": "object",
                     "properties": {
                         "code": { "type": "number" },

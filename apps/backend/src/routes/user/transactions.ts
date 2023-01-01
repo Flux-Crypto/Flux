@@ -6,53 +6,54 @@ import {
     UserTransactionsRequestBody,
     UserWalletsRequestBody
 } from "../../types/routeParams";
-import UserSchema from "../../../docs/schemas/user.json";
 import { logError } from "../../lib/utils";
+import { UserTransactionsSchema } from "types/jsonObjects";
 
 const transactions = (
     server: FastifyInstance,
-    _opts: any,
+    {
+        get: getSchema,
+        post: postSchema,
+        delete: deleteSchema
+    }: UserTransactionsSchema,
     done: () => void
 ) => {
     const { prisma } = server;
 
-    const { GetUserSchema, PostUserWalletSchema, DeleteUserWalletSchema } =
-        UserSchema;
-
-    server.get("/", GetUserSchema, async (request, reply) => {
+    server.get("/", getSchema, async (request, reply) => {
         const { userId } = request.params as UserRequestParams;
         if (!userId) {
-            logError(reply, 400, "missing user id param");
+            logError(reply, 404, "missing user id param");
             return;
         }
 
         try {
-            const transaction = await prisma.transaction.findUnique({
+            const transactions = await prisma.transaction.findMany({
                 where: {
                     id: userId
                 }
             });
 
-            return transaction;
+            return transactions;
         } catch (e) {
             if (e instanceof PrismaClientKnownRequestError)
                 logError(reply, 500, e.message);
 
-            logError(reply, 500, "fetching transaction");
+            logError(reply, 500, "fetching transactions");
         }
     });
 
-    server.post("/", PostUserWalletSchema, async (request, reply) => {
+    server.post("/", postSchema, async (request, reply) => {
         const { userId } = request.params as UserRequestParams;
         if (!userId) {
-            logError(reply, 400, "missing user id param");
+            logError(reply, 404, "missing user id param");
             return;
         }
 
         const { transaction: transactionData } =
             request.body as UserTransactionsRequestBody;
         if (!transactionData) {
-            logError(reply, 400, "missing transaction param");
+            logError(reply, 404, "missing transaction param");
             return;
         }
 
@@ -73,16 +74,16 @@ const transactions = (
         }
     });
 
-    server.delete("/", DeleteUserWalletSchema, async (request, reply) => {
+    server.delete("/", deleteSchema, async (request, reply) => {
         const { userId } = request.params as UserRequestParams;
         if (!userId) {
-            logError(reply, 400, "missing user id param");
+            logError(reply, 404, "missing user id param");
             return;
         }
 
         const { walletAddress } = request.body as UserWalletsRequestBody;
         if (!walletAddress) {
-            logError(reply, 400, "missing wallet address param");
+            logError(reply, 404, "missing wallet address param");
             return;
         }
 

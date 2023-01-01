@@ -6,27 +6,30 @@ import {
     UserWalletsRequestParams,
     UserWalletsRequestBody
 } from "../../types/routeParams";
-import UserSchema from "../../../docs/schemas/user.json";
 import { logError } from "../../lib/utils";
+import { UserWalletsSchema } from "types/jsonObjects";
 
-const wallets = (server: FastifyInstance, _: any, done: () => void) => {
+const wallets = (
+    server: FastifyInstance,
+    { post: postSchema, delete: deleteSchema }: UserWalletsSchema,
+    done: () => void
+) => {
     const { prisma } = server;
 
-    const { PostUserWalletSchema, DeleteUserWalletSchema } = UserSchema;
-
-    server.post("/", PostUserWalletSchema, async (request, reply) => {
+    server.post("/", postSchema, async (request, reply) => {
         const { userId } = request.params as UserRequestParams;
         if (!userId) {
-            logError(reply, 400, "missing user id param");
+            logError(reply, 404, "missing user id param");
             return;
         }
 
         const { walletAddress } = request.body as UserWalletsRequestBody;
         if (!walletAddress) {
-            logError(reply, 400, "missing wallet address param");
+            logError(reply, 404, "missing wallet address param");
             return;
         }
 
+        // TODO: check if wallet already exists, return 409 (Conflict)
         try {
             const wallet = await prisma.wallet.create({
                 data: {
@@ -44,16 +47,16 @@ const wallets = (server: FastifyInstance, _: any, done: () => void) => {
         }
     });
 
-    server.delete("/", DeleteUserWalletSchema, async (request, reply) => {
+    server.delete("/", deleteSchema, async (request, reply) => {
         const { userId } = request.params as UserRequestParams;
         if (!userId) {
-            logError(reply, 400, "missing user id param");
+            logError(reply, 404, "missing user id param");
             return;
         }
 
         const { walletId } = request.params as UserWalletsRequestParams;
         if (!walletId) {
-            logError(reply, 400, "missing wallet id param");
+            logError(reply, 404, "missing wallet id param");
             return;
         }
 
