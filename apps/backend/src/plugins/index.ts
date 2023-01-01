@@ -1,1 +1,3 @@
-export { default as prismaPlugin } from "./prisma"
+import prismaPlugin from "@backend/plugins/prisma";
+
+export default prismaPlugin;

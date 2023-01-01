@@ -1,8 +1,7 @@
-import { FastifyInstance } from "fastify";
+import { UsersRequestBody } from "@backend/types/routeParams";
+import { logError } from "@backend/utils/utils";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
-
-import { UsersRequestBody } from "src/types/routeParams";
-import { logError } from "src/utils/utils";
+import { FastifyInstance } from "fastify";
 
 const users = (server: FastifyInstance, _: any, done: () => void) => {
     const { prisma } = server;
@@ -27,6 +26,7 @@ const users = (server: FastifyInstance, _: any, done: () => void) => {
 
             logError(reply, 500, "creating user");
         }
+        return "";
     });
 
     done();

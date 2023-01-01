@@ -1,13 +1,12 @@
-import { FastifyInstance } from "fastify";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
-
 import {
     UserRequestParams,
     UserWalletsRequestBody
-} from "src/types/routeParams";
-import { logError } from "src/utils/utils";
+} from "@backend/types/routeParams";
+import { logError } from "@backend/utils/utils";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
+import { FastifyInstance } from "fastify";
 
-const user = (server: FastifyInstance, _: any, done: () => void) => {
+const user = (server: FastifyInstance, _opts: unknown, done: () => void) => {
     const { prisma } = server;
 
     server.get("/:userId", async (request, reply) => {
@@ -29,6 +28,7 @@ const user = (server: FastifyInstance, _: any, done: () => void) => {
 
             logError(reply, 500, "fetching user");
         }
+        return "";
     });
 
     server.post("/:userId/wallets", async (request, reply) => {
