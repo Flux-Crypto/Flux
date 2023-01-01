@@ -39,7 +39,7 @@ const transactions = (
             if (e instanceof PrismaClientKnownRequestError)
                 logError(reply, 500, e.message);
 
-            logError(reply, 500, "fetching transactions");
+            logError(reply, 500, "getting transactions");
         }
     });
 
