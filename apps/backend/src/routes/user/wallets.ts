@@ -5,9 +5,9 @@ import {
     UserRequestParams,
     UserWalletsRequestParams,
     UserWalletsRequestBody
-} from "../../types/routeParams";
+} from "../../../types/routeParams";
 import { logError } from "../../lib/utils";
-import { UserWalletsSchema } from "types/jsonObjects";
+import { UserWalletsSchema } from "../../../types/jsonObjects";
 
 const wallets = (
     server: FastifyInstance,
