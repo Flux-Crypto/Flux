@@ -47,7 +47,16 @@ module.exports = {
         "simple-import-sort/exports": "warn",
         "import/first": "warn",
         "import/newline-after-import": "warn",
-        "import/no-duplicates": "error"
+        "import/no-duplicates": "error",
+        "@typescript-eslint/no-shadow": "warn",
+        "@typescript-eslint/no-unused-vars": [
+            "warn",
+            {
+                argsIgnorePattern: "^_",
+                caughtErrorsIgnorePattern: "^_"
+            }
+        ],
+        "@typescript-eslint/ban-ts-comment": "warn"
     },
     // overrides: [
     //     {

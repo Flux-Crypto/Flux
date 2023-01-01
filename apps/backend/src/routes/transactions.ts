@@ -1,7 +1,7 @@
-import { AlchemyOptions } from "@backend/types/blockchain";
-import { AddressRequestParams } from "@backend/types/routeParams";
-import { alchemy } from "@backend/utils/blockchain";
-import { logError } from "@backend/utils/utils";
+import { AlchemyOptions } from "@lib/types/apiOptions";
+import { AddressRequestParams } from "@lib/types/routeParams";
+import { logError } from "@lib/utils";
+import { alchemy } from "@src/utils/blockchain";
 import { FastifyInstance } from "fastify";
 import _ from "lodash";
 

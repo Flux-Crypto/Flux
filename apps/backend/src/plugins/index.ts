@@ -1,3 +1,2 @@
-import prismaPlugin from "@backend/plugins/prisma";
-
-export default prismaPlugin;
+/* eslint-disable import/prefer-default-export */
+export { default as prismaPlugin } from "@src/plugins/prisma";

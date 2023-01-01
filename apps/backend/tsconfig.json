@@ -5,15 +5,20 @@
     "compilerOptions": {
         "composite": true,
         "module": "CommonJS",
-        "rootDir": "src",
+        "rootDir": ".",
         "outDir": "build",
+        "resolveJsonModule": true,
         "baseUrl": ".",
         "paths": {
-            "@backend/*": ["src/*"]
+            "@src/*": ["src/*"],
+            "@lib/*": ["src/lib/*"],
+            "@routes/*": ["src/routes/*"],
+            "@plugins/*": ["src/plugins/*"],
+            "@docs/*": ["docs/*"]
         },
         "strictNullChecks": true
     },
-    "include": ["**/*.ts", "**/*.tsx"],
+    "include": ["**/*.ts", "**/*.tsx", "**/*.json"],
     "exclude": ["node_modules"],
     "ts-node": {
         "require": ["tsconfig-paths/register"]

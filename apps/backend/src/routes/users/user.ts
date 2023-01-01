@@ -1,9 +1,8 @@
-import { FastifyInstance } from "fastify";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
-
-import { UserRequestParams } from "../../../types/routeParams";
+import { UserIndexSchema } from "../../lib/types/jsonObjects";
+import { UserRequestParams } from "../../lib/types/routeParams";
 import { logError } from "../../lib/utils";
-import { UserIndexSchema } from "../../../types/jsonObjects";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
+import { FastifyInstance } from "fastify";
 
 const user = (
     server: FastifyInstance,

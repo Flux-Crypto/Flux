@@ -1,13 +1,12 @@
-import { FastifyInstance } from "fastify";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
-
+import { UserTransactionsSchema } from "@lib/types/jsonObjects";
 import {
     UserRequestParams,
     UsersTransactionsRequestParams,
     UserTransactionsRequestBody
-} from "../../../types/routeParams";
-import { logError } from "../../lib/utils";
-import { UserTransactionsSchema } from "../../../types/jsonObjects";
+} from "@lib/types/routeParams";
+import { logError } from "@lib/utils";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
+import { FastifyInstance } from "fastify";
 
 const transactions = (
     server: FastifyInstance,
@@ -37,7 +36,7 @@ const transactions = (
                 }
             });
 
-            return transactions;
+            reply.send(transactions);
         } catch (e) {
             if (e instanceof PrismaClientKnownRequestError)
                 logError(reply, 500, e.message);

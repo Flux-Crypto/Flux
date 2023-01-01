@@ -32,9 +32,8 @@ const swaggerUIOptions = {
         deepLinking: false
     },
     staticCSP: true,
-    transformSpecification: (swaggerObject: any, request: any, reply: any) => {
-        return swaggerObject;
-    },
+    transformSpecification: (swaggerObject: any, _request: any, _reply: any) =>
+        swaggerObject,
     transformSpecificationClone: true,
     exposeRoute: true
 };
