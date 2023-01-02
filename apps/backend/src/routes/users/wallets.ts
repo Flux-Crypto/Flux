@@ -1,7 +1,7 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { FastifyInstance } from "fastify";
 
-import { log } from "@lib/logger";
+import { logger } from "@lib/logger";
 import { UserWalletsSchema } from "@lib/types/jsonObjects";
 import {
     UserRequestParams,
@@ -14,21 +14,15 @@ const walletsRoute = (
     { post: postSchema, delete: deleteSchema }: UserWalletsSchema,
     done: () => void
 ) => {
-    const { prisma } = server;
+    const { prisma, log } = server;
 
     server.post("/", postSchema, async (request, reply) => {
         const { userId } = request.params as UserRequestParams;
-        if (!userId)
-            log(request.log.error, reply, 400, "Missing user id parameter");
+        if (!userId) logger(log.error, reply, 400, "Missing user id parameter");
 
         const { walletAddress } = request.body as UserWalletsRequestBody;
         if (!walletAddress)
-            log(
-                request.log.error,
-                reply,
-                400,
-                "Missing wallet address parameter"
-            );
+            logger(log.error, reply, 400, "Missing wallet address parameter");
 
         try {
             const checkWallet = await prisma.wallet.findUnique({
@@ -61,22 +55,23 @@ const walletsRoute = (
                 reply.send(wallet);
             }
 
-            logError(reply, 409, "wallet already exists");
+            logger(log.error, reply, 409, "wallet already exists");
         } catch (e) {
             if (e instanceof PrismaClientKnownRequestError) {
-                request.log.fatal(e);
+                log.fatal(e);
                 reply.code(500).send("Server error");
             }
-            log(request.log.error, reply, 500, "Couldn't create wallet");
+
+            logger(log.error, reply, 500, "Couldn't create wallet");
         }
     });
 
     server.delete("/:walletAddress", deleteSchema, async (request, reply) => {
         const { userId, walletAddress } =
             request.params as UserWalletsRequestParams;
-        if (!userId || !walletAddress) 
-            log(
-                request.log.error,
+        if (!userId || !walletAddress)
+            logger(
+                log.error,
                 reply,
                 400,
                 "Missing user id or wallet address parameter"
@@ -91,10 +86,11 @@ const walletsRoute = (
             });
         } catch (e) {
             if (e instanceof PrismaClientKnownRequestError) {
-                request.log.fatal(e);
+                log.fatal(e);
                 reply.code(500).send("Server error");
             }
-            log(request.log.error, reply, 500, "Couldn't delete wallet");
+
+            logger(log.error, reply, 500, "Couldn't delete wallet");
         }
     });
 
