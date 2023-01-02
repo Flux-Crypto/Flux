@@ -1,4 +1,6 @@
-import { TransactionSchema } from "../apiSchema";
+import _ from "lodash";
+
+import { TransactionExample, TransactionSchema } from "../apiSchema";
 
 export default {
     get: {
@@ -21,7 +23,8 @@ export default {
                     type: "array",
                     items: {
                         type: "object",
-                        properties: TransactionSchema
+                        properties: TransactionSchema,
+                        example: TransactionExample
                     }
                 },
                 "400": {
@@ -53,13 +56,23 @@ export default {
             },
             body: {
                 type: "object",
-                properties: TransactionSchema
+                properties: _.pick(TransactionSchema, [
+                    "date",
+                    "receivedQuantity",
+                    "receivedCurrency",
+                    "sentQuantity",
+                    "sentCurrency",
+                    "feeAmount",
+                    "feeCurrency",
+                    "tag"
+                ])
             },
             response: {
                 "201": {
                     description: "Successful creation.",
                     type: "object",
-                    properties: TransactionSchema
+                    properties: TransactionSchema,
+                    example: TransactionExample
                 },
                 "400": {
                     description:
