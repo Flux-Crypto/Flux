@@ -70,6 +70,7 @@ const walletsRoute = (
         if (!userId || !walletAddress)
             logError(reply, 400, "missing user id or wallet address param");
 
+        // TODO: delete wallet connection, delete wallet if no connections
         try {
             await prisma.wallet.delete({
                 where: {

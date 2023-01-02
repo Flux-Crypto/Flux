@@ -1,4 +1,4 @@
-import { WalletSchema } from "../apiSchema";
+import { WalletExample, WalletSchema } from "../apiSchema";
 
 export default {
     post: {
@@ -26,7 +26,8 @@ export default {
                 "201": {
                     description: "Successful creation and linking.",
                     type: "object",
-                    properties: WalletSchema
+                    properties: WalletSchema,
+                    example: WalletExample
                 },
                 "400": {
                     description:
