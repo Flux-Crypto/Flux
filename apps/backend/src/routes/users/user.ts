@@ -5,7 +5,7 @@ import { log } from "@lib/logger";
 import { UserIndexSchema } from "@lib/types/jsonObjects";
 import { UserRequestParams } from "@lib/types/routeParams";
 
-const user = (
+const userRoute = (
     server: FastifyInstance,
     { get: getSchema }: UserIndexSchema,
     done: () => void
@@ -43,4 +43,4 @@ const user = (
     done();
 };
 
-export default user;
+export default userRoute;

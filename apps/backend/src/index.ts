@@ -16,22 +16,21 @@ import { FastifyDone } from "@lib/types/fastifyTypes";
 import users from "@routes/users/base";
 import transactions from "@src/routes/explorer/transactions";
 
-import SwaggerOptions from "@docs/options";
+import { swaggerOptions, swaggerUIOptions } from "@docs/options";
 
 const runServer = async () => {
     const server = fastify({
         logger: envToLogger.development ?? true
     });
 
-    await server.register(prismaPlugin);
+    await fastifyServer.register(prismaPlugin);
 
-    const { swaggerOptions, swaggerUIOptions } = SwaggerOptions;
-
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore:next-line
-    await server.register(swagger, swaggerOptions);
-    await server.register(swaggerUI, swaggerUIOptions);
+    await fastifyServer.register(swagger, swaggerOptions);
+    await fastifyServer.register(swaggerUI, swaggerUIOptions);
 
-    server.register(
+    fastifyServer.register(
         (
             server: FastifyInstance,
             _opts: FastifyServerOptions,
@@ -45,13 +44,13 @@ const runServer = async () => {
         { prefix: "/api/v1" }
     );
 
-    server.get(
+    fastifyServer.get(
         "/ping",
         async (_request: FastifyRequest, _reply: FastifyReply) => "pong\n"
     );
 
-    await server.ready();
-    server.listen({ port: 8000 }, (err, address) => {
+    await fastifyServer.ready();
+    fastifyServer.listen({ port: 8000 }, (err, address) => {
         if (err) {
             server.log.fatal(err);
             process.exit(1);

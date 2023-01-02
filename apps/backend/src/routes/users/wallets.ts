@@ -9,7 +9,7 @@ import {
     UserWalletsRequestParams
 } from "@lib/types/routeParams";
 
-const wallets = (
+const walletsRoute = (
     server: FastifyInstance,
     { post: postSchema, delete: deleteSchema }: UserWalletsSchema,
     done: () => void
@@ -34,20 +34,38 @@ const wallets = (
             return;
         }
 
-        // TODO: check if wallet already exists, return 409 (Conflict)
         try {
-            const wallet = await prisma.user.update({
+            const checkWallet = await prisma.wallet.findUnique({
                 where: {
-                    id: userId
-                },
-                data: {
-                    wallets: {
-                        push: [{ address: walletAddress }]
-                    }
+                    address: walletAddress
                 }
             });
 
-            reply.code(201).send(wallet);
+            if (!checkWallet) {
+                const wallet = await prisma.wallet.create({
+                    data: {
+                        address: walletAddress,
+                        userId
+                    }
+                });
+
+                reply.code(201).send(wallet);
+            }
+
+            if (!checkWallet?.userId) {
+                const wallet = await prisma.wallet.update({
+                    where: {
+                        address: walletAddress
+                    },
+                    data: {
+                        userId
+                    }
+                });
+
+                reply.send(wallet);
+            }
+
+            logError(reply, 409, "wallet already exists");
         } catch (e) {
             if (e instanceof PrismaClientKnownRequestError) {
                 request.log.fatal(e);
@@ -71,18 +89,9 @@ const wallets = (
         }
 
         try {
-            await prisma.user.update({
+            await prisma.wallet.delete({
                 where: {
-                    id: userId
-                },
-                data: {
-                    wallets: {
-                        deleteMany: {
-                            where: {
-                                address: walletAddress
-                            }
-                        }
-                    }
+                    address: walletAddress
                 }
             });
         } catch (e) {
@@ -97,4 +106,4 @@ const wallets = (
     done();
 };
 
-export default wallets;
+export default walletsRoute;

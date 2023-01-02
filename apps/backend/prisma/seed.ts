@@ -3,11 +3,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 const reset = async () => {
-    const deleteTransactions = prisma.transaction.deleteMany();
-    const deleteWallets = prisma.wallet.deleteMany();
-    const deleteUsers = prisma.user.deleteMany();
-
-    await prisma.$transaction([deleteTransactions, deleteWallets, deleteUsers]);
+    await prisma.user.deleteMany();
 };
 
 const disconnect = async () => {
