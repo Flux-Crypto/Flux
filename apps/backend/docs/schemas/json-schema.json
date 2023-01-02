@@ -21,13 +21,16 @@
           ],
           "default": ""
         },
-        "user": {
-          "$ref": "#/definitions/User"
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          }
         }
       },
       "required": [
         "address",
-        "userId"
+        "userIds"
       ]
     },
     "User": {
@@ -73,7 +76,8 @@
       "required": [
         "email",
         "processorAPIKeys",
-        "exchangeAPIKeys"
+        "exchangeAPIKeys",
+        "walletAddresses"
       ]
     },
     "Transaction": {
