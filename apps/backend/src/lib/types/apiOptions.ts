@@ -1,4 +1,7 @@
-import { SortingOrder } from "alchemy-sdk/dist/src/types/types";
+import {
+    AssetTransfersCategory,
+    SortingOrder
+} from "alchemy-sdk/dist/src/types/types";
 
 export interface AlchemyOptions {
     fromBlock: string;
@@ -6,7 +9,7 @@ export interface AlchemyOptions {
     excludeZeroValue: boolean;
     order: SortingOrder;
     withMetadata: boolean;
-    maxCount: string;
-    category: string[];
+    maxCount: number;
+    category: AssetTransfersCategory[];
     pageKey?: string;
 }

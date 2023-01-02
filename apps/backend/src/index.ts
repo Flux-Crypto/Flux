@@ -14,7 +14,7 @@ import { prismaPlugin } from "@plugins/index";
 import { envToLogger } from "@lib/logger";
 import { FastifyDone } from "@lib/types/fastifyTypes";
 import users from "@routes/users/base";
-import transactions from "@src/routes/explorer/transactions";
+import explorer from "@src/routes/explorer/base";
 
 import { swaggerOptions, swaggerUIOptions } from "@docs/options";
 
@@ -37,7 +37,7 @@ const runServer = async () => {
             done: FastifyDone
         ) => {
             server.register(users, { prefix: "/users" });
-            server.register(transactions, { prefix: "/transactions" });
+            server.register(explorer, { prefix: "/explorer" });
 
             done();
         },
