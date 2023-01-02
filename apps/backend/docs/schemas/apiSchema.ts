@@ -70,6 +70,18 @@ export const TransactionSchema = {
     }
 };
 
+export const TransactionExample = {
+    id: "63b27824cc5b18dda70b8442",
+    date: "06/14/2017 20:57:35",
+    receivedQuantity: 0.5,
+    receivedCurrency: "BTC",
+    sentQuantity: 4005.8,
+    sentCurrency: "USD",
+    feeAmount: 0.00001,
+    feeCurrency: "BTC",
+    tag: "PAYMENT"
+};
+
 /**
  * User
  */
