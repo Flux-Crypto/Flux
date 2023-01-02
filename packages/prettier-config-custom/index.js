@@ -1,14 +1,14 @@
 module.exports = {
     semi: true,
     trailingComma: "none",
-    singleQuote: true,
+    singleQuote: false,
     tabWidth: 4,
     useTabs: false,
     importOrder: [
-        "^@aurora/(.*)$",
-        "^@frontend/(.*)$",
-        "^@backend/(.*)$",
-        "^@ui/(.*)$",
+        "^@?(?!src|lib|docs)\\w+",
+        "^@src/(.*)$",
+        "^@lib/(.*)$",
+        "^@docs/(.*)$",
         "^[./]"
     ],
     importOrderSeparation: true,

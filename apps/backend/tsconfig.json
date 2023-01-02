@@ -18,7 +18,7 @@
         },
         "strictNullChecks": true
     },
-    "include": ["**/*.ts", "**/*.tsx", "**/*.json"],
+    "include": ["**/*.ts", "**/*.tsx", "**/*.json", "**/*.d.ts"],
     "exclude": ["node_modules"],
     "ts-node": {
         "require": ["tsconfig-paths/register"]

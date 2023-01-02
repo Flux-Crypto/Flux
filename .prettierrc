@@ -3,5 +3,13 @@
     "trailingComma": "none",
     "singleQuote": false,
     "tabWidth": 4,
-    "useTabs": false
+    "useTabs": false,
+    "importOrder": [
+        "^@?(?!src|lib|docs)\\w+",
+        "^@src/(.*)$",
+        "^@lib/(.*)$",
+        "^@ui/(.*)$"
+    ],
+    "importOrderSeparation": true,
+    "importOrderSortSpecifiers": true
 }
