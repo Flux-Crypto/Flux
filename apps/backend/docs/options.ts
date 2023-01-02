@@ -1,6 +1,7 @@
+import { UserExample } from "./schemas/apiSchema";
 import jsonSchema from "./schemas/json-schema.json";
 
-const swaggerOptions = {
+export const swaggerOptions = {
     openapi: {
         openapi: "3.0.3",
         info: {
@@ -10,13 +11,16 @@ const swaggerOptions = {
         },
         servers: [
             {
-                url: "http://localhost"
+                url: "http://127.0.0.1:8000"
             }
         ],
         tags: [{ name: "users", description: "User specific endpoints" }],
         components: {
             schemas: {
-                User: jsonSchema.definitions.User,
+                User: {
+                    ...jsonSchema.definitions.User,
+                    example: UserExample
+                },
                 Wallet: jsonSchema.definitions.Wallet,
                 Transaction: jsonSchema.definitions.Transaction
             }
@@ -25,7 +29,7 @@ const swaggerOptions = {
     hideUntagged: true
 };
 
-const swaggerUIOptions = {
+export const swaggerUIOptions = {
     routePrefix: "/docs",
     uiConfig: {
         docExpansion: "list",
@@ -36,9 +40,4 @@ const swaggerUIOptions = {
         swaggerObject,
     transformSpecificationClone: true,
     exposeRoute: true
-};
-
-export default {
-    swaggerOptions,
-    swaggerUIOptions
 };
