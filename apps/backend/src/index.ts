@@ -19,7 +19,7 @@ import transactions from "@src/routes/explorer/transactions";
 import { swaggerOptions, swaggerUIOptions } from "@docs/options";
 
 const runServer = async () => {
-    const server = fastify({
+    const fastifyServer = fastify({
         logger: envToLogger.development ?? true
     });
 

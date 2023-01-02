@@ -25,10 +25,9 @@ const transactionsRoute = (
         getSchema,
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { userId } = request.params as UserRequestParams;
-            if (!userId) {
+            if (!userId) 
                 log(request.log.error, reply, 400, "Missing user id parameter");
-                return;
-            }
+            
 
             try {
                 const transactions = await prisma.user.findMany({
@@ -57,22 +56,20 @@ const transactionsRoute = (
         postSchema,
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { userId } = request.params as UserRequestParams;
-            if (!userId) {
+            if (!userId) 
                 log(request.log.error, reply, 400, "Missing user id parameter");
-                return;
-            }
+            
 
             const { transaction: transactionData } =
                 request.body as UserTransactionsRequestBody;
-            if (!transactionData) {
+            if (!transactionData) 
                 log(
                     request.log.error,
                     reply,
                     400,
                     "Missing transaction parameter"
                 );
-                return;
-            }
+            
 
             try {
                 const transaction = await prisma.user.update({
@@ -109,15 +106,14 @@ const transactionsRoute = (
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { userId, transactionId } =
                 request.params as UsersTransactionsRequestParams;
-            if (!userId || !transactionId) {
+            if (!userId || !transactionId) 
                 log(
                     request.log.error,
                     reply,
                     400,
                     "Missing user id or transaction id parameter"
                 );
-                return;
-            }
+            
 
             try {
                 await prisma.user.update({
