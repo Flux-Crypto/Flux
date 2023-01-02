@@ -5,7 +5,7 @@ import { UserIndexSchema } from "@lib/types/jsonObjects";
 import { UserRequestParams } from "@lib/types/routeParams";
 import { logError } from "@lib/utils";
 
-const user = (
+const userRoute = (
     server: FastifyInstance,
     { get: getSchema }: UserIndexSchema,
     done: () => void
@@ -17,10 +17,7 @@ const user = (
         getSchema,
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { userId } = request.params as UserRequestParams;
-            if (!userId) {
-                logError(reply, 404, "missing user id param");
-                return;
-            }
+            if (!userId) logError(reply, 400, "missing user id param");
 
             try {
                 const user = await prisma.user.findUnique({
@@ -42,4 +39,4 @@ const user = (
     done();
 };
 
-export default user;
+export default userRoute;

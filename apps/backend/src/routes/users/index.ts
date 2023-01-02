@@ -37,7 +37,7 @@ const indexRoute = (
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { email, name } = request.body as UsersRequestBody;
 
-            if (!email) logError(reply, 404, "missing email param");
+            if (!email) logError(reply, 400, "missing email param");
 
             try {
                 const user = await prisma.user.create({
