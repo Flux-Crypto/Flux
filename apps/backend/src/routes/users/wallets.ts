@@ -18,21 +18,17 @@ const walletsRoute = (
 
     server.post("/", postSchema, async (request, reply) => {
         const { userId } = request.params as UserRequestParams;
-        if (!userId) {
+        if (!userId)
             log(request.log.error, reply, 400, "Missing user id parameter");
-            return;
-        }
 
         const { walletAddress } = request.body as UserWalletsRequestBody;
-        if (!walletAddress) {
+        if (!walletAddress)
             log(
                 request.log.error,
                 reply,
                 400,
                 "Missing wallet address parameter"
             );
-            return;
-        }
 
         try {
             const checkWallet = await prisma.wallet.findUnique({
@@ -78,15 +74,13 @@ const walletsRoute = (
     server.delete("/:walletAddress", deleteSchema, async (request, reply) => {
         const { userId, walletAddress } =
             request.params as UserWalletsRequestParams;
-        if (!userId || !walletAddress) {
+        if (!userId || !walletAddress) 
             log(
                 request.log.error,
                 reply,
                 400,
                 "Missing user id or wallet address parameter"
             );
-            return;
-        }
 
         // TODO: delete wallet connection, delete wallet if no connections
         try {

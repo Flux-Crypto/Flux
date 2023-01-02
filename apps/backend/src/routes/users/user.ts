@@ -17,10 +17,8 @@ const userRoute = (
         getSchema,
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { userId } = request.params as UserRequestParams;
-            if (!userId) {
+            if (!userId) 
                 log(request.log.error, reply, 400, "Missing user id parameter");
-                return;
-            }
 
             try {
                 const user = await prisma.user.findUnique({
