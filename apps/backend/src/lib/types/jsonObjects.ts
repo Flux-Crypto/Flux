@@ -1,10 +1,10 @@
 /**
  * /users
  */
-import UsersIndexSchemaJSON from "@docs/schemas/users/index.json";
-import UserTransactionsSchemaJSON from "@docs/schemas/users/transactions.json";
-import UserSchemaJSON from "@docs/schemas/users/user.json";
-import UserWalletsSchemaJSON from "@docs/schemas/users/wallets.json";
+import UsersIndexSchemaJSON from "@docs/schemas/users";
+import UserTransactionsSchemaJSON from "@docs/schemas/users/transactions";
+import UserSchemaJSON from "@docs/schemas/users/user";
+import UserWalletsSchemaJSON from "@docs/schemas/users/wallets";
 
 export type UsersIndexSchema = typeof UsersIndexSchemaJSON;
 export type UserIndexSchema = typeof UserSchemaJSON;

@@ -1,18 +1,19 @@
+import { AssetTransfersCategory, SortingOrder } from "alchemy-sdk";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import _ from "lodash";
 
-import { log } from "@lib/logger";
+import { logger } from "@lib/logger";
 import { AlchemyOptions } from "@lib/types/apiOptions";
 import { AddressRequestParams } from "@lib/types/routeParams";
 import { alchemy } from "@src/lib/blockchain";
-
-const MAX_TWENTY_FIVE_TXNS_HEX = "0x19";
 
 const transactions = (
     server: FastifyInstance,
     _opts: unknown,
     done: () => void
 ) => {
+    const { log } = server;
+
     server.get(
         "/:address",
         async (request: FastifyRequest, reply: FastifyReply) => {
@@ -20,23 +21,26 @@ const transactions = (
             const { headers } = request;
             // Check for wallet address parameter
             if (!address) {
-                log(request.log.error, reply, 400, "Missing address parameter");
+                logger(log.error, reply, 400, "Missing address parameter");
             }
 
             // Validate wallet address
             const WALLET_ADDRESS_REGEX = /^0[xX][0-9a-fA-F]+$/g;
             if (!address.match(WALLET_ADDRESS_REGEX)) {
-                log(request.log.error, reply, 400, "Invalid address");
+                logger(log.error, reply, 400, "Invalid address");
             }
 
             const alchemyOpts: AlchemyOptions = {
                 fromBlock: "0x0",
                 fromAddress: address,
                 excludeZeroValue: true,
-                order: "desc",
+                order: SortingOrder.DESCENDING,
                 withMetadata: true,
-                maxCount: MAX_TWENTY_FIVE_TXNS_HEX,
-                category: ["external", "erc20"]
+                maxCount: 25,
+                category: [
+                    AssetTransfersCategory.EXTERNAL,
+                    AssetTransfersCategory.ERC20
+                ]
             };
 
             // Multiple pages of data

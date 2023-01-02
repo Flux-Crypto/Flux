@@ -1,7 +1,7 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
-import { log } from "@lib/logger";
+import { logger } from "@lib/logger";
 import { UserTransactionsSchema } from "@lib/types/jsonObjects";
 import {
     UserRequestParams,
@@ -18,17 +18,15 @@ const transactionsRoute = (
     }: UserTransactionsSchema,
     done: () => void
 ) => {
-    const { prisma } = server;
+    const { prisma, log } = server;
 
     server.get(
         "/",
         getSchema,
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { userId } = request.params as UserRequestParams;
-            if (!userId) {
-                log(request.log.error, reply, 400, "Missing user id parameter");
-                return;
-            }
+            if (!userId)
+                logger(log.error, reply, 400, "Missing user id parameter");
 
             try {
                 const transactions = await prisma.user.findMany({
@@ -43,11 +41,11 @@ const transactionsRoute = (
                 reply.send(transactions);
             } catch (e) {
                 if (e instanceof PrismaClientKnownRequestError) {
-                    request.log.fatal(e);
+                    log.fatal(e);
                     reply.code(500).send("Server error");
                 }
 
-                log(request.log.error, reply, 500, "Couldn't get transactions");
+                logger(log.error, reply, 500, "Couldn't get transactions");
             }
         }
     );
@@ -57,22 +55,13 @@ const transactionsRoute = (
         postSchema,
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { userId } = request.params as UserRequestParams;
-            if (!userId) {
-                log(request.log.error, reply, 400, "Missing user id parameter");
-                return;
-            }
+            if (!userId)
+                logger(log.error, reply, 400, "Missing user id parameter");
 
             const { transaction: transactionData } =
                 request.body as UserTransactionsRequestBody;
-            if (!transactionData) {
-                log(
-                    request.log.error,
-                    reply,
-                    400,
-                    "Missing transaction parameter"
-                );
-                return;
-            }
+            if (!transactionData)
+                logger(log.error, reply, 400, "Missing transaction parameter");
 
             try {
                 const transaction = await prisma.user.update({
@@ -89,16 +78,11 @@ const transactionsRoute = (
                 reply.code(201).send(transaction);
             } catch (e) {
                 if (e instanceof PrismaClientKnownRequestError) {
-                    request.log.fatal(e);
+                    log.fatal(e);
                     reply.code(500).send("Server error");
                 }
 
-                log(
-                    request.log.error,
-                    reply,
-                    500,
-                    "Couldn't create transaction"
-                );
+                logger(log.error, reply, 500, "Couldn't create transaction");
             }
         }
     );
@@ -109,15 +93,13 @@ const transactionsRoute = (
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { userId, transactionId } =
                 request.params as UsersTransactionsRequestParams;
-            if (!userId || !transactionId) {
-                log(
-                    request.log.error,
+            if (!userId || !transactionId)
+                logger(
+                    log.error,
                     reply,
                     400,
                     "Missing user id or transaction id parameter"
                 );
-                return;
-            }
 
             try {
                 await prisma.user.update({
@@ -136,11 +118,11 @@ const transactionsRoute = (
                 });
             } catch (e) {
                 if (e instanceof PrismaClientKnownRequestError) {
-                    request.log.fatal(e);
+                    log.fatal(e);
                     reply.code(500).send("Server error");
                 }
 
-                log(request.log.error, reply, 500, "Couldn't delete wallet");
+                logger(log.error, reply, 500, "Couldn't delete wallet");
             }
         }
     );

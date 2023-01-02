@@ -1,38 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
-    "User": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "name": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "wallets": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Wallet"
-          }
-        },
-        "transactions": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Transaction"
-          }
-        }
-      },
-      "required": [
-        "email"
-      ]
-    },
     "Wallet": {
       "type": "object",
       "properties": {
@@ -52,10 +20,64 @@
             "null"
           ],
           "default": ""
+        },
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          }
         }
       },
       "required": [
-        "address"
+        "address",
+        "userIds"
+      ]
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "processorAPIKeys": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "exchangeAPIKeys": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "wallets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Wallet"
+          }
+        },
+        "transactions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Transaction"
+          }
+        }
+      },
+      "required": [
+        "email",
+        "processorAPIKeys",
+        "exchangeAPIKeys",
+        "walletAddresses"
       ]
     },
     "Transaction": {
@@ -117,6 +139,9 @@
   },
   "type": "object",
   "properties": {
+    "wallet": {
+      "$ref": "#/definitions/Wallet"
+    },
     "user": {
       "$ref": "#/definitions/User"
     }

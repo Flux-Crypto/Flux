@@ -3,11 +3,10 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 const reset = async () => {
-    const deleteTransactions = prisma.transaction.deleteMany();
     const deleteWallets = prisma.wallet.deleteMany();
     const deleteUsers = prisma.user.deleteMany();
 
-    await prisma.$transaction([deleteTransactions, deleteWallets, deleteUsers]);
+    await prisma.$transaction([deleteWallets, deleteUsers]);
 };
 
 const disconnect = async () => {
@@ -23,20 +22,52 @@ const disconnect = async () => {
 const main = async () => {
     await reset();
 
-    const alice = await prisma.user.upsert({
-        where: { email: "alice@prisma.io" },
-        update: {},
-        create: {
+    await prisma.user.create({
+        data: {
             email: "alice@prisma.io",
-            name: "Alice"
+            name: "Alice",
+            processorAPIKeys: ["abcdef12345"],
+            exchangeAPIKeys: ["uvwxyz67890"],
+            wallets: {
+                create: [
+                    {
+                        address: "0x95222290dd7278aa3ddd389cc1e1d165cc4bafe5",
+                        readOnly: false,
+                        seedPhrase:
+                            "inquiry blame advance neglect foster time debris uncover hen ten indicate dinosaur"
+                    },
+                    {
+                        address: "0xd0451f62be92c2e45dbafbf0a9aa5fd42f1798ea"
+                    }
+                ]
+            }
         }
     });
-    const bob = await prisma.user.upsert({
-        where: { email: "bob@prisma.io" },
-        update: {},
-        create: {
+
+    await prisma.user.create({
+        data: {
             email: "bob@prisma.io",
-            name: "Bob"
+            name: "Bob",
+            wallets: {
+                connect: [
+                    {
+                        address: "0x95222290dd7278aa3ddd389cc1e1d165cc4bafe5"
+                    },
+                    {
+                        address: "0xd0451f62be92c2e45dbafbf0a9aa5fd42f1798ea"
+                    }
+                ]
+            },
+            transactions: {
+                date: new Date("06/14/2017 20:57:35"),
+                receivedQuantity: 0.5,
+                receivedCurrency: "BTC",
+                sentQuantity: 4005.8,
+                sentCurrency: "USD",
+                feeAmount: 0.00001,
+                feeCurrency: "BTC",
+                tag: "PAYMENT"
+            }
         }
     });
 

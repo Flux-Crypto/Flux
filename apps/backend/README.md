@@ -18,13 +18,13 @@ To develop the API, here are a few steps to get started:
 
 1. Create an endpoint in `src/routes`. Be sure to update route parameters in `types/routeParams.ts`.
 
-2. If it's a new base route, register it in `index.ts`.
+2. If it's a new base route, register it in `src/index.ts`. Also, update `docs/options.ts` accordingly.
 
 3. Create a `.json` schema in `docs/schemas`, naming it consistently with the route (or extend on an existing one if not a base route). Structure it according to [OpenAPI 3.0.3 standards](https://swagger.io/specification/).
 
     Update the `types/jsonObjects.ts` file to include the new route.
 
-5. If you want to see the API live, make sure the backend server is running with the following command (from the root directory):
+> Optional: If you want to see the API live, make sure the backend server is running with the following command (from the root directory):
 
 ```sh
     npm run dev:backend
@@ -44,15 +44,33 @@ To work on the database, here's how to get started:
 
 1. Update the `prisma/schema.prisma` file, modifying whatever you need to.
 
-2. Run the following command (from the project root directory) to open Prisma Studio and view the live database:
+> Optional: Run the following command (from the project root directory) to open Prisma Studio and view the live database:
 
 ```sh
     npm run studio
 ```
 
-3. Run the following command (from the project root directory) to commit your changes to the Prisma schema:
+2. Run the following command (from the project root directory) to commit your changes to the Prisma schema:
 
 ```sh
     npm run generate
+```
+
+3. Update the Swagger schema in `docs/schemas/apiSchema.ts` to reflect the model changes. If it's a new model, then create a new schema and corresponding example.
+
+4. If it's a new model, create a new file for it under the respective route name where it's used. Be sure to add it to `docs/options.ts` within the following object:
+
+```js
+    export const swaggerOptions = {
+        openapi: {
+            ...
+            components: {
+                schemas: {
+                    // TODO: new model here
+                }
+            }
+        },
+        hideUntagged: true
+    };
 ```
 

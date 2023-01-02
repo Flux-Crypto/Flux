@@ -13,10 +13,12 @@ datasource db {
     url      = env("DB_URL")
 }
 
-type Wallet {
-    address    String
+model Wallet {
+    address    String   @id @map("_id")
     readOnly   Boolean? @default(true)
     seedPhrase String?  @default("")
+    userIds    String[] @db.ObjectId
+    users      User[]   @relation(fields: [userIds], references: [id])
 }
 
 enum TxnTag {
@@ -53,9 +55,9 @@ model User {
     name             String?
     processorAPIKeys String[]
     exchangeAPIKeys  String[]
-    wallets          Wallet[]
+    walletAddresses  String[]      @unique
+    wallets          Wallet[]      @relation(fields: [walletAddresses], references: [address])
     transactions     Transaction[]
 
-    @@unique([wallets.address, wallets.seedPhrase, transactions.id])
-    @@index([wallets.address, transactions.id])
+    @@index([transactions.id])
 }
