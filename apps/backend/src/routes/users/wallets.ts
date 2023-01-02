@@ -1,3 +1,6 @@
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
+import { FastifyInstance } from "fastify";
+
 import { UserWalletsSchema } from "@lib/types/jsonObjects";
 import {
     UserRequestParams,
@@ -5,8 +8,6 @@ import {
     UserWalletsRequestParams
 } from "@lib/types/routeParams";
 import { logError } from "@lib/utils";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
-import { FastifyInstance } from "fastify";
 
 const wallets = (
     server: FastifyInstance,

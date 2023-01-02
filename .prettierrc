@@ -10,7 +10,8 @@
         "^@lib/(.*)$",
         "^@routes/(.*)$",
         "^@plugins/(.*)$",
-        "^@ui/(.*)$"
+        "^@docs/(.*)$",
+        "^[./]"
     ],
     "importOrderSeparation": true,
     "importOrderSortSpecifiers": true

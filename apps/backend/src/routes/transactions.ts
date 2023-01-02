@@ -1,43 +1,43 @@
-import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
-import _ from 'lodash';
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import _ from "lodash";
 
-import { alchemy } from '@src/utils/blockchain';
+import { alchemy } from "@src/utils/blockchain";
 
-import { AlchemyOptions } from '@lib/types/apiOptions';
-import { AddressRequestParams } from '@lib/types/routeParams';
-import { logError } from '@lib/utils';
+import { AlchemyOptions } from "@lib/types/apiOptions";
+import { AddressRequestParams } from "@lib/types/routeParams";
+import { logError } from "@lib/utils";
 
-const MAX_TWENTY_FIVE_TXNS_HEX = '0x19';
+const MAX_TWENTY_FIVE_TXNS_HEX = "0x19";
 
 const transactions = (
     server: FastifyInstance,
     _opts: unknown,
-    done: () => void,
+    done: () => void
 ) => {
     server.get(
-        '/:address',
+        "/:address",
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { address } = request.params as AddressRequestParams;
             const { headers } = request;
             // Check for wallet address parameter
             if (!address) {
-                logError(reply, 400, 'Missing address parameter');
+                logError(reply, 400, "Missing address parameter");
             }
 
             // Validate wallet address
             const WALLET_ADDRESS_REGEX = /^0[xX][0-9a-fA-F]+$/g;
             if (!address.match(WALLET_ADDRESS_REGEX)) {
-                logError(reply, 400, 'Invalid address');
+                logError(reply, 400, "Invalid address");
             }
 
             const alchemyOpts: AlchemyOptions = {
-                fromBlock: '0x0',
+                fromBlock: "0x0",
                 fromAddress: address,
                 excludeZeroValue: true,
-                order: 'desc',
+                order: "desc",
                 withMetadata: true,
                 maxCount: MAX_TWENTY_FIVE_TXNS_HEX,
-                category: ['external', 'erc20'],
+                category: ["external", "erc20"]
             };
 
             // Multiple pages of data
@@ -45,10 +45,10 @@ const transactions = (
             const PAGE_KEY_REGEX =
                 /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
             if (
-                headers['page-key'] &&
-                (headers['page-key'] as string).match(PAGE_KEY_REGEX)
+                headers["page-key"] &&
+                (headers["page-key"] as string).match(PAGE_KEY_REGEX)
             ) {
-                alchemyOpts.pageKey = request.headers['page-key'] as string;
+                alchemyOpts.pageKey = request.headers["page-key"] as string;
             }
 
             const response = await alchemy.core.getAssetTransfers(alchemyOpts);
@@ -59,31 +59,31 @@ const transactions = (
                 reply.send({
                     success: true,
                     data: {
-                        message: 'No transactions for this wallet.',
-                    },
+                        message: "No transactions for this wallet."
+                    }
                 });
             }
 
             const results = transfers.map((transfer: unknown) =>
                 _.pick(transfer, [
-                    'blockNum',
-                    'hash',
-                    'from',
-                    'to',
-                    'value',
-                    'asset',
-                    'metadata',
-                    'pageKey',
-                ]),
+                    "blockNum",
+                    "hash",
+                    "from",
+                    "to",
+                    "value",
+                    "asset",
+                    "metadata",
+                    "pageKey"
+                ])
             );
 
             reply.send({
                 success: true,
                 data: {
-                    results,
-                },
+                    results
+                }
             });
-        },
+        }
     );
 
     done();

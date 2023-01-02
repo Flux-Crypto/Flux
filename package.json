@@ -8,6 +8,8 @@
         "packages/*"
     ],
     "scripts": {
+        "format:backend": "npx prettier -w apps/backend/src/**/*.ts",
+        "lint:backend": "npm run format:backend && npx eslint --ext .ts,.json,.prisma --fix-dry-run",
         "test": "echo \"Error: no test specified\" && exit 1",
         "dev:frontend": "npm run dev --workspace=frontend",
         "dev:backend": "npm run dev --workspace=backend",
