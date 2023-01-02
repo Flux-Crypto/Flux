@@ -2,7 +2,6 @@
  * Wallet
  */
 export const WalletSchema = {
-    id: { type: "string" },
     address: { type: "string" },
     userId: { type: "string" },
     readOnly: { type: "boolean" },
@@ -10,7 +9,6 @@ export const WalletSchema = {
 };
 
 export const WalletExample = {
-    id: "00000020f51bb4362eee2a4d",
     address: "0x95222290dd7278aa3ddd389cc1e1d165cc4bafe5",
     userId: "507f1f77bcf86cd799439011",
     readOnly: true,
@@ -109,6 +107,6 @@ export const UserExample = {
     name: "John Doe",
     processorAPIKeys: ["abcdef12345"],
     exchangeAPIKeys: ["uvwxyz67890"],
-    wallets: ["00000020f51bb4362eee2a4d"],
+    wallets: ["0x95222290dd7278aa3ddd389cc1e1d165cc4bafe5"],
     transactions: ["63b27824cc5b18dda70b8442"]
 };

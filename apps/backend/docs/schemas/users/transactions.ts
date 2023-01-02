@@ -56,16 +56,7 @@ export default {
             },
             body: {
                 type: "object",
-                properties: _.pick(TransactionSchema, [
-                    "date",
-                    "receivedQuantity",
-                    "receivedCurrency",
-                    "sentQuantity",
-                    "sentCurrency",
-                    "feeAmount",
-                    "feeCurrency",
-                    "tag"
-                ])
+                properties: _.omit(TransactionSchema, ["id"])
             },
             response: {
                 "201": {
