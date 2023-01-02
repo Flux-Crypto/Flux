@@ -8,6 +8,7 @@ import {
     UserWalletsRequestBody,
     UserWalletsRequestParams
 } from "@lib/types/routeParams";
+import HttpStatus from "@src/lib/types/httpStatus";
 
 const walletsRoute = (
     server: FastifyInstance,
@@ -18,13 +19,30 @@ const walletsRoute = (
 
     server.post("/", postSchema, async (request, reply) => {
         const { userId } = request.params as UserRequestParams;
-        if (!userId) logger(log.error, reply, 400, "Missing user id parameter");
+        if (!userId)
+            logger(
+                log.error,
+                reply,
+                HttpStatus.BAD_REQUEST,
+                "Missing user id parameter"
+            );
 
-        const { walletAddress } = request.body as UserWalletsRequestBody;
+        const { walletAddress, seedPhrase } =
+            request.body as UserWalletsRequestBody;
         if (!walletAddress)
-            logger(log.error, reply, 400, "Missing wallet address parameter");
+            logger(
+                log.error,
+                reply,
+                HttpStatus.BAD_REQUEST,
+                "Missing wallet address parameter"
+            );
 
         try {
+            if (seedPhrase) {
+                // check for authentication
+                // auth or kick
+            }
+
             const checkWallet = await prisma.wallet.findUnique({
                 where: {
                     address: walletAddress
@@ -35,34 +53,41 @@ const walletsRoute = (
                 const wallet = await prisma.wallet.create({
                     data: {
                         address: walletAddress,
-                        userId
+                        [seedPhrase ? "rdwrUsers" : "rdUsers"]: {
+                            connect: { id: userId }
+                        }
                     }
                 });
 
                 reply.code(201).send(wallet);
             }
 
-            if (!checkWallet?.userId) {
-                const wallet = await prisma.wallet.update({
-                    where: {
-                        address: walletAddress
-                    },
-                    data: {
-                        userId
+            const wallet = await prisma.wallet.update({
+                where: {
+                    address: walletAddress
+                },
+                data: {
+                    [seedPhrase ? "rdwrUsers" : "rdUsers"]: {
+                        connect: { id: userId }
                     }
-                });
+                }
+            });
 
-                reply.send(wallet);
-            }
-
-            logger(log.error, reply, 409, "wallet already exists");
+            reply.send(wallet);
         } catch (e) {
             if (e instanceof PrismaClientKnownRequestError) {
                 log.fatal(e);
-                reply.code(500).send("Server error");
+                reply
+                    .code(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .send("Server error");
             }
 
-            logger(log.error, reply, 500, "Couldn't create wallet");
+            logger(
+                log.error,
+                reply,
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "Couldn't create wallet"
+            );
         }
     });
 
@@ -73,24 +98,52 @@ const walletsRoute = (
             logger(
                 log.error,
                 reply,
-                400,
+                HttpStatus.BAD_REQUEST,
                 "Missing user id or wallet address parameter"
             );
 
-        // TODO: delete wallet connection, delete wallet if no connections
         try {
-            await prisma.wallet.delete({
+            const { rdUsers, rdwrUsers } = await prisma.wallet.update({
                 where: {
                     address: walletAddress
+                },
+                data: {
+                    rdUsers: {
+                        disconnect: [{ id: userId }]
+                    },
+                    rdwrUsers: {
+                        disconnect: [{ id: userId }]
+                    }
+                },
+                select: {
+                    rdUsers: true,
+                    rdwrUsers: true
                 }
             });
+
+            if (!rdUsers && !rdwrUsers) {
+                await prisma.wallet.delete({
+                    where: {
+                        address: walletAddress
+                    }
+                });
+            }
+
+            reply.code(HttpStatus.NO_CONTENT);
         } catch (e) {
             if (e instanceof PrismaClientKnownRequestError) {
                 log.fatal(e);
-                reply.code(500).send("Server error");
+                reply
+                    .code(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .send("Server error");
             }
 
-            logger(log.error, reply, 500, "Couldn't delete wallet");
+            logger(
+                log.error,
+                reply,
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "Couldn't delete wallet"
+            );
         }
     });
 

@@ -8,6 +8,7 @@ import {
     UserTransactionsRequestBody,
     UsersTransactionsRequestParams
 } from "@lib/types/routeParams";
+import HttpStatus from "@src/lib/types/httpStatus";
 
 const transactionsRoute = (
     server: FastifyInstance,
@@ -26,7 +27,12 @@ const transactionsRoute = (
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { userId } = request.params as UserRequestParams;
             if (!userId)
-                logger(log.error, reply, 400, "Missing user id parameter");
+                logger(
+                    log.error,
+                    reply,
+                    HttpStatus.BAD_REQUEST,
+                    "Missing user id parameter"
+                );
 
             try {
                 const transactions = await prisma.user.findMany({
@@ -42,10 +48,17 @@ const transactionsRoute = (
             } catch (e) {
                 if (e instanceof PrismaClientKnownRequestError) {
                     log.fatal(e);
-                    reply.code(500).send("Server error");
+                    reply
+                        .code(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .send("Server error");
                 }
 
-                logger(log.error, reply, 500, "Couldn't get transactions");
+                logger(
+                    log.error,
+                    reply,
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Couldn't get transactions"
+                );
             }
         }
     );
@@ -56,12 +69,22 @@ const transactionsRoute = (
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { userId } = request.params as UserRequestParams;
             if (!userId)
-                logger(log.error, reply, 400, "Missing user id parameter");
+                logger(
+                    log.error,
+                    reply,
+                    HttpStatus.BAD_REQUEST,
+                    "Missing user id parameter"
+                );
 
             const { transaction: transactionData } =
                 request.body as UserTransactionsRequestBody;
             if (!transactionData)
-                logger(log.error, reply, 400, "Missing transaction parameter");
+                logger(
+                    log.error,
+                    reply,
+                    HttpStatus.BAD_REQUEST,
+                    "Missing transaction parameter"
+                );
 
             try {
                 const transaction = await prisma.user.update({
@@ -79,10 +102,17 @@ const transactionsRoute = (
             } catch (e) {
                 if (e instanceof PrismaClientKnownRequestError) {
                     log.fatal(e);
-                    reply.code(500).send("Server error");
+                    reply
+                        .code(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .send("Server error");
                 }
 
-                logger(log.error, reply, 500, "Couldn't create transaction");
+                logger(
+                    log.error,
+                    reply,
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Couldn't create transaction"
+                );
             }
         }
     );
@@ -97,7 +127,7 @@ const transactionsRoute = (
                 logger(
                     log.error,
                     reply,
-                    400,
+                    HttpStatus.BAD_REQUEST,
                     "Missing user id or transaction id parameter"
                 );
 
@@ -119,10 +149,17 @@ const transactionsRoute = (
             } catch (e) {
                 if (e instanceof PrismaClientKnownRequestError) {
                     log.fatal(e);
-                    reply.code(500).send("Server error");
+                    reply
+                        .code(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .send("Server error");
                 }
 
-                logger(log.error, reply, 500, "Couldn't delete wallet");
+                logger(
+                    log.error,
+                    reply,
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Couldn't delete wallet"
+                );
             }
         }
     );

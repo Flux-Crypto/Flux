@@ -21,13 +21,23 @@ const transactions = (
             const { headers } = request;
             // Check for wallet address parameter
             if (!address) {
-                logger(log.error, reply, 400, "Missing address parameter");
+                logger(
+                    log.error,
+                    reply,
+                    HttpStatus.BAD_REQUEST,
+                    "Missing address parameter"
+                );
             }
 
             // Validate wallet address
             const WALLET_ADDRESS_REGEX = /^0[xX][0-9a-fA-F]+$/g;
             if (!address.match(WALLET_ADDRESS_REGEX)) {
-                logger(log.error, reply, 400, "Invalid address");
+                logger(
+                    log.error,
+                    reply,
+                    HttpStatus.BAD_REQUEST,
+                    "Invalid address"
+                );
             }
 
             const alchemyOpts: AlchemyOptions = {

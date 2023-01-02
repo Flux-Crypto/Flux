@@ -5,6 +5,7 @@ import { logger } from "@lib/logger";
 import { UsersIndexSchema } from "@lib/types/jsonObjects";
 import { UsersRequestBody } from "@lib/types/routeParams";
 import { FastifyDone } from "@src/lib/types/fastifyTypes";
+import HttpStatus from "@src/lib/types/httpStatus";
 
 const indexRoute = (
     server: FastifyInstance,
@@ -24,10 +25,17 @@ const indexRoute = (
             } catch (e) {
                 if (e instanceof PrismaClientKnownRequestError) {
                     log.fatal(e);
-                    reply.code(500).send("Server error");
+                    reply
+                        .code(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .send("Server error");
                 }
 
-                logger(log.error, reply, 500, "Couldn't get users.");
+                logger(
+                    log.error,
+                    reply,
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Couldn't get users."
+                );
             }
         }
     );
@@ -39,7 +47,12 @@ const indexRoute = (
             const { email, name } = request.body as UsersRequestBody;
 
             if (!email)
-                logger(log.error, reply, 404, "Missing email parameters");
+                logger(
+                    log.error,
+                    reply,
+                    HttpStatus.BAD_REQUEST,
+                    "Missing email parameters"
+                );
 
             try {
                 const user = await prisma.user.create({
@@ -53,10 +66,17 @@ const indexRoute = (
             } catch (e) {
                 if (e instanceof PrismaClientKnownRequestError) {
                     log.fatal(e);
-                    reply.code(500).send("Server error");
+                    reply
+                        .code(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .send("Server error");
                 }
 
-                logger(log.error, reply, 500, "Couldn't create user.");
+                logger(
+                    log.error,
+                    reply,
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Couldn't create user."
+                );
             }
         }
     );

@@ -4,6 +4,7 @@ import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { logger } from "@lib/logger";
 import { UserIndexSchema } from "@lib/types/jsonObjects";
 import { UserRequestParams } from "@lib/types/routeParams";
+import HttpStatus from "@src/lib/types/httpStatus";
 
 const userRoute = (
     server: FastifyInstance,
@@ -18,7 +19,12 @@ const userRoute = (
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { userId } = request.params as UserRequestParams;
             if (!userId)
-                logger(log.error, reply, 400, "Missing user id parameter");
+                logger(
+                    log.error,
+                    reply,
+                    HttpStatus.BAD_REQUEST,
+                    "Missing user id parameter"
+                );
 
             try {
                 const user = await prisma.user.findUnique({
@@ -31,9 +37,16 @@ const userRoute = (
             } catch (e) {
                 if (e instanceof PrismaClientKnownRequestError) {
                     log.fatal(e);
-                    reply.code(500).send("Server error");
+                    reply
+                        .code(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .send("Server error");
                 }
-                logger(log.error, reply, 500, "Couldn't get user");
+                logger(
+                    log.error,
+                    reply,
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Couldn't get user"
+                );
             }
         }
     );
