@@ -5,11 +5,12 @@ module.exports = {
     tabWidth: 4,
     useTabs: false,
     importOrder: [
-        "^@?(?!src|lib|docs)\\w+",
+        "^@?(?!src|lib|docs|routes|plugins)\\w+",
         "^@src/(.*)$",
         "^@lib/(.*)$",
-        "^@docs/(.*)$",
-        "^[./]"
+        "^@routes/(.*)$",
+        "^@plugins/(.*)$",
+        "^@ui/(.*)$"
     ],
     importOrderSeparation: true,
     importOrderSortSpecifiers: true

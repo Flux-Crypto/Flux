@@ -5,9 +5,11 @@
     "tabWidth": 4,
     "useTabs": false,
     "importOrder": [
-        "^@?(?!src|lib|docs)\\w+",
+        "^@?(?!src|lib|docs|routes|plugins)\\w+",
         "^@src/(.*)$",
         "^@lib/(.*)$",
+        "^@routes/(.*)$",
+        "^@plugins/(.*)$",
         "^@ui/(.*)$"
     ],
     "importOrderSeparation": true,
