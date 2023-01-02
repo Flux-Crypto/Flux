@@ -4,7 +4,7 @@ import _ from "lodash";
 import { log } from "@lib/logger";
 import { AlchemyOptions } from "@lib/types/apiOptions";
 import { AddressRequestParams } from "@lib/types/routeParams";
-import { alchemy } from "@src/utils/blockchain";
+import { alchemy } from "@src/lib/blockchain";
 
 const MAX_TWENTY_FIVE_TXNS_HEX = "0x19";
 

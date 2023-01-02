@@ -1,12 +1,14 @@
+import {
+    AssetTransfersCategory,
+    AssetTransfersWithMetadataParams,
+    SortingOrder
+} from "alchemy-sdk";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import _ from "lodash";
 
 import { log } from "@lib/logger";
-import { AlchemyOptions } from "@lib/types/apiOptions";
 import { AddressRequestParams } from "@lib/types/routeParams";
-import { alchemy } from "@src/utils/blockchain";
-
-const MAX_TWENTY_FIVE_TXNS_HEX = "0x19";
+import { alchemy } from "@src/lib/blockchain";
 
 const transactions = (
     server: FastifyInstance,
@@ -29,14 +31,17 @@ const transactions = (
                 log(request.log.error, reply, 400, "Invalid address");
             }
 
-            const alchemyOpts: AlchemyOptions = {
+            const alchemyOpts: AssetTransfersWithMetadataParams = {
                 fromBlock: "0x0",
                 fromAddress: address,
                 excludeZeroValue: true,
-                order: "desc",
+                order: SortingOrder.DESCENDING,
                 withMetadata: true,
-                maxCount: MAX_TWENTY_FIVE_TXNS_HEX,
-                category: ["external", "erc20"]
+                maxCount: 25,
+                category: [
+                    AssetTransfersCategory.EXTERNAL,
+                    AssetTransfersCategory.ERC20
+                ]
             };
 
             // Multiple pages of data
