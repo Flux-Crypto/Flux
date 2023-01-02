@@ -9,6 +9,15 @@ export const WalletSchema = {
     seedPhrase: { type: "string" }
 };
 
+export const WalletExample = {
+    id: "00000020f51bb4362eee2a4d",
+    address: "0x95222290dd7278aa3ddd389cc1e1d165cc4bafe5",
+    userId: "507f1f77bcf86cd799439011",
+    readOnly: true,
+    seedPhrase:
+        "inquiry blame advance neglect foster time debris uncover hen ten indicate dinosaur"
+};
+
 /**
  * Transaction
  */

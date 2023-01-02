@@ -88,6 +88,7 @@ const walletsRoute = (
             return;
         }
 
+        // TODO: delete wallet connection, delete wallet if no connections
         try {
             await prisma.wallet.delete({
                 where: {
