@@ -7,8 +7,16 @@ import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import _ from "lodash";
 
 import { log } from "@lib/logger";
+<<<<<<< HEAD
 import { AddressRequestParams } from "@lib/types/routeParams";
 import { alchemy } from "@src/lib/blockchain";
+=======
+import { AlchemyOptions } from "@lib/types/apiOptions";
+import { AddressRequestParams } from "@lib/types/routeParams";
+import { alchemy } from "@src/utils/blockchain";
+
+const MAX_TWENTY_FIVE_TXNS_HEX = "0x19";
+>>>>>>> CU-860pck1t4_Store_user_API_keys
 
 const transactions = (
     server: FastifyInstance,

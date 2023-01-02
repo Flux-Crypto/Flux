@@ -4,7 +4,11 @@ import _ from "lodash";
 import { log } from "@lib/logger";
 import { AlchemyOptions } from "@lib/types/apiOptions";
 import { AddressRequestParams } from "@lib/types/routeParams";
+<<<<<<< HEAD
 import { alchemy } from "@src/lib/blockchain";
+=======
+import { alchemy } from "@src/utils/blockchain";
+>>>>>>> CU-860pck1t4_Store_user_API_keys
 
 const MAX_TWENTY_FIVE_TXNS_HEX = "0x19";
 
