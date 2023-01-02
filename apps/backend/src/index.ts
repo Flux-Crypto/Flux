@@ -52,10 +52,10 @@ const runServer = async () => {
     await fastifyServer.ready();
     fastifyServer.listen({ port: 8000 }, (err, address) => {
         if (err) {
-            server.log.fatal(err);
+            fastifyServer.log.fatal(err);
             process.exit(1);
         }
-        server.log.debug(`Server listening at ${address}`);
+        fastifyServer.log.debug(`Server listening at ${address}`);
     });
 };
 

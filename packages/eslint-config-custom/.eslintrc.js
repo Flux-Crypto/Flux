@@ -57,7 +57,8 @@ module.exports = {
                 caughtErrorsIgnorePattern: "^_"
             }
         ],
-        "@typescript-eslint/ban-ts-comment": "warn"
+        "@typescript-eslint/ban-ts-comment": "warn",
+        "no-console": ["error", { allow: ["info", "warn", "error"] }]
     },
     // overrides: [
     //     {
