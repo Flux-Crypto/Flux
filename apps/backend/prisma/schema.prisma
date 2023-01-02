@@ -48,11 +48,13 @@ type Transaction {
 }
 
 model User {
-    id           String        @id @default(auto()) @map("_id") @db.ObjectId
-    email        String        @unique
-    name         String?
-    wallets      Wallet[]
-    transactions Transaction[]
+    id               String        @id @default(auto()) @map("_id") @db.ObjectId
+    email            String        @unique
+    name             String?
+    processorAPIKeys String[]
+    exchangeAPIKeys  String[]
+    wallets          Wallet[]
+    transactions     Transaction[]
 
     @@unique([wallets.address, wallets.seedPhrase, transactions.id])
     @@index([wallets.address, transactions.id])
