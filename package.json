@@ -11,8 +11,8 @@
         "format:backend": "npx prettier -w apps/backend/src/**/*.ts",
         "lint:backend": "npm run format:backend && npx eslint --ext .ts,.json,.prisma --fix-dry-run",
         "test": "echo \"Error: no test specified\" && exit 1",
-        "dev:frontend": "npm run dev --workspace=frontend",
-        "dev:backend": "npm run dev --workspace=backend",
+        "dev:frontend": "NODE_ENV=development npm run dev --workspace=frontend",
+        "dev:backend": "NODE_ENV=development npm run dev --workspace=backend",
         "generate": "npm run generate --workspace=backend",
         "reset": "npm run reset --workspace=backend",
         "studio": "npm run studio --workspace=backend"

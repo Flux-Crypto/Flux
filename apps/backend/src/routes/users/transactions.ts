@@ -1,13 +1,13 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
+import { log } from "@lib/logger";
 import { UserTransactionsSchema } from "@lib/types/jsonObjects";
 import {
     UserRequestParams,
     UserTransactionsRequestBody,
     UsersTransactionsRequestParams
 } from "@lib/types/routeParams";
-import { logError } from "@lib/utils";
 
 const transactionsRoute = (
     server: FastifyInstance,
@@ -26,7 +26,7 @@ const transactionsRoute = (
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { userId } = request.params as UserRequestParams;
             if (!userId) {
-                logError(reply, 404, "missing user id param");
+                log(request.log.error, reply, 400, "Missing user id parameter");
                 return;
             }
 
@@ -42,10 +42,12 @@ const transactionsRoute = (
 
                 reply.send(transactions);
             } catch (e) {
-                if (e instanceof PrismaClientKnownRequestError)
-                    logError(reply, 500, e.message);
+                if (e instanceof PrismaClientKnownRequestError) {
+                    request.log.fatal(e);
+                    reply.code(500).send("Server error");
+                }
 
-                logError(reply, 500, "getting transactions");
+                log(request.log.error, reply, 500, "Couldn't get transactions");
             }
         }
     );
@@ -56,14 +58,19 @@ const transactionsRoute = (
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { userId } = request.params as UserRequestParams;
             if (!userId) {
-                logError(reply, 404, "missing user id param");
+                log(request.log.error, reply, 400, "Missing user id parameter");
                 return;
             }
 
             const { transaction: transactionData } =
                 request.body as UserTransactionsRequestBody;
             if (!transactionData) {
-                logError(reply, 404, "missing transaction param");
+                log(
+                    request.log.error,
+                    reply,
+                    400,
+                    "Missing transaction parameter"
+                );
                 return;
             }
 
@@ -81,10 +88,17 @@ const transactionsRoute = (
 
                 reply.code(201).send(transaction);
             } catch (e) {
-                if (e instanceof PrismaClientKnownRequestError)
-                    logError(reply, 500, e.message);
+                if (e instanceof PrismaClientKnownRequestError) {
+                    request.log.fatal(e);
+                    reply.code(500).send("Server error");
+                }
 
-                logError(reply, 500, "creating transaction");
+                log(
+                    request.log.error,
+                    reply,
+                    500,
+                    "Couldn't create transaction"
+                );
             }
         }
     );
@@ -96,7 +110,12 @@ const transactionsRoute = (
             const { userId, transactionId } =
                 request.params as UsersTransactionsRequestParams;
             if (!userId || !transactionId) {
-                logError(reply, 404, "missing user id or transaction id param");
+                log(
+                    request.log.error,
+                    reply,
+                    400,
+                    "Missing user id or transaction id parameter"
+                );
                 return;
             }
 
@@ -116,10 +135,12 @@ const transactionsRoute = (
                     }
                 });
             } catch (e) {
-                if (e instanceof PrismaClientKnownRequestError)
-                    logError(reply, 500, e.message);
+                if (e instanceof PrismaClientKnownRequestError) {
+                    request.log.fatal(e);
+                    reply.code(500).send("Server error");
+                }
 
-                logError(reply, 500, "deleting wallet");
+                log(request.log.error, reply, 500, "Couldn't delete wallet");
             }
         }
     );

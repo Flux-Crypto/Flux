@@ -11,14 +11,17 @@ import fastify, {
 
 import { prismaPlugin } from "@plugins/index";
 
+import { envToLogger } from "@lib/logger";
 import { FastifyDone } from "@lib/types/fastifyTypes";
 import users from "@routes/users/base";
-import transactions from "@src/routes/transactions";
+import transactions from "@src/routes/explorer/transactions";
 
 import SwaggerOptions from "@docs/options";
 
 const runServer = async () => {
-    const server = fastify();
+    const server = fastify({
+        logger: envToLogger.development ?? true
+    });
 
     await server.register(prismaPlugin);
 
@@ -50,10 +53,10 @@ const runServer = async () => {
     await server.ready();
     server.listen({ port: 8000 }, (err, address) => {
         if (err) {
-            console.error(err);
+            server.log.fatal(err);
             process.exit(1);
         }
-        console.info(`Server listening at ${address}`);
+        server.log.debug(`Server listening at ${address}`);
     });
 };
 

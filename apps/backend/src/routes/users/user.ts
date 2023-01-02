@@ -1,9 +1,9 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
+import { log } from "@lib/logger";
 import { UserIndexSchema } from "@lib/types/jsonObjects";
 import { UserRequestParams } from "@lib/types/routeParams";
-import { logError } from "@lib/utils";
 
 const user = (
     server: FastifyInstance,
@@ -18,7 +18,7 @@ const user = (
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { userId } = request.params as UserRequestParams;
             if (!userId) {
-                logError(reply, 404, "missing user id param");
+                log(request.log.error, reply, 400, "Missing user id parameter");
                 return;
             }
 
@@ -31,10 +31,11 @@ const user = (
 
                 reply.send(user);
             } catch (e) {
-                if (e instanceof PrismaClientKnownRequestError)
-                    logError(reply, 500, e.message);
-
-                logError(reply, 500, "getting user");
+                if (e instanceof PrismaClientKnownRequestError) {
+                    request.log.fatal(e);
+                    reply.code(500).send("Server error");
+                }
+                log(request.log.error, reply, 500, "Couldn't get user");
             }
         }
     );
