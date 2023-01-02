@@ -6,11 +6,10 @@
     "useTabs": false,
     "importOrder": [
         "^@?(?!src|lib|docs|routes|plugins)\\w+",
-        "^@src/(.*)$",
-        "^@lib/(.*)$",
-        "^@routes/(.*)$",
         "^@plugins/(.*)$",
-        "^@ui/(.*)$"
+        "^@(src|routes|lib|)/(.*)$",
+        "^@docs/(.*)$",
+        "^[./]"
     ],
     "importOrderSeparation": true,
     "importOrderSortSpecifiers": true

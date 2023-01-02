@@ -1,9 +1,11 @@
+import { FastifyInstance, FastifyServerOptions } from "fastify";
+
+import { FastifyDone } from "@src/lib/types/fastifyTypes";
+
 import IndexSchema from "@docs/schemas/users/index.json";
 import TransactionsSchema from "@docs/schemas/users/transactions.json";
 import UserSchema from "@docs/schemas/users/user.json";
 import WalletsSchema from "@docs/schemas/users/wallets.json";
-import { FastifyDone } from "@src/lib/types/fastifyTypes";
-import { FastifyInstance, FastifyServerOptions } from "fastify";
 
 import index from "./index";
 import transactions from "./transactions";

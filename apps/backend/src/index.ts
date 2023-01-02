@@ -1,18 +1,21 @@
-import SwaggerOptions from "@docs/options";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import swagger from "@fastify/swagger";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import swaggerUI from "@fastify/swagger-ui";
-import { FastifyDone } from "@lib/types/fastifyTypes";
-import { prismaPlugin } from "@plugins/index";
-import users from "@routes/users/base";
-import transactions from "@src/routes/transactions";
 import fastify, {
     FastifyInstance,
     FastifyReply,
     FastifyRequest,
     FastifyServerOptions
 } from "fastify";
+
+import { prismaPlugin } from "@plugins/index";
+
+import { FastifyDone } from "@lib/types/fastifyTypes";
+import users from "@routes/users/base";
+import transactions from "@src/routes/transactions";
+
+import SwaggerOptions from "@docs/options";
 
 const runServer = async () => {
     const server = fastify();
