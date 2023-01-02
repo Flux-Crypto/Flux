@@ -1,4 +1,4 @@
-import CSVImport from "../../components/CSVImport";
+import CSVImport from "../components/CSVImport";
 
 const Import = () => {
   return (
