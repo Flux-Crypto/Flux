@@ -2,6 +2,7 @@ import { FastifyInstance, FastifyServerOptions } from "fastify";
 
 import { FastifyDone } from "@src/lib/types/fastifyTypes";
 
+import transactionRoute from "./transaction";
 import transactionsRoute from "./transactions";
 
 const users = (
@@ -10,6 +11,7 @@ const users = (
     done: FastifyDone
 ) => {
     server.register(transactionsRoute, { prefix: "/transactions" });
+    server.register(transactionRoute, { prefix: "/transaction" });
 
     done();
 };

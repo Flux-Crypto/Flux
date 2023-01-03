@@ -47,3 +47,10 @@ export interface UserTransactionsRequestBody {
 export interface AddressRequestParams {
     address: string;
 }
+
+/**
+ * /explorer/transaction/:transactionHash
+ */
+export interface TransactionHashRequestParams {
+    hash: string;
+}
