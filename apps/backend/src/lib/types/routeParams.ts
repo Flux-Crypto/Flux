@@ -24,6 +24,7 @@ export interface UsersTransactionsRequestParams extends UserRequestParams {
  */
 export interface UserWalletsRequestBody {
     walletAddress: string;
+    seedPhrase: string;
 }
 
 /**
