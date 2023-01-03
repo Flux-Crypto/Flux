@@ -1,4 +1,4 @@
-import { Transaction } from "@prisma/client";
+import { ImportTransaction } from "@prisma/client";
 
 /**
  *  /users
@@ -38,19 +38,19 @@ export interface UserWalletsRequestParams extends UserRequestParams {
  * /users/:userId/transactions
  */
 export interface UserTransactionsRequestBody {
-    transaction: Transaction;
+    transaction: ImportTransaction;
 }
 
 /**
- * /explorer/transactions/:walletAddress
+ * /explorer/wallet/:walletAddress
  */
-export interface AddressRequestParams {
-    address: string;
+export interface ExplorerWalletRequestParams {
+    walletAddress: string;
 }
 
 /**
  * /explorer/transaction/:transactionHash
  */
-export interface TransactionHashRequestParams {
-    hash: string;
+export interface ExplorerTransactionRequestParams {
+    transactionHash: string;
 }

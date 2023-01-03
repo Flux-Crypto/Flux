@@ -1,4 +1,4 @@
-import { UserSchema } from "../apiSchema";
+import { UserExample, UserSchema } from "../apiSchema";
 
 export default {
     get: {
@@ -19,7 +19,8 @@ export default {
                 "200": {
                     description: "OK",
                     type: "object",
-                    properties: UserSchema
+                    properties: UserSchema,
+                    example: UserExample
                 },
                 "400": {
                     description: "Bad request. Missing user id parameter.",

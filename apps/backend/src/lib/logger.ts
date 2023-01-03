@@ -2,7 +2,7 @@ import { FastifyReply } from "fastify";
 import { LogFn } from "pino";
 
 export const envToLogger = {
-    development: {
+    dev: {
         transport: {
             target: "pino-pretty",
             options: {
@@ -12,11 +12,32 @@ export const envToLogger = {
             }
         }
     },
-    production: true,
+    stg: {
+        transport: {
+            target: "pino-pretty",
+            options: {
+                translateTime: "yyyy-dd-mm, h:MM:ss TT",
+                ignore: "pid,hostname",
+                colorize: true,
+                level: "warn"
+            }
+        }
+    },
+    prd: {
+        transport: {
+            target: "pino-pretty",
+            options: {
+                translateTime: "yyyy-dd-mm, h:MM:ss TT",
+                ignore: "pid,hostname",
+                colorize: true,
+                level: "warn"
+            }
+        }
+    },
     test: false
 };
 
-export const logger = (
+export const logAndSendReply = (
     logFn: LogFn,
     reply: FastifyReply,
     code: number,

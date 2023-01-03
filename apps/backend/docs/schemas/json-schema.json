@@ -11,8 +11,7 @@
           "type": [
             "string",
             "null"
-          ],
-          "default": ""
+          ]
         },
         "rdUsers": {
           "type": "array",
@@ -72,10 +71,22 @@
             "$ref": "#/definitions/Wallet"
           }
         },
-        "transactions": {
+        "walletNames": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Transaction"
+            "$ref": "#/definitions/WalletName"
+          }
+        },
+        "importTransactions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ImportTransaction"
+          }
+        },
+        "chainTransactions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ChainTransaction"
           }
         }
       },
@@ -87,7 +98,22 @@
         "rdwrWalletAddresses"
       ]
     },
-    "Transaction": {
+    "WalletName": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "address",
+        "name"
+      ]
+    },
+    "ImportTransaction": {
       "type": "object",
       "properties": {
         "id": {
@@ -122,26 +148,30 @@
           "default": ""
         },
         "tag": {
-          "type": "string",
-          "default": "PAYMENT",
-          "enum": [
-            "GIFT",
-            "LOSS",
-            "DONATION",
-            "MARGIN_FEE",
-            "FORK",
-            "AIRDROP",
-            "MINED",
-            "PAYMENT",
-            "STAKED",
-            "MARGIN",
-            "MARGIN_REBATE",
-            "INTEREST",
-            "INCOME"
+          "type": [
+            "string",
+            "null"
           ]
         }
       },
       "required": []
+    },
+    "ChainTransaction": {
+      "type": "object",
+      "properties": {
+        "hash": {
+          "type": "string"
+        },
+        "tag": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "hash"
+      ]
     }
   },
   "type": "object",

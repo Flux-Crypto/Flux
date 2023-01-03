@@ -1,4 +1,9 @@
-import { UserExample } from "./schemas/apiSchema";
+import {
+    ChainTransactionExample,
+    ImportTransactionExample,
+    UserExample,
+    WalletExample
+} from "./schemas/apiSchema";
 import jsonSchema from "./schemas/json-schema.json";
 
 export const swaggerOptions = {
@@ -21,8 +26,18 @@ export const swaggerOptions = {
                     ...jsonSchema.definitions.User,
                     example: UserExample
                 },
-                Wallet: jsonSchema.definitions.Wallet,
-                Transaction: jsonSchema.definitions.Transaction
+                Wallet: {
+                    ...jsonSchema.definitions.Wallet,
+                    example: WalletExample
+                },
+                ImportTransaction: {
+                    ...jsonSchema.definitions.ImportTransaction,
+                    example: ImportTransactionExample
+                },
+                ChainTransaction: {
+                    ...jsonSchema.definitions.ChainTransaction,
+                    example: ChainTransactionExample
+                }
             }
         }
     },
@@ -36,8 +51,6 @@ export const swaggerUIOptions = {
         deepLinking: false
     },
     staticCSP: true,
-    transformSpecification: (swaggerObject: any, _request: any, _reply: any) =>
-        swaggerObject,
     transformSpecificationClone: true,
     exposeRoute: true
 };

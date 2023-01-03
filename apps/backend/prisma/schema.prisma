@@ -15,30 +15,19 @@ datasource db {
 
 model Wallet {
     address     String   @id @map("_id")
-    seedPhrase  String?  @default("")
+    seedPhrase  String?
     rdUserIds   String[] @db.ObjectId // read-only
     rdUsers     User[]   @relation(fields: [rdUserIds], references: [id], name: "readOnly")
     rdwrUserIds String[] @db.ObjectId // read-write
     rdwrUsers   User[]   @relation(fields: [rdwrUserIds], references: [id], name: "readWrite")
 }
 
-enum TxnTag {
-    GIFT
-    LOSS
-    DONATION
-    MARGIN_FEE
-    FORK
-    AIRDROP
-    MINED
-    PAYMENT
-    STAKED
-    MARGIN
-    MARGIN_REBATE
-    INTEREST
-    INCOME
+type WalletName {
+    address String
+    name    String
 }
 
-type Transaction {
+type ImportTransaction {
     id               String   @default(uuid())
     date             DateTime @default(now())
     receivedQuantity Float    @default(0)
@@ -47,20 +36,27 @@ type Transaction {
     sentCurrency     String   @default("")
     feeAmount        Float    @default(0)
     feeCurrency      String   @default("")
-    tag              TxnTag   @default(PAYMENT)
+    tag              String?
+}
+
+type ChainTransaction {
+    hash String
+    tag  String?
 }
 
 model User {
-    id                  String        @id @default(auto()) @map("_id") @db.ObjectId
-    email               String        @unique
+    id                  String              @id @default(auto()) @map("_id") @db.ObjectId
+    email               String              @unique
     name                String?
     processorAPIKeys    String[]
     exchangeAPIKeys     String[]
-    rdWalletAddresses   String[]      @unique // read-only
-    rdWallets           Wallet[]      @relation(fields: [rdWalletAddresses], references: [address], name: "readOnly")
-    rdwrWalletAddresses String[]      @unique // read-write
-    rdwrWallets         Wallet[]      @relation(fields: [rdwrWalletAddresses], references: [address], name: "readWrite")
-    transactions        Transaction[]
+    rdWalletAddresses   String[] // read-only
+    rdWallets           Wallet[]            @relation(fields: [rdWalletAddresses], references: [address], name: "readOnly")
+    rdwrWalletAddresses String[] // read-write
+    rdwrWallets         Wallet[]            @relation(fields: [rdwrWalletAddresses], references: [address], name: "readWrite")
+    walletNames         WalletName[]
+    importTransactions  ImportTransaction[]
+    chainTransactions   ChainTransaction[]
 
-    @@index([transactions.id])
+    @@index([walletNames.address, importTransactions.id, chainTransactions.hash])
 }
