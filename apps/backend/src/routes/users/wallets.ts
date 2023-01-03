@@ -1,4 +1,5 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
+import { ethers } from "ethers";
 import { FastifyInstance } from "fastify";
 
 import { logger } from "@lib/logger";
@@ -36,10 +37,25 @@ const walletsRoute = (
                 HttpStatus.BAD_REQUEST,
                 "Missing wallet address parameter"
             );
+        if (!ethers.utils.isAddress(walletAddress))
+            logger(
+                log.error,
+                reply,
+                HttpStatus.BAD_REQUEST,
+                "Invalid wallet address"
+            );
 
         try {
             if (seedPhrase) {
                 // check for authentication
+                if (!ethers.utils.isValidMnemonic(seedPhrase))
+                    logger(
+                        log.error,
+                        reply,
+                        HttpStatus.BAD_REQUEST,
+                        "Invalid seed phrase mnemonic"
+                    );
+
                 // auth or kick
             }
 
