@@ -3,9 +3,10 @@ import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import _ from "lodash";
 
 import { logger } from "@lib/logger";
-import { AlchemyOptions } from "@lib/types/apiOptions";
+import { AlchemyTransactionsOptions } from "@lib/types/apiOptions";
 import { AddressRequestParams } from "@lib/types/routeParams";
 import { alchemy } from "@src/lib/blockchain";
+import HttpStatus from "@src/lib/types/httpStatus";
 
 const transactions = (
     server: FastifyInstance,
@@ -40,7 +41,7 @@ const transactions = (
                 );
             }
 
-            const alchemyOpts: AlchemyOptions = {
+            const alchemyOpts: AlchemyTransactionsOptions = {
                 fromBlock: "0x0",
                 fromAddress: address,
                 excludeZeroValue: true,
