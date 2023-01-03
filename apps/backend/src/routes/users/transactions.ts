@@ -1,7 +1,7 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
-import { logger } from "@lib/logger";
+import { logAndSendReply } from "@lib/logger";
 import { UserTransactionsSchema } from "@lib/types/jsonObjects";
 import {
     UserRequestParams,
@@ -27,7 +27,7 @@ const transactionsRoute = (
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { userId } = request.params as UserRequestParams;
             if (!userId)
-                logger(
+                logAndSendReply(
                     log.error,
                     reply,
                     HttpStatus.BAD_REQUEST,
@@ -53,7 +53,7 @@ const transactionsRoute = (
                         .send("Server error");
                 }
 
-                logger(
+                logAndSendReply(
                     log.error,
                     reply,
                     HttpStatus.INTERNAL_SERVER_ERROR,
@@ -69,7 +69,7 @@ const transactionsRoute = (
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { userId } = request.params as UserRequestParams;
             if (!userId)
-                logger(
+                logAndSendReply(
                     log.error,
                     reply,
                     HttpStatus.BAD_REQUEST,
@@ -79,7 +79,7 @@ const transactionsRoute = (
             const { transaction: transactionData } =
                 request.body as UserTransactionsRequestBody;
             if (!transactionData)
-                logger(
+                logAndSendReply(
                     log.error,
                     reply,
                     HttpStatus.BAD_REQUEST,
@@ -107,7 +107,7 @@ const transactionsRoute = (
                         .send("Server error");
                 }
 
-                logger(
+                logAndSendReply(
                     log.error,
                     reply,
                     HttpStatus.INTERNAL_SERVER_ERROR,
@@ -124,7 +124,7 @@ const transactionsRoute = (
             const { userId, transactionId } =
                 request.params as UsersTransactionsRequestParams;
             if (!userId || !transactionId)
-                logger(
+                logAndSendReply(
                     log.error,
                     reply,
                     HttpStatus.BAD_REQUEST,
@@ -154,7 +154,7 @@ const transactionsRoute = (
                         .send("Server error");
                 }
 
-                logger(
+                logAndSendReply(
                     log.error,
                     reply,
                     HttpStatus.INTERNAL_SERVER_ERROR,

@@ -44,6 +44,6 @@ export interface UserTransactionsRequestBody {
 /**
  * /explorer/transactions/:walletAddress
  */
-export interface AddressRequestParams {
-    address: string;
+export interface ExplorerTransactionsRequestParams {
+    walletAddress: string;
 }

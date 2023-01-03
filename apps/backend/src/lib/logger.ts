@@ -16,7 +16,7 @@ export const envToLogger = {
     test: false
 };
 
-export const logger = (
+export const logAndSendReply = (
     logFn: LogFn,
     reply: FastifyReply,
     code: number,

@@ -1,7 +1,7 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
-import { logger } from "@lib/logger";
+import { logAndSendReply } from "@lib/logger";
 import { UserIndexSchema } from "@lib/types/jsonObjects";
 import { UserRequestParams } from "@lib/types/routeParams";
 import HttpStatus from "@src/lib/types/httpStatus";
@@ -19,7 +19,7 @@ const userRoute = (
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { userId } = request.params as UserRequestParams;
             if (!userId)
-                logger(
+                logAndSendReply(
                     log.error,
                     reply,
                     HttpStatus.BAD_REQUEST,
@@ -41,7 +41,7 @@ const userRoute = (
                         .code(HttpStatus.INTERNAL_SERVER_ERROR)
                         .send("Server error");
                 }
-                logger(
+                logAndSendReply(
                     log.error,
                     reply,
                     HttpStatus.INTERNAL_SERVER_ERROR,
