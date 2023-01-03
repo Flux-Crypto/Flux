@@ -1,22 +1,27 @@
-import ForgotPasswordInput from "../components/ForgotPasswordInput";
+import MainLayout from "../layouts/MainLayout";
 import {
   Paper,
   createStyles,
   TextInput,
-  PasswordInput,
   Checkbox,
   Button,
   Title,
   Text,
-  Anchor,
+  Flex,
+  Stack,
+  Box,
+  Group,
+  PasswordInput,
 } from "@mantine/core";
+import Link from "next/link";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
     minHeight: 900,
-    backgroundSize: "cover",
+    backgroundPositionX: "-25%",
+    backgroundPositionY: "40%",
     backgroundImage:
-      "url(https://images.unsplash.com/photo-1484242857719-4b9144542727?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1280&q=80)",
+      "url(https://images.unsplash.com/photo-1620321023374-d1a68fbc720d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1794&q=80)",
   },
 
   form: {
@@ -49,47 +54,59 @@ const useStyles = createStyles((theme) => ({
 const Login = () => {
   const { classes } = useStyles();
   return (
-    <div className={classes.wrapper}>
-      <Paper className={classes.form} radius={0} p={30}>
-        <Title
-          order={2}
-          className={classes.title}
-          align="center"
-          mt="md"
-          mb={50}
-        >
-          Welcome back to Aurora
-        </Title>
-
-        <TextInput
-          label="Email address"
-          placeholder="hello@gmail.com"
-          size="md"
-        />
-        {/* <PasswordInput
-          label="Password"
-          placeholder="Your password"
-          mt="md"
-          size="md"
-        /> */}
-        <ForgotPasswordInput style={{ marginTop: 14 }} size="md" />
-        <Checkbox label="Keep me logged in" mt="xl" size="md" />
-        <Button fullWidth mt="xl" size="md">
-          Login
-        </Button>
-
-        <Text align="center" mt="md">
-          Don&apos;t have an account?{" "}
-          <Anchor<"a">
-            href="#"
-            weight={700}
-            onClick={(event) => event.preventDefault()}
+    <MainLayout pageTitle="Login">
+      <div className={classes.wrapper}>
+        <Paper className={classes.form} radius={0} p={30}>
+          <Title
+            order={2}
+            className={classes.title}
+            align="center"
+            mt="md"
+            mb={50}
           >
-            Register
-          </Anchor>
-        </Text>
-      </Paper>
-    </div>
+            Welcome back to Aurora
+          </Title>
+
+          <TextInput
+            label="Email address"
+            placeholder="hello@gmail.com"
+            size="md"
+          />
+          <Stack>
+            <PasswordInput label="Password" mt="md" size="md" />
+            <Group position="right">
+              <Box
+                component={Link}
+                href="/forgotpassword"
+                sx={(theme) => ({
+                  paddingTop: 2,
+                  color:
+                    theme.colors[theme.primaryColor][
+                      theme.colorScheme === "dark" ? 4 : 6
+                    ],
+                  fontWeight: 500,
+                  fontSize: theme.fontSizes.xs,
+                })}
+              >
+                Forgot your password?
+              </Box>
+            </Group>
+          </Stack>
+
+          <Checkbox label="Keep me logged in" mt="xl" size="md" />
+          <Button fullWidth mt="xl" size="md">
+            Login
+          </Button>
+
+          <Flex gap="xs" justify="center" align="center" mt="md">
+            <Text align="center">Don&apos;t have an account? </Text>
+            <Link href="/register">
+              <Text weight={700}>Register</Text>
+            </Link>
+          </Flex>
+        </Paper>
+      </div>
+    </MainLayout>
   );
 };
 
