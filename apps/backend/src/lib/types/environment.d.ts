@@ -1,7 +1,7 @@
 declare global {
     namespace NodeJS {
         interface ProcessEnv {
-            NODE_ENV: "development" | "production" | "staging";
+            DOPPLER_ENVIRONMENT: "dev" | "stg" | "prd";
             ALCHEMY_API_KEY: string;
             DB_URL: string;
         }

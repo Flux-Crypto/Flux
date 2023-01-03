@@ -8,6 +8,7 @@ import fastify, {
     FastifyRequest,
     FastifyServerOptions
 } from "fastify";
+import { env } from "process";
 
 import { prismaPlugin } from "@plugins/index";
 
@@ -19,8 +20,11 @@ import explorer from "@src/routes/explorer/base";
 import { swaggerOptions, swaggerUIOptions } from "@docs/options";
 
 const runServer = async () => {
+    // TODO: fix
+    const NODE_ENV = env.DOPPLER_ENVIRONMENT as "dev" | "stg" | "prd";
+
     const fastifyServer = fastify({
-        logger: envToLogger.development ?? true
+        logger: envToLogger[NODE_ENV] ?? true
     });
 
     await fastifyServer.register(prismaPlugin);
@@ -55,7 +59,7 @@ const runServer = async () => {
             fastifyServer.log.fatal(err);
             process.exit(1);
         }
-        fastifyServer.log.debug(`Server listening at ${address}`);
+        fastifyServer.log.debug(`Server err at ${address}`);
     });
 };
 
