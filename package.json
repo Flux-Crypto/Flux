@@ -14,7 +14,7 @@
         "dev:frontend": "npm run dev --workspace=frontend",
         "dev:backend": "npm run dev --workspace=backend",
         "generate": "npm run generate --workspace=backend",
-        "reset": "npm run reset --workspace=backend",
+        "reset": "npm run generate && npm run reset --workspace=backend",
         "studio": "npm run studio --workspace=backend"
     },
     "repository": {

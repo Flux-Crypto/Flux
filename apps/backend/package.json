@@ -30,6 +30,7 @@
     "dependencies": {
         "@prisma/client": "^4.8.0",
         "alchemy-sdk": "^2.2.5",
+        "ethers": "^5.7.2",
         "fastify": "^4.10.2",
         "fastify-plugin": "^4.4.0",
         "fs": "^0.0.1-security",
