@@ -56,7 +56,8 @@ export default {
             },
             body: {
                 type: "object",
-                properties: _.omit(TransactionSchema, ["id"])
+                properties: _.omit(TransactionSchema, ["id"]),
+                examples: [_.omit(TransactionExample, ["id"])]
             },
             response: {
                 "201": {

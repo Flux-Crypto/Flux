@@ -1,7 +1,7 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { FastifyInstance } from "fastify";
 
-import { logger } from "@lib/logger";
+import { logAndSendReply } from "@lib/logger";
 import { UserWalletsSchema } from "@lib/types/jsonObjects";
 import {
     UserRequestParams,
@@ -20,7 +20,7 @@ const walletsRoute = (
     server.post("/", postSchema, async (request, reply) => {
         const { userId } = request.params as UserRequestParams;
         if (!userId)
-            logger(
+            logAndSendReply(
                 log.error,
                 reply,
                 HttpStatus.BAD_REQUEST,
@@ -30,7 +30,7 @@ const walletsRoute = (
         const { walletAddress, seedPhrase } =
             request.body as UserWalletsRequestBody;
         if (!walletAddress)
-            logger(
+            logAndSendReply(
                 log.error,
                 reply,
                 HttpStatus.BAD_REQUEST,
@@ -82,7 +82,7 @@ const walletsRoute = (
                     .send("Server error");
             }
 
-            logger(
+            logAndSendReply(
                 log.error,
                 reply,
                 HttpStatus.INTERNAL_SERVER_ERROR,
@@ -95,7 +95,7 @@ const walletsRoute = (
         const { userId, walletAddress } =
             request.params as UserWalletsRequestParams;
         if (!userId || !walletAddress)
-            logger(
+            logAndSendReply(
                 log.error,
                 reply,
                 HttpStatus.BAD_REQUEST,
@@ -138,7 +138,7 @@ const walletsRoute = (
                     .send("Server error");
             }
 
-            logger(
+            logAndSendReply(
                 log.error,
                 reply,
                 HttpStatus.INTERNAL_SERVER_ERROR,

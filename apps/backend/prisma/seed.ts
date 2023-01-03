@@ -28,19 +28,19 @@ const main = async () => {
             name: "Alice",
             processorAPIKeys: ["abcdef12345"],
             exchangeAPIKeys: ["uvwxyz67890"],
+            rdWallets: {
+                create: [
+                    {
+                        address: "0xd0451f62be92c2e45dbafbf0a9aa5fd42f1798ea"
+                    }
+                ]
+            },
             rdwrWallets: {
                 create: [
                     {
                         address: "0x95222290dd7278aa3ddd389cc1e1d165cc4bafe5",
                         seedPhrase:
                             "inquiry blame advance neglect foster time debris uncover hen ten indicate dinosaur"
-                    }
-                ]
-            },
-            rdWallets: {
-                create: [
-                    {
-                        address: "0xd0451f62be92c2e45dbafbf0a9aa5fd42f1798ea"
                     }
                 ]
             }

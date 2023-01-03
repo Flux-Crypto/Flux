@@ -29,7 +29,8 @@ export const WalletExample = {
     address: "0x95222290dd7278aa3ddd389cc1e1d165cc4bafe5",
     seedPhrase:
         "inquiry blame advance neglect foster time debris uncover hen ten indicate dinosaur",
-    userId: "507f1f77bcf86cd799439011"
+    rdUsers: ["507f1f77bcf86cd799439011"],
+    rdwrUsers: ["63b3b68e4e23a9f08b4630e2"]
 };
 
 /**
@@ -161,6 +162,13 @@ export const UserExample = {
     name: "John Doe",
     processorAPIKeys: ["abcdef12345"],
     exchangeAPIKeys: ["uvwxyz67890"],
-    wallets: ["0x95222290dd7278aa3ddd389cc1e1d165cc4bafe5"],
+    rdWallets: ["0x95222290dd7278aa3ddd389cc1e1d165cc4bafe5"],
+    rdwrWallets: ["0xd0451f62be92c2e45dbafbf0a9aa5fd42f1798ea"],
+    walletNames: [
+        {
+            address: "0xd0451f62be92c2e45dbafbf0a9aa5fd42f1798ea",
+            name: "My Personal Wallet"
+        }
+    ],
     transactions: ["63b27824cc5b18dda70b8442"]
 };
