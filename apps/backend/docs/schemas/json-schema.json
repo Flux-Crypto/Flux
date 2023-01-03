@@ -72,6 +72,12 @@
             "$ref": "#/definitions/Wallet"
           }
         },
+        "walletNames": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WalletName"
+          }
+        },
         "transactions": {
           "type": "array",
           "items": {
@@ -92,6 +98,12 @@
       "properties": {
         "id": {
           "type": "string"
+        },
+        "hash": {
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "date": {
           "type": "string",
@@ -122,26 +134,29 @@
           "default": ""
         },
         "tag": {
-          "type": "string",
-          "default": "PAYMENT",
-          "enum": [
-            "GIFT",
-            "LOSS",
-            "DONATION",
-            "MARGIN_FEE",
-            "FORK",
-            "AIRDROP",
-            "MINED",
-            "PAYMENT",
-            "STAKED",
-            "MARGIN",
-            "MARGIN_REBATE",
-            "INTEREST",
-            "INCOME"
-          ]
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": "PAYMENT"
         }
       },
       "required": []
+    },
+    "WalletName": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "address",
+        "name"
+      ]
     }
   },
   "type": "object",

@@ -1,19 +1,47 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
+
 /**
  * Wallet
  */
 export const WalletSchema = {
-    address: { type: "string" },
-    userId: { type: "string" },
-    readOnly: { type: "boolean" },
-    seedPhrase: { type: "string" }
+    address: {
+        type: "string"
+    },
+    seedPhrase: {
+        type: ["string", "null"],
+        default: ""
+    },
+    rdUsers: {
+        type: "array",
+        items: {
+            type: "string"
+        }
+    },
+    rdwrUsers: {
+        type: "array",
+        items: {
+            type: "string"
+        }
+    }
 };
 
 export const WalletExample = {
     address: "0x95222290dd7278aa3ddd389cc1e1d165cc4bafe5",
-    userId: "507f1f77bcf86cd799439011",
-    readOnly: true,
     seedPhrase:
-        "inquiry blame advance neglect foster time debris uncover hen ten indicate dinosaur"
+        "inquiry blame advance neglect foster time debris uncover hen ten indicate dinosaur",
+    userId: "507f1f77bcf86cd799439011"
+};
+
+/**
+ * WalletName
+ */
+export const WalletNameSchema = {
+    address: {
+        type: "string"
+    },
+    name: {
+        type: "string"
+    }
 };
 
 /**
@@ -23,48 +51,40 @@ export const TransactionSchema = {
     id: {
         type: "string"
     },
+    hash: {
+        type: ["string", "null"]
+    },
     date: {
         type: "string",
         format: "date-time"
     },
     receivedQuantity: {
-        type: "number"
+        type: "number",
+        default: 0
     },
     receivedCurrency: {
-        type: "string"
+        type: "string",
+        default: ""
     },
     sentQuantity: {
-        type: "number"
+        type: "number",
+        default: 0
     },
     sentCurrency: {
-        type: "string"
+        type: "string",
+        default: ""
     },
     feeAmount: {
-        type: "number"
+        type: "number",
+        default: 0
     },
     feeCurrency: {
-        type: "string"
+        type: "string",
+        default: ""
     },
     tag: {
-        type: "string",
-        enum: [
-            "GIFT",
-            "LOSS",
-            "DONATION",
-            "MARGIN_FEE",
-            "FORK",
-            "AIRDROP",
-            "MINED",
-            "PAYMENT",
-            "STAKED",
-            "MARGIN",
-            "MARGIN_REBATE",
-            "INTEREST",
-            "INCOME"
-        ]
-    },
-    user: {
-        type: "string"
+        type: ["string", "null"],
+        default: "PAYMENT"
     }
 };
 
@@ -84,19 +104,53 @@ export const TransactionExample = {
  * User
  */
 export const UserSchema = {
-    id: { type: "string" },
-    email: { type: "string" },
-    name: { type: "string" },
-    wallets: {
+    id: {
+        type: "string"
+    },
+    email: {
+        type: "string"
+    },
+    name: {
+        type: ["string", "null"]
+    },
+    processorAPIKeys: {
         type: "array",
         items: {
             type: "string"
         }
     },
-    transactions: {
+    exchangeAPIKeys: {
         type: "array",
         items: {
             type: "string"
+        }
+    },
+    rdWallets: {
+        type: "array",
+        items: {
+            type: "object",
+            properties: WalletSchema
+        }
+    },
+    rdwrWallets: {
+        type: "array",
+        items: {
+            type: "object",
+            properties: WalletSchema
+        }
+    },
+    walletNames: {
+        type: "array",
+        items: {
+            type: "object",
+            properties: WalletNameSchema
+        }
+    },
+    transactions: {
+        type: "array",
+        items: {
+            type: "object",
+            properties: TransactionSchema
         }
     }
 };

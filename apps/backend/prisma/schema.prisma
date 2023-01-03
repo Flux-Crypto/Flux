@@ -22,24 +22,9 @@ model Wallet {
     rdwrUsers   User[]   @relation(fields: [rdwrUserIds], references: [id], name: "readWrite")
 }
 
-enum TxnTag {
-    GIFT
-    LOSS
-    DONATION
-    MARGIN_FEE
-    FORK
-    AIRDROP
-    MINED
-    PAYMENT
-    STAKED
-    MARGIN
-    MARGIN_REBATE
-    INTEREST
-    INCOME
-}
-
 type Transaction {
     id               String   @default(uuid())
+    hash             String?
     date             DateTime @default(now())
     receivedQuantity Float    @default(0)
     receivedCurrency String   @default("")
@@ -47,7 +32,12 @@ type Transaction {
     sentCurrency     String   @default("")
     feeAmount        Float    @default(0)
     feeCurrency      String   @default("")
-    tag              TxnTag   @default(PAYMENT)
+    tag              String?  @default("PAYMENT")
+}
+
+type WalletName {
+    address String
+    name    String
 }
 
 model User {
@@ -60,7 +50,8 @@ model User {
     rdWallets           Wallet[]      @relation(fields: [rdWalletAddresses], references: [address], name: "readOnly")
     rdwrWalletAddresses String[]      @unique // read-write
     rdwrWallets         Wallet[]      @relation(fields: [rdwrWalletAddresses], references: [address], name: "readWrite")
+    walletNames         WalletName[]
     transactions        Transaction[]
 
-    @@index([transactions.id])
+    @@index([transactions.id, transactions.hash])
 }
