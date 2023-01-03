@@ -3,7 +3,7 @@ import {
     SortingOrder
 } from "alchemy-sdk/dist/src/types/types";
 
-export interface AlchemyOptions {
+export interface AlchemyTransactionsOptions {
     fromBlock: string;
     fromAddress: string;
     excludeZeroValue: boolean;
