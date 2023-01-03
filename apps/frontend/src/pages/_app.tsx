@@ -1,7 +1,7 @@
+import { UserProvider } from "@auth0/nextjs-auth0/client";
 import { MantineProvider } from "@mantine/core";
 import { AppProps } from "next/app";
 import Head from "next/head";
-import { UserProvider } from "@auth0/nextjs-auth0/client";
 
 export default function App(props: AppProps) {
   const { Component, pageProps } = props;
@@ -9,7 +9,7 @@ export default function App(props: AppProps) {
   return (
     <UserProvider>
       <Head>
-        <title>Page title</title>
+        <title>Aurora</title>
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
@@ -28,5 +28,4 @@ export default function App(props: AppProps) {
       </MantineProvider>
     </UserProvider>
   );
-
 }
