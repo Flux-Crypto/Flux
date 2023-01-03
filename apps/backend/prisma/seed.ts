@@ -61,7 +61,7 @@ const main = async () => {
                     }
                 ]
             },
-            transactions: {
+            importTransactions: {
                 date: new Date("06/14/2017 20:57:35"),
                 receivedQuantity: 0.5,
                 receivedCurrency: "BTC",

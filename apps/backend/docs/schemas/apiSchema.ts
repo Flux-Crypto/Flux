@@ -8,16 +8,15 @@ export const WalletSchema = {
         type: "string"
     },
     seedPhrase: {
-        type: ["string", "null"],
-        default: ""
+        type: ["string", "null"]
     },
-    rdUsers: {
+    rdUserIds: {
         type: "array",
         items: {
             type: "string"
         }
     },
-    rdwrUsers: {
+    rdwrUserIds: {
         type: "array",
         items: {
             type: "string"
@@ -29,8 +28,8 @@ export const WalletExample = {
     address: "0x95222290dd7278aa3ddd389cc1e1d165cc4bafe5",
     seedPhrase:
         "inquiry blame advance neglect foster time debris uncover hen ten indicate dinosaur",
-    rdUsers: ["507f1f77bcf86cd799439011"],
-    rdwrUsers: ["63b3b68e4e23a9f08b4630e2"]
+    rdUserIds: ["507f1f77bcf86cd799439011"],
+    rdwrUserIds: ["63b3b68e4e23a9f08b4630e2"]
 };
 
 /**
@@ -45,15 +44,17 @@ export const WalletNameSchema = {
     }
 };
 
+export const WalletNameExample = {
+    address: "0x95222290dd7278aa3ddd389cc1e1d165cc4bafe5",
+    name: "My Personal Wallet"
+};
+
 /**
- * Transaction
+ * ImportTransaction
  */
-export const TransactionSchema = {
+export const ImportTransactionSchema = {
     id: {
         type: "string"
-    },
-    hash: {
-        type: ["string", "null"]
     },
     date: {
         type: "string",
@@ -84,12 +85,11 @@ export const TransactionSchema = {
         default: ""
     },
     tag: {
-        type: ["string", "null"],
-        default: "PAYMENT"
+        type: ["string", "null"]
     }
 };
 
-export const TransactionExample = {
+export const ImportTransactionExample = {
     id: "63b27824cc5b18dda70b8442",
     date: "06/14/2017 20:57:35",
     receivedQuantity: 0.5,
@@ -99,6 +99,23 @@ export const TransactionExample = {
     feeAmount: 0.00001,
     feeCurrency: "BTC",
     tag: "PAYMENT"
+};
+
+/**
+ * ChainTransaction
+ */
+export const ChainTransactionSchema = {
+    hash: {
+        type: "string"
+    },
+    tag: {
+        type: ["string", "null"]
+    }
+};
+
+export const ChainTransactionExample = {
+    hash: "0x839b28928a32459391db977632d7be2ce1cf93505ba2e19cdcf63bfe312ba062",
+    tag: "AIRDROP"
 };
 
 /**
@@ -147,11 +164,18 @@ export const UserSchema = {
             properties: WalletNameSchema
         }
     },
-    transactions: {
+    importTransactions: {
         type: "array",
         items: {
             type: "object",
-            properties: TransactionSchema
+            properties: ImportTransactionSchema
+        }
+    },
+    chainTransactions: {
+        type: "array",
+        items: {
+            type: "object",
+            properties: ChainTransactionSchema
         }
     }
 };
@@ -170,5 +194,8 @@ export const UserExample = {
             name: "My Personal Wallet"
         }
     ],
-    transactions: ["63b27824cc5b18dda70b8442"]
+    importTransactions: ["63b27824cc5b18dda70b8442"],
+    chainTransactions: [
+        "0x839b28928a32459391db977632d7be2ce1cf93505ba2e19cdcf63bfe312ba062"
+    ]
 };

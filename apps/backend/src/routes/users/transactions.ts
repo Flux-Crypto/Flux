@@ -40,7 +40,7 @@ const transactionsRoute = (
                         id: userId
                     },
                     select: {
-                        transactions: true
+                        importTransactions: true
                     }
                 });
 
@@ -92,7 +92,7 @@ const transactionsRoute = (
                         id: userId
                     },
                     data: {
-                        transactions: {
+                        importTransactions: {
                             push: [{ ...transactionData }]
                         }
                     }
@@ -137,7 +137,7 @@ const transactionsRoute = (
                         id: userId
                     },
                     data: {
-                        transactions: {
+                        importTransactions: {
                             deleteMany: {
                                 where: {
                                     id: transactionId

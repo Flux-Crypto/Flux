@@ -1,6 +1,9 @@
 import _ from "lodash";
 
-import { TransactionExample, TransactionSchema } from "../apiSchema";
+import {
+    ImportTransactionExample,
+    ImportTransactionSchema
+} from "../apiSchema";
 
 export default {
     get: {
@@ -23,8 +26,8 @@ export default {
                     type: "array",
                     items: {
                         type: "object",
-                        properties: TransactionSchema,
-                        example: TransactionExample
+                        properties: ImportTransactionSchema,
+                        example: ImportTransactionExample
                     }
                 },
                 "400": {
@@ -56,15 +59,15 @@ export default {
             },
             body: {
                 type: "object",
-                properties: _.omit(TransactionSchema, ["id"]),
-                examples: [_.omit(TransactionExample, ["id"])]
+                properties: _.omit(ImportTransactionSchema, ["id"]),
+                examples: [_.omit(ImportTransactionExample, ["id"])]
             },
             response: {
                 "201": {
                     description: "Successful creation.",
                     type: "object",
-                    properties: TransactionSchema,
-                    example: TransactionExample
+                    properties: ImportTransactionSchema,
+                    example: ImportTransactionExample
                 },
                 "400": {
                     description:

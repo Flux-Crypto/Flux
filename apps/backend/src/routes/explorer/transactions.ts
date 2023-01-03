@@ -3,16 +3,12 @@ import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import _ from "lodash";
 
 import { logAndSendReply } from "@lib/logger";
-import { AlchemyOptions } from "@lib/types/apiOptions";
-import { ExplorerTransactionsRequestParams } from "@lib/types/routeParams";
+import { AlchemyTransactionsOptions } from "@lib/types/apiOptions";
+import { ExplorerWalletRequestParams } from "@lib/types/routeParams";
 import { alchemy } from "@src/lib/blockchain";
 import HttpStatus from "@src/lib/types/httpStatus";
 
-const transactions = (
-    server: FastifyInstance,
-    _opts: unknown,
-    done: () => void
-) => {
+const wallet = (server: FastifyInstance, _opts: unknown, done: () => void) => {
     const { log } = server;
 
     server.get(
@@ -21,7 +17,7 @@ const transactions = (
             const { "page-key": pageKey } = request.headers;
 
             const { walletAddress } =
-                request.params as ExplorerTransactionsRequestParams;
+                request.params as ExplorerWalletRequestParams;
             if (!walletAddress)
                 logAndSendReply(
                     log.error,
@@ -98,4 +94,4 @@ const transactions = (
     done();
 };
 
-export default transactions;
+export default wallet;

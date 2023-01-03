@@ -11,8 +11,7 @@
           "type": [
             "string",
             "null"
-          ],
-          "default": ""
+          ]
         },
         "rdUsers": {
           "type": "array",
@@ -78,10 +77,16 @@
             "$ref": "#/definitions/WalletName"
           }
         },
-        "transactions": {
+        "importTransactions": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Transaction"
+            "$ref": "#/definitions/ImportTransaction"
+          }
+        },
+        "chainTransactions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ChainTransaction"
           }
         }
       },
@@ -93,17 +98,26 @@
         "rdwrWalletAddresses"
       ]
     },
-    "Transaction": {
+    "WalletName": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "address",
+        "name"
+      ]
+    },
+    "ImportTransaction": {
       "type": "object",
       "properties": {
         "id": {
           "type": "string"
-        },
-        "hash": {
-          "type": [
-            "string",
-            "null"
-          ]
         },
         "date": {
           "type": "string",
@@ -137,25 +151,26 @@
           "type": [
             "string",
             "null"
-          ],
-          "default": "PAYMENT"
+          ]
         }
       },
       "required": []
     },
-    "WalletName": {
+    "ChainTransaction": {
       "type": "object",
       "properties": {
-        "address": {
+        "hash": {
           "type": "string"
         },
-        "name": {
-          "type": "string"
+        "tag": {
+          "type": [
+            "string",
+            "null"
+          ]
         }
       },
       "required": [
-        "address",
-        "name"
+        "hash"
       ]
     }
   },
