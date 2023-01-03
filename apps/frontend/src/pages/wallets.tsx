@@ -24,9 +24,15 @@ const Wallets = () => {
       address: (value) =>
         ethers.utils.isAddress(value) ? null : "Invalid address",
       seedPhrase: (value) =>
-        ethers.utils.isValidMnemonic(value) ? null : "Invalid seed phrase",
+        !value || ethers.utils.isValidMnemonic(value)
+          ? null
+          : "Invalid seed phrase",
     },
   });
+
+  const handleSubmit = async (values: typeof form.values) => {
+    const response = await fetch("http://localhost:8000/");
+  };
 
   return (
     <Center style={{ width: "100%", height: "100%" }}>
@@ -35,7 +41,7 @@ const Wallets = () => {
           Link Wallet
         </Title>
         <Box sx={{ maxWidth: 300 }} mx="auto">
-          <form onSubmit={form.onSubmit((values) => console.log(values))}>
+          <form onSubmit={form.onSubmit(handleSubmit)}>
             <TextInput
               withAsterisk
               required

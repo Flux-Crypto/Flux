@@ -4,8 +4,9 @@ import _ from "lodash";
 
 import { logger } from "@lib/logger";
 import { AlchemyOptions } from "@lib/types/apiOptions";
-import { AddressRequestParams } from "@lib/types/routeParams";
+import { ExplorerTransactionsRequestParams } from "@lib/types/routeParams";
 import { alchemy } from "@src/lib/blockchain";
+import HttpStatus from "@src/lib/types/httpStatus";
 
 const transactions = (
     server: FastifyInstance,
@@ -15,23 +16,24 @@ const transactions = (
     const { log } = server;
 
     server.get(
-        "/:address",
+        "/:walletAddress",
         async (request: FastifyRequest, reply: FastifyReply) => {
-            const { address } = request.params as AddressRequestParams;
-            const { headers } = request;
-            // Check for wallet address parameter
-            if (!address) {
+            const { "page-key": pageKey } = request.headers;
+
+            const { walletAddress } =
+                request.params as ExplorerTransactionsRequestParams;
+            if (!walletAddress) {
                 logger(
                     log.error,
                     reply,
                     HttpStatus.BAD_REQUEST,
-                    "Missing address parameter"
+                    "Missing wallet address parameter"
                 );
             }
 
             // Validate wallet address
             const WALLET_ADDRESS_REGEX = /^0[xX][0-9a-fA-F]+$/g;
-            if (!address.match(WALLET_ADDRESS_REGEX)) {
+            if (!walletAddress.match(WALLET_ADDRESS_REGEX)) {
                 logger(
                     log.error,
                     reply,
@@ -42,7 +44,7 @@ const transactions = (
 
             const alchemyOpts: AlchemyOptions = {
                 fromBlock: "0x0",
-                fromAddress: address,
+                fromAddress: walletAddress,
                 excludeZeroValue: true,
                 order: SortingOrder.DESCENDING,
                 withMetadata: true,
@@ -57,26 +59,22 @@ const transactions = (
             // NOTE: Page key only lasts for 10 min before expiring!
             const PAGE_KEY_REGEX =
                 /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
-            if (
-                headers["page-key"] &&
-                (headers["page-key"] as string).match(PAGE_KEY_REGEX)
-            ) {
-                alchemyOpts.pageKey = request.headers["page-key"] as string;
+            if (pageKey?.toString().match(PAGE_KEY_REGEX)) {
+                alchemyOpts.pageKey = pageKey.toString();
             }
 
             const response = await alchemy.core.getAssetTransfers(alchemyOpts);
             const { transfers } = response;
 
-            // No transactions found
-            if (transfers.length <= 0) {
+            if (transfers.length <= 0)
                 reply.send({
                     success: true,
                     data: {
                         message: "No transactions for this wallet."
                     }
                 });
-            }
 
+            // TODO: provide type for transfer
             const results = transfers.map((transfer: unknown) =>
                 _.pick(transfer, [
                     "blockNum",
