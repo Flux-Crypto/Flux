@@ -67,11 +67,7 @@ const Login = () => {
             Welcome back to Aurora
           </Title>
 
-          <TextInput
-            label="Email address"
-            placeholder="hello@gmail.com"
-            size="md"
-          />
+          <TextInput label="Email address" size="md" />
           <Stack>
             <PasswordInput label="Password" mt="md" size="md" />
             <Group position="right">

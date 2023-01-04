@@ -1,4 +1,5 @@
 import PasswordStrength from "../components/PasswordStrength";
+import { useSignUp } from "@clerk/clerk-react";
 import {
   TextInput,
   Checkbox,
@@ -8,9 +9,12 @@ import {
   Text,
   Container,
   Button,
+  LoadingOverlay,
 } from "@mantine/core";
 
 const Register = () => {
+  const { isLoaded, signUp } = useSignUp();
+
   return (
     <Container size={420} my={40}>
       <Title
@@ -29,10 +33,18 @@ const Register = () => {
         </Anchor>
       </Text>
 
-      <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+      <Paper
+        withBorder
+        shadow="md"
+        p={30}
+        mt={30}
+        radius="md"
+        style={{ position: "relative" }}
+      >
+        <LoadingOverlay visible={!isLoaded} overlayBlur={2} />
         <TextInput
           label="Email"
-          placeholder="you@mantine.dev"
+          placeholder="johndoe@email.com"
           required
           mb="md"
         />

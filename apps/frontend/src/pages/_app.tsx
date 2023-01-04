@@ -1,19 +1,20 @@
+import { ClerkProvider } from "@clerk/nextjs";
 import { MantineProvider } from "@mantine/core";
 import { AppProps } from "next/app";
 
-export default function App(props: AppProps) {
-  const { Component, pageProps } = props;
-
+export default function App({ Component, pageProps }: AppProps) {
   return (
-    <MantineProvider
-      withGlobalStyles
-      withNormalizeCSS
-      theme={{
-        /** Put your mantine theme override here */
-        colorScheme: "dark",
-      }}
-    >
-      <Component {...pageProps} />
-    </MantineProvider>
+    <ClerkProvider {...pageProps}>
+      <MantineProvider
+        withGlobalStyles
+        withNormalizeCSS
+        theme={{
+          /** Put your mantine theme override here */
+          colorScheme: "dark",
+        }}
+      >
+        <Component {...pageProps} />
+      </MantineProvider>
+    </ClerkProvider>
   );
 }

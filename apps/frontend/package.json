@@ -2,7 +2,7 @@
   "name": "frontend",
   "version": "0.1.0",
   "scripts": {
-    "dev": "next dev",
+    "dev": "doppler run next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
@@ -11,6 +11,7 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
+    "@clerk/nextjs": "^4.6.15",
     "@emotion/react": "^11.10.5",
     "@emotion/server": "^11.10.0",
     "@mantine/core": "^5.9.6",

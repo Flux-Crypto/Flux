@@ -9,7 +9,8 @@ module.exports = {
         "^@src/(.*)$",
         "^@lib/(.*)$",
         "^@routes/(.*)$",
-        "^@plugins/(.*)$"
+        "^@plugins/(.*)$",
+        "^..?/"
     ],
     importOrderSeparation: true,
     importOrderSortSpecifiers: true
