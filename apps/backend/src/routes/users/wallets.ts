@@ -38,7 +38,7 @@ const walletsRoute = (
                 "Missing wallet address parameter"
             )
         if (!ethers.utils.isAddress(walletAddress))
-            logger(
+            logAndSendReply(
                 log.error,
                 reply,
                 HttpStatus.BAD_REQUEST,
@@ -49,7 +49,7 @@ const walletsRoute = (
             if (seedPhrase) {
                 // check for authentication
                 if (!ethers.utils.isValidMnemonic(seedPhrase))
-                    logger(
+                    logAndSendReply(
                         log.error,
                         reply,
                         HttpStatus.BAD_REQUEST,

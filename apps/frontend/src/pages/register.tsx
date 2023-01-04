@@ -1,4 +1,4 @@
-import { useSignUp } from "@clerk/clerk-react"
+import { useSignUp } from "@clerk/clerk-react";
 import {
     Anchor,
     Button,
@@ -10,10 +10,10 @@ import {
     TextInput,
     Title,
     createStyles
-} from "@mantine/core"
-import Link from "next/link"
+} from "@mantine/core";
+import Link from "next/link";
 
-import PasswordStrength from "../components/PasswordStrength"
+import PasswordStrength from "../components/PasswordStrength";
 
 const useStyles = createStyles((theme) => ({
     form: {
@@ -28,11 +28,11 @@ const useStyles = createStyles((theme) => ({
         color: theme.colorScheme === "dark" ? theme.white : theme.black,
         fontFamily: `Greycliff CF, ${theme.fontFamily}`
     }
-}))
+}));
 
 function Register() {
-    const { isLoaded, signUp } = useSignUp()
-    const { classes } = useStyles()
+    const { isLoaded, signUp } = useSignUp();
+    const { classes } = useStyles();
 
     return (
         <Container size={420} my={40}>
@@ -70,7 +70,7 @@ function Register() {
                 </Button>
             </Paper>
         </Container>
-    )
+    );
 }
 
-export default Register
+export default Register;

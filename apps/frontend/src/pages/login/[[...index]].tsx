@@ -5,6 +5,7 @@ import {
     Container,
     Flex,
     Group,
+    LoadingOverlay,
     Paper,
     PasswordInput,
     Stack,
@@ -51,6 +52,7 @@ interface FormValues {
 function Login() {
     const { classes } = useStyles()
     const { isLoaded, signIn } = useSignIn()
+
     const form = useForm<FormValues>({
         initialValues: {
             email: "",
@@ -63,15 +65,11 @@ function Login() {
         }
     })
 
-    if (!isLoaded) {
-        return null
-    }
-
     const submitHandler = async (values: FormValues) => {
         console.log(values)
 
         try {
-            const response = await signIn.create({
+            const response = await signIn?.create({
                 identifier: values.email,
                 password: values.password
             })
@@ -104,6 +102,7 @@ function Login() {
                             submitHandler(values)
                         )}
                     >
+                        <LoadingOverlay visible={!isLoaded} overlayBlur={2} />
                         <TextInput
                             label="Email address"
                             placeholder="johndoe@email.com"

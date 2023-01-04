@@ -1,5 +1,5 @@
 {
-    "semi": false,
+    "semi": true,
     "trailingComma": "none",
     "singleQuote": false,
     "tabWidth": 4,
@@ -10,7 +10,7 @@
         "^@(src|routes|lib|)/(.*)$",
         "^@(pages|components|stories|layouts)/(.*)$",
         "^@docs/(.*)$",
-        "^[./]"
+        "^..?/"
     ],
     "importOrderSeparation": true,
     "importOrderSortSpecifiers": true
