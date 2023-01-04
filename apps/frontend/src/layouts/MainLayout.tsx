@@ -7,10 +7,11 @@ interface MainLayoutProps {
 }
 
 const MainLayout = ({ pageTitle, children }: MainLayoutProps) => {
+  const title = `Aurora | ${pageTitle}`;
   return (
     <>
       <Head>
-        <title>Aurora | {pageTitle}</title>
+        <title>{title}</title>
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
