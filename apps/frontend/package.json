@@ -3,14 +3,15 @@
   "version": "0.1.0",
   "scripts": {
     "dev": "doppler run next dev",
-    "build": "next build",
-    "start": "next start",
+    "build": "doppler run next build",
+    "start": "doppler run next start",
     "lint": "eslint .",
     "format": "eslint --fix --ext .js,.jsx .",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
   "dependencies": {
+    "@clerk/clerk-react": "^4.7.0",
     "@clerk/nextjs": "^4.6.15",
     "@emotion/react": "^11.10.5",
     "@emotion/server": "^11.10.0",
@@ -35,12 +36,14 @@
     "next": "13.1.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.1.2",
     "typescript": "^4.9.4",
     "wallet-address-validator": "^0.2.4"
   },
   "devDependencies": {
-    "@aurora/eslint-config-custom": "^0.1.0",
-    "@aurora/prettier-config-custom": "^0.1.0",
+    "@aurora/eslint-config-custom": "*",
+    "@aurora/prettier-config-custom": "*",
     "@babel/core": "^7.20.7",
     "@storybook/addon-actions": "^6.5.15",
     "@storybook/addon-essentials": "^6.5.15",

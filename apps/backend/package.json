@@ -28,6 +28,7 @@
     },
     "homepage": "https://github.com/tot/aurora#readme",
     "dependencies": {
+        "@clerk/clerk-sdk-node": "^4.5.14",
         "@prisma/client": "^4.8.0",
         "alchemy-sdk": "^2.2.5",
         "ethers": "^5.7.2",
