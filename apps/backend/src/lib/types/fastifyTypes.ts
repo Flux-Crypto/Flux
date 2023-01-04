@@ -1,6 +1,6 @@
 /**
  * Fastify done() type
  */
-import { FastifyError } from "fastify";
+import { FastifyError } from "fastify"
 
-export type FastifyDone = (err?: FastifyError) => void;
+export type FastifyDone = (err?: FastifyError) => void

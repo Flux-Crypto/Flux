@@ -49,4 +49,4 @@ enum HttpStatus {
     // HTTP_VERSION_NOT_SUPPORTED = 505
 }
 
-export default HttpStatus;
+export default HttpStatus

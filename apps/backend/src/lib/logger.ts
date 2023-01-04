@@ -1,5 +1,5 @@
-import { FastifyReply } from "fastify";
-import { LogFn } from "pino";
+import { FastifyReply } from "fastify"
+import { LogFn } from "pino"
 
 export const envToLogger = {
     dev: {
@@ -35,7 +35,7 @@ export const envToLogger = {
         }
     },
     test: false
-};
+}
 
 export const logAndSendReply = (
     logFn: LogFn,
@@ -43,6 +43,6 @@ export const logAndSendReply = (
     code: number,
     message: string
 ) => {
-    logFn(message);
-    reply.code(code).send(message);
-};
+    logFn(message)
+    reply.code(code).send(message)
+}
