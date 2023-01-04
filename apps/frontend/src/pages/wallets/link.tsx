@@ -16,7 +16,7 @@ import { IconAlertCircle, IconLink } from "@tabler/icons";
 import { ethers } from "ethers";
 import { useState } from "react";
 
-import callAPI from "./api/callAPI";
+import callAPI from "../api/callAPI";
 
 const useStyles = createStyles((theme) => ({
     root: {
@@ -64,7 +64,7 @@ function Wallets() {
         }
     });
 
-    const handleSubmit = async (values: typeof form.values) => {
+    const submitHandler = async (values: typeof form.values) => {
         setFetching(true);
 
         // replace HOSTNAME with env var
@@ -97,7 +97,7 @@ function Wallets() {
                             Link Wallet
                         </Title>
                         <Box mx="auto">
-                            <form onSubmit={form.onSubmit(handleSubmit)}>
+                            <form onSubmit={form.onSubmit(submitHandler)}>
                                 <TextInput
                                     withAsterisk
                                     required

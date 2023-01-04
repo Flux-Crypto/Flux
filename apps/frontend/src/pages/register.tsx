@@ -36,16 +36,6 @@ function Register() {
 
     return (
         <Container size={420} my={40}>
-            <Title align="center" className={classes.title}>
-                Register
-            </Title>
-            <Text color="dimmed" size="sm" align="center" mt={5}>
-                Already have an account?{" "}
-                <Anchor component={Link} href="/login" size="sm">
-                    Login
-                </Anchor>
-            </Text>
-
             <Paper
                 withBorder
                 shadow="md"
@@ -55,10 +45,22 @@ function Register() {
                 style={{ position: "relative" }}
             >
                 <LoadingOverlay visible={!isLoaded} overlayBlur={2} />
+
+                <Title align="center" className={classes.title}>
+                    Register
+                </Title>
+                <Text color="dimmed" size="sm" align="center" mt={5}>
+                    Already have an account?{" "}
+                    <Anchor component={Link} href="/login" size="sm">
+                        Login
+                    </Anchor>
+                </Text>
+
                 <TextInput
                     label="Email"
                     placeholder="johndoe@email.com"
                     required
+                    mt="xl"
                     mb="md"
                 />
                 <PasswordStrength />

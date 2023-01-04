@@ -44,8 +44,6 @@ module.exports = {
     },
     rules: {
         "no-underscore-dangle": "off",
-        // "simple-import-sort/imports": "warn",
-        // "simple-import-sort/exports": "warn",
         "import/first": "warn",
         "import/newline-after-import": "warn",
         "import/no-duplicates": "error",

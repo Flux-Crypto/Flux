@@ -1,12 +1,41 @@
-import { ChangeEvent, DragEvent, useRef, useState } from "react";
+import { Button, Container, Group, Text, createStyles } from "@mantine/core";
+import { Dropzone, FileWithPath, MIME_TYPES } from "@mantine/dropzone";
+import { IconUpload, IconDownload, IconX } from "@tabler/icons";
+import { Dispatch, SetStateAction, useRef } from "react";
 
 import { Transaction } from "../../lib/types";
+
+const useStyles = createStyles((theme) => ({
+    wrapper: {
+        position: "relative",
+        marginBottom: 30
+    },
+
+    dropzone: {
+        borderWidth: 1,
+        paddingBottom: 50
+    },
+
+    icon: {
+        color:
+            theme.colorScheme === "dark"
+                ? theme.colors.dark[3]
+                : theme.colors.gray[4]
+    },
+
+    control: {
+        position: "absolute",
+        width: 250,
+        left: "calc(50% - 125px)",
+        bottom: -20
+    }
+}));
 
 const parseCSV = (csvData: string) => {
     const rawData = csvData.split("\n");
 
     const txns = [];
-    for (let i = 1; i < rawData.length; i++) {
+    for (let i = 1; i < rawData.length; i += 1) {
         const rawTxn = rawData[i].split(",");
 
         const txn: Transaction = {
@@ -17,7 +46,7 @@ const parseCSV = (csvData: string) => {
             sentCurrency: rawTxn[4] || "",
             feeAmount: parseFloat(rawTxn[5]) || 0,
             feeCurrency: rawTxn[6] || "",
-            tag: rawTxn[7] || ""
+            tag: (rawTxn[7] || "").toUpperCase()
         };
 
         txns.push(txn);
@@ -26,29 +55,14 @@ const parseCSV = (csvData: string) => {
     return txns;
 };
 
-const CSVImport = () => {
-    const fileInput = useRef<HTMLInputElement>(null);
-    const [txns, setTxns] = useState<Transaction[]>([]);
+interface CSVImportProps {
+    updateData: Dispatch<SetStateAction<Transaction[]>>;
+}
 
-    const handleDrop = (e: DragEvent<HTMLDivElement>) => {
-        e.preventDefault();
+function CSVImport({ updateData }: CSVImportProps) {
+    const { classes, theme } = useStyles();
 
-        const file = e.dataTransfer?.files[0];
-        // TODO: implement error handling for invalid file type
-        if (file?.type === "text/csv") {
-            readFile(file);
-        }
-    };
-
-    const handleFileInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if (!e.target.files) return;
-
-        const file = e.target.files[0];
-        // TODO: implement error handling for invalid file type
-        if (file.type === "text/csv") {
-            readFile(file);
-        }
-    };
+    const openRef = useRef<() => void>(null);
 
     const readFile = (file: File) => {
         const reader = new FileReader();
@@ -56,64 +70,89 @@ const CSVImport = () => {
         reader.onload = (e) => {
             if (!e.target?.result) return;
 
-            const txns = parseCSV(e.target?.result as string);
-            setTxns(txns);
+            const txnsData = parseCSV(e.target?.result as string);
+            updateData(txnsData);
         };
 
         reader.readAsText(file);
     };
 
-    const handleClick = () => {
-        fileInput.current?.click();
+    const handleDrop = (files: FileWithPath[]) => {
+        const file = files[0];
+
+        // TODO: implement error handling for invalid file type
+        if (file?.type === "text/csv") {
+            readFile(file);
+        }
     };
 
     return (
-        <div
-            onDrop={handleDrop}
-            onDragOver={(e) => e.preventDefault()}
-            style={{
-                width: "500px",
-                height: "200px",
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                border: "1px solid black"
-            }}
-        >
-            <input
-                type="file"
-                ref={fileInput}
-                onChange={handleFileInputChange}
-                style={{ display: "none" }}
-                accept=".csv"
-            />
-            <button onClick={handleClick}>Import CSV</button>
-            {txns.map(
-                ({
-                    date,
-                    receivedQuantity,
-                    receivedCurrency,
-                    sentQuantity,
-                    sentCurrency,
-                    feeAmount,
-                    feeCurrency,
-                    tag
-                }: Transaction) => (
-                    <div key={date}>
-                        <p>{date}</p>
-                        <p>{receivedQuantity}</p>
-                        <p>{receivedCurrency}</p>
-                        <p>{sentQuantity}</p>
-                        <p>{sentCurrency}</p>
-                        <p>{feeAmount}</p>
-                        <p>{feeCurrency}</p>
-                        <p>{tag}</p>
-                    </div>
-                )
-            )}
+        <div className={classes.wrapper}>
+            <Dropzone
+                openRef={openRef}
+                onDrop={handleDrop}
+                className={classes.dropzone}
+                radius="md"
+                accept={[MIME_TYPES.csv]}
+                maxSize={30 * 1024 ** 2}
+            >
+                <div style={{ pointerEvents: "none" }}>
+                    <Group position="center">
+                        <Dropzone.Accept>
+                            <IconDownload
+                                size={50}
+                                color={theme.colors[theme.primaryColor][6]}
+                                stroke={1.5}
+                            />
+                        </Dropzone.Accept>
+                        <Dropzone.Reject>
+                            <IconX
+                                size={50}
+                                color={theme.colors.red[6]}
+                                stroke={1.5}
+                            />
+                        </Dropzone.Reject>
+                        <Dropzone.Idle>
+                            <IconUpload
+                                size={50}
+                                color={
+                                    theme.colorScheme === "dark"
+                                        ? theme.colors.dark[0]
+                                        : theme.black
+                                }
+                                stroke={1.5}
+                            />
+                        </Dropzone.Idle>
+                    </Group>
+
+                    <Text align="center" weight={700} size="lg" mt="xl">
+                        <Dropzone.Accept>Drop files here</Dropzone.Accept>
+                        <Dropzone.Reject>
+                            CSV file less than 30mb
+                        </Dropzone.Reject>
+                        <Dropzone.Idle>Import transactions</Dropzone.Idle>
+                    </Text>
+                    <Container size="sm">
+                        <Text align="center" size="sm" mt="xs" color="dimmed">
+                            Drag and drop files here to upload. We can accept
+                            only <i>.csv</i> files that are less than 30mb in
+                            size. Please follow the provided template to
+                            properly format your transactions.
+                        </Text>
+                    </Container>
+                </div>
+            </Dropzone>
+
+            <Button
+                className={classes.control}
+                size="md"
+                radius="xl"
+                onClick={() => openRef.current?.()}
+            >
+                Select files
+            </Button>
         </div>
     );
-};
+}
 
 export default CSVImport;

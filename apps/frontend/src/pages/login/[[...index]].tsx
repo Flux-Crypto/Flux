@@ -1,4 +1,4 @@
-import { useSignIn } from "@clerk/clerk-react"
+import { useSignIn } from "@clerk/clerk-react";
 import {
     Anchor,
     Button,
@@ -13,11 +13,11 @@ import {
     TextInput,
     Title,
     createStyles
-} from "@mantine/core"
-import { useForm } from "@mantine/form"
-import Link from "next/link"
+} from "@mantine/core";
+import { useForm } from "@mantine/form";
+import Link from "next/link";
 
-import MainLayout from "@layouts/MainLayout"
+import MainLayout from "@layouts/MainLayout";
 
 const useStyles = createStyles((theme) => ({
     form: {
@@ -42,16 +42,16 @@ const useStyles = createStyles((theme) => ({
         fontSize: theme.fontSizes.sm,
         textDecoration: "none"
     }
-}))
+}));
 
 interface FormValues {
-    email: string
-    password: string
+    email: string;
+    password: string;
 }
 
 function Login() {
-    const { classes } = useStyles()
-    const { isLoaded, signIn } = useSignIn()
+    const { classes } = useStyles();
+    const { isLoaded, signIn } = useSignIn();
 
     const form = useForm<FormValues>({
         initialValues: {
@@ -63,21 +63,21 @@ function Login() {
             email: (value: string) =>
                 /^\S+@\S+$/.test(value) ? null : "Invalid email"
         }
-    })
+    });
 
     const submitHandler = async (values: FormValues) => {
-        console.log(values)
+        console.log(values);
 
         try {
             const response = await signIn?.create({
                 identifier: values.email,
                 password: values.password
-            })
-            console.log(response)
+            });
+            console.log(response);
         } catch (e) {
-            console.log(e)
+            console.log(e);
         }
-    }
+    };
 
     return (
         <MainLayout pageTitle="Login">
@@ -97,11 +97,7 @@ function Login() {
                     >
                         Welcome back
                     </Title>
-                    <form
-                        onSubmit={form.onSubmit((values) =>
-                            submitHandler(values)
-                        )}
-                    >
+                    <form onSubmit={form.onSubmit(submitHandler)}>
                         <LoadingOverlay visible={!isLoaded} overlayBlur={2} />
                         <TextInput
                             label="Email address"
@@ -146,7 +142,7 @@ function Login() {
                 </Paper>
             </Container>
         </MainLayout>
-    )
+    );
 }
 
-export default Login
+export default Login;

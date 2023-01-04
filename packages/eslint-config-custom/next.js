@@ -27,8 +27,7 @@ module.exports = {
         }
     },
     rules: {
-        // semi: ["error", "always"],
-        semi: 0,
+        semi: ["error", "warn"],
         "no-unexpected-multiline": "error",
         // suppress errors for missing 'import React' in files
         "react/react-in-jsx-scope": "off",
@@ -36,8 +35,21 @@ module.exports = {
         "react/jsx-filename-extension": [1, { extensions: [".ts", ".tsx"] }],
         // suppress errors for props spreading
         "react/jsx-props-no-spreading": "off",
-        // suppress errors for nested ternaries
-        "no-nested-ternary": "off",
+        "react/function-component-definition": [
+            "error",
+            {
+                namedComponents: "arrow-function",
+                unnamedComponents: "arrow-function"
+            }
+        ],
+        "@typescript-eslint/no-unused-vars": [
+            "warn",
+            {
+                argsIgnorePattern: "^_",
+                caughtErrorsIgnorePattern: "^_"
+            }
+        ],
+        "no-nested-ternary": "warn",
         "no-param-reassign": "off",
         // export styling
         "import/prefer-default-export": "off"
@@ -52,4 +64,4 @@ module.exports = {
         "coverage",
         "dist"
     ]
-}
+};
