@@ -1,5 +1,6 @@
 import { useSignUp } from "@clerk/clerk-react";
 import {
+    Alert,
     Anchor,
     Button,
     Checkbox,
@@ -12,6 +13,7 @@ import {
     createStyles
 } from "@mantine/core";
 import { matches } from "@mantine/form";
+import { IconAlertCircle } from "@tabler/icons";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -58,14 +60,16 @@ function getStrength(password: string) {
     return Math.max(100 - (100 / (requirements.length + 1)) * multiplier, 0);
 }
 
-function Register() {
+const Register = () => {
     const { classes } = useStyles();
-
+    const [error, setError] = useState("");
     const { isLoaded, signUp } = useSignUp();
     const [passwordStrength, setPasswordStrength] = useState(0);
 
     const form = useRegisterForm({
         initialValues: {
+            firstName: "",
+            lastName: "",
             email: "",
             password: ""
         },
@@ -86,13 +90,18 @@ function Register() {
     const submitHandler = async ({ email, password }: typeof form.values) => {
         try {
             const response = await signUp?.create({
+                firstName: "abc",
+                lastName: "asd",
                 emailAddress: email,
                 password
             });
-
             console.log(response);
         } catch (e) {
-            console.log(e);
+            if (e.status === 422) {
+                setError("Insecure password.");
+            } else {
+                setError("Something went wrong. Try again later.");
+            }
         }
     };
 
@@ -116,19 +125,42 @@ function Register() {
                             Login
                         </Anchor>
                     </Text>
-
+                    {error && (
+                        <Alert
+                            icon={<IconAlertCircle size={16} />}
+                            title="Something went wrong!"
+                            color="red"
+                        >
+                            {error}
+                        </Alert>
+                    )}
                     <RegisterFormProvider form={form}>
                         <form onSubmit={form.onSubmit(submitHandler)}>
                             <LoadingOverlay
                                 visible={!isLoaded}
                                 overlayBlur={2}
                             />
-
+                            <TextInput
+                                label="First Name"
+                                placeholder="John"
+                                required
+                                mt="md"
+                                mb="md"
+                                {...form.getInputProps("firstName")}
+                            />
+                            <TextInput
+                                label="Last Name"
+                                placeholder="Doe"
+                                required
+                                mt="md"
+                                mb="md"
+                                {...form.getInputProps("lastName")}
+                            />
                             <TextInput
                                 label="Email"
                                 placeholder="johndoe@email.com"
                                 required
-                                mt="xl"
+                                mt="md"
                                 mb="md"
                                 {...form.getInputProps("email")}
                             />
@@ -140,7 +172,7 @@ function Register() {
                             <Checkbox
                                 label="Remember me"
                                 sx={{ lineHeight: 1 }}
-                                mt="xl"
+                                mt="md"
                             />
 
                             <Button
@@ -157,6 +189,6 @@ function Register() {
             </Container>
         </MainLayout>
     );
-}
+};
 
 export default Register;

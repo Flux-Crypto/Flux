@@ -44,7 +44,7 @@ const useStyles = createStyles((theme) => ({
     }
 }));
 
-function Login() {
+const Login = () => {
     const { classes } = useStyles();
     const { isLoaded, signIn } = useSignIn();
 
@@ -138,6 +138,6 @@ function Login() {
             </Container>
         </MainLayout>
     );
-}
+};
 
 export default Login;

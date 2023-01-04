@@ -39,7 +39,7 @@ const useStyles = createStyles((theme) => ({
     }
 }));
 
-function Wallets() {
+const Wallets = () => {
     const { classes } = useStyles();
 
     const { isLoaded, userId, sessionId } = useAuth();
@@ -146,6 +146,6 @@ function Wallets() {
             </Stack>
         </Center>
     );
-}
+};
 
 export default Wallets;
