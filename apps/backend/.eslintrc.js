@@ -1,8 +1,8 @@
 module.exports = {
-    ...require("@aurora/eslint-config-custom/.eslintrc")
-    // parserOptions: {
-    //     root: true,
-    //     tsconfigRootDir: __dirname,
-    //     project: ["./tsconfig.json"]
-    // }
+    ...require("@aurora/eslint-config-custom/server"),
+    parserOptions: {
+        root: true,
+        tsconfigRootDir: __dirname,
+        project: ["./tsconfig.json"]
+    }
 };

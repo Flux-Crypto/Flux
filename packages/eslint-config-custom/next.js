@@ -27,7 +27,7 @@ module.exports = {
         }
     },
     rules: {
-        semi: ["error", "warn"],
+        semi: "off",
         "no-unexpected-multiline": "error",
         // suppress errors for missing 'import React' in files
         "react/react-in-jsx-scope": "off",

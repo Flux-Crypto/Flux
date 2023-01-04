@@ -1,9 +1,10 @@
 {
     "name": "@aurora/eslint-config-custom",
     "version": "0.1.0",
+    "main": "index.js",
     "files": [
         "next.js",
-        ".eslintrc.js"
+        "server.js"
     ],
     "dependencies": {
         "eslint-config-airbnb-base": "^15.0.0",

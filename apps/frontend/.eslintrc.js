@@ -1,5 +1,5 @@
 module.exports = {
-    ...require("@aurora/eslint-config-custom/next.js"),
+    ...require("@aurora/eslint-config-custom/next"),
     parserOptions: {
         root: true,
         tsconfigRootDir: __dirname,
