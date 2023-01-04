@@ -1,11 +1,13 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import { MantineProvider } from "@mantine/core";
 import { AppProps } from "next/app";
+import { useRouter } from "next/router";
 
-// eslint-disable-next-line react/function-component-definition
 export default function App({ Component, pageProps }: AppProps) {
+    const { push } = useRouter();
+
     return (
-        <ClerkProvider {...pageProps}>
+        <ClerkProvider {...pageProps} navigate={(to) => push(to)}>
             <MantineProvider
                 withGlobalStyles
                 withNormalizeCSS

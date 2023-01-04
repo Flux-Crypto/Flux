@@ -16,7 +16,7 @@ import { IconAlertCircle, IconLink } from "@tabler/icons";
 import { ethers } from "ethers";
 import { useState } from "react";
 
-import callAPI from "../api/callAPI";
+import callAPI from "@lib/callAPI";
 
 const useStyles = createStyles((theme) => ({
     root: {
@@ -39,7 +39,7 @@ const useStyles = createStyles((theme) => ({
     }
 }));
 
-const Wallets = () => {
+function Wallets() {
     const { classes } = useStyles();
 
     const { isLoaded, userId, sessionId } = useAuth();
@@ -146,6 +146,6 @@ const Wallets = () => {
             </Stack>
         </Center>
     );
-};
+}
 
 export default Wallets;
