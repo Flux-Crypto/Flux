@@ -6,17 +6,17 @@ import {
     Progress,
     Text
 } from "@mantine/core";
-import { useInputState } from "@mantine/hooks";
 import { IconCheck, IconX } from "@tabler/icons";
 import _ from "lodash";
 
-function PasswordRequirement({
-    meets,
-    label
-}: {
+import { useRegisterFormContext } from "@contexts/register-form-context";
+
+interface PasswordRequirementProps {
     meets: boolean;
     label: string;
-}) {
+}
+
+function PasswordRequirement({ meets, label }: PasswordRequirementProps) {
     return (
         <Text color={meets ? "teal" : "red"} mt={5} size="sm">
             <Center inline>
@@ -31,29 +31,14 @@ function PasswordRequirement({
     );
 }
 
-const requirements = [
-    { re: /[0-9]/, label: "Includes number" },
-    { re: /[a-z]/, label: "Includes lowercase letter" },
-    { re: /[A-Z]/, label: "Includes uppercase letter" },
-    { re: /[$&+,:;=?@#|'<>.^*()%!-]/, label: "Includes special symbol" }
-];
-
-function getStrength(password: string) {
-    let multiplier = password.length >= 8 ? 0 : 1;
-
-    requirements.forEach((requirement) => {
-        if (!requirement.re.test(password)) {
-            multiplier += 1;
-        }
-    });
-
-    return Math.max(100 - (100 / (requirements.length + 1)) * multiplier, 0);
+interface PasswordStrengthProps {
+    strength: number;
+    requirements: { re: RegExp; label: string }[];
 }
 
-function PasswordStrength() {
-    const [password, setPassword] = useInputState("");
-
-    const strength = getStrength(password);
+function PasswordStrength({ strength, requirements }: PasswordStrengthProps) {
+    const form = useRegisterFormContext();
+    const { password } = form.values;
 
     let color: string;
     if (strength > 80) color = "teal";
@@ -63,11 +48,10 @@ function PasswordStrength() {
     return (
         <div>
             <PasswordInput
-                value={password}
-                onChange={setPassword}
                 placeholder="Your password"
                 label="Password"
                 required
+                {...form.getInputProps("password")}
             />
 
             <Group spacing={5} grow mt="xs" mb="md">
@@ -88,10 +72,6 @@ function PasswordStrength() {
                 ))}
             </Group>
 
-            <PasswordRequirement
-                label="Has at least 8 characters"
-                meets={password.length > 8}
-            />
             {requirements.map((requirement) => (
                 <PasswordRequirement
                     key={requirement.label}

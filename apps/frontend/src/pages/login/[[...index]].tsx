@@ -14,7 +14,7 @@ import {
     Title,
     createStyles
 } from "@mantine/core";
-import { useForm } from "@mantine/form";
+import { matches, useForm } from "@mantine/form";
 import Link from "next/link";
 
 import MainLayout from "@layouts/MainLayout";
@@ -44,34 +44,29 @@ const useStyles = createStyles((theme) => ({
     }
 }));
 
-interface FormValues {
-    email: string;
-    password: string;
-}
-
 function Login() {
     const { classes } = useStyles();
     const { isLoaded, signIn } = useSignIn();
 
-    const form = useForm<FormValues>({
+    const form = useForm({
         initialValues: {
             email: "",
             password: ""
         },
 
         validate: {
-            email: (value: string) =>
-                /^\S+@\S+$/.test(value) ? null : "Invalid email"
+            email: matches(
+                /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+                "Invalid email"
+            )
         }
     });
 
-    const submitHandler = async (values: FormValues) => {
-        console.log(values);
-
+    const submitHandler = async ({ email, password }: typeof form.values) => {
         try {
             const response = await signIn?.create({
-                identifier: values.email,
-                password: values.password
+                identifier: email,
+                password
             });
             console.log(response);
         } catch (e) {

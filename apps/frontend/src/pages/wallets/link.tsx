@@ -84,7 +84,7 @@ function Wallets() {
             return;
         }
 
-        form.resetDirty();
+        form.reset();
     };
 
     return (
