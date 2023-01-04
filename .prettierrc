@@ -5,9 +5,10 @@
     "tabWidth": 4,
     "useTabs": false,
     "importOrder": [
-        "^@?(?!src|lib|docs|routes|plugins)\\w+",
+        "^@?(?!src|lib|docs|routes|plugins|layouts|pages|components|stories)\\w+",
         "^@plugins/(.*)$",
         "^@(src|routes|lib|)/(.*)$",
+        "^@(pages|components|stories|layouts)/(.*)$",
         "^@docs/(.*)$",
         "^[./]"
     ],

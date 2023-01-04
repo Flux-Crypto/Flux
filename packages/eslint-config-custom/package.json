@@ -2,7 +2,7 @@
     "name": "@aurora/eslint-config-custom",
     "version": "0.1.0",
     "files": [
-        "server.js",
+        "next.js",
         ".eslintrc.js"
     ],
     "dependencies": {
