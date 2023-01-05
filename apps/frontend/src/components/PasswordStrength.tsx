@@ -49,6 +49,7 @@ const PasswordStrength = ({
     return (
         <div>
             <PasswordInput
+                withAsterisk={false}
                 placeholder="Your password"
                 label="Password"
                 required

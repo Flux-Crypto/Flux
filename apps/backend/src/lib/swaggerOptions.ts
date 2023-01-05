@@ -3,8 +3,8 @@ import {
     ImportTransactionExample,
     UserExample,
     WalletExample
-} from "./schemas/apiSchema";
-import jsonSchema from "./schemas/json-schema.json";
+} from "@aurora/prisma/docs/schemas/apiSchema";
+import jsonSchema from "@aurora/prisma/docs/schemas/json-schema.json";
 
 export const swaggerOptions = {
     openapi: {

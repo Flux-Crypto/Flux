@@ -15,11 +15,10 @@ import { env } from "process";
 import { prismaPlugin } from "@plugins/index";
 
 import { envToLogger } from "@lib/logger";
+import { swaggerOptions, swaggerUIOptions } from "@lib/swaggerOptions";
 import { FastifyDone } from "@lib/types/fastifyTypes";
+import explorer from "@routes/explorer/base";
 import users from "@routes/users/base";
-import explorer from "@src/routes/explorer/base";
-
-import { swaggerOptions, swaggerUIOptions } from "@docs/options";
 
 const runServer = async () => {
     // TODO: fix

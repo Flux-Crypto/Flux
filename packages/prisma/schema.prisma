@@ -1,0 +1,91 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+generator jsonSchema {
+    provider              = "prisma-json-schema-generator"
+    output                = "./docs/schemas"
+    includeRequiredFields = "true"
+}
+
+datasource db {
+    provider = "mongodb"
+    url      = env("DB_URL")
+}
+
+model Wallet {
+    address     String   @id @map("_id")
+    seedPhrase  String?
+    rdUserIds   String[] @db.ObjectId // read-only
+    rdUsers     User[]   @relation(fields: [rdUserIds], references: [id], name: "readOnly")
+    rdwrUserIds String[] @db.ObjectId // read-write
+    rdwrUsers   User[]   @relation(fields: [rdwrUserIds], references: [id], name: "readWrite")
+}
+
+type WalletName {
+    address String
+    name    String
+}
+
+type ImportTransaction {
+    id               String   @default(uuid())
+    date             DateTime @default(now())
+    receivedQuantity Float    @default(0)
+    receivedCurrency String   @default("")
+    sentQuantity     Float    @default(0)
+    sentCurrency     String   @default("")
+    feeAmount        Float    @default(0)
+    feeCurrency      String   @default("")
+    tag              String?
+}
+
+type ChainTransaction {
+    hash String
+    tag  String?
+}
+
+model User {
+    id                  String              @id @default(auto()) @map("_id") @db.ObjectId
+    email               String              @unique
+    firstName           String
+    lastName            String
+    apiKey              String              @unique @default("")
+    processorAPIKeys    String[]
+    exchangeAPIKeys     String[]
+    rdWalletAddresses   String[] // read-only
+    rdWallets           Wallet[]            @relation(fields: [rdWalletAddresses], references: [address], name: "readOnly")
+    rdwrWalletAddresses String[] // read-write
+    rdwrWallets         Wallet[]            @relation(fields: [rdwrWalletAddresses], references: [address], name: "readWrite")
+    walletNames         WalletName[]
+    importTransactions  ImportTransaction[]
+    chainTransactions   ChainTransaction[]
+    accessToken         String?             @map(name: "access_token")
+    accessTokenExpires  DateTime?           @map(name: "access_token_expires")
+    createdAt           DateTime            @default(now()) @map(name: "created_at")
+    updatedAt           DateTime            @default(now()) @map(name: "updated_at")
+
+    @@index([walletNames.address, importTransactions.id, chainTransactions.hash])
+}
+
+model Session {
+    id           String   @id @default(auto()) @map("_id") @db.ObjectId
+    userId       String   @map(name: "user_id")
+    expires      DateTime
+    sessionToken String   @unique @map(name: "session_token")
+    accessToken  String   @unique @map(name: "access_token")
+    createdAt    DateTime @default(now()) @map(name: "created_at")
+    updatedAt    DateTime @default(now()) @map(name: "updated_at")
+
+    @@map(name: "sessions")
+}
+
+model VerificationRequest {
+    id         String   @id @default(auto()) @map("_id") @db.ObjectId
+    identifier String
+    token      String   @unique
+    expires    DateTime
+    createdAt  DateTime @default(now()) @map(name: "created_at")
+    updatedAt  DateTime @default(now()) @map(name: "updated_at")
+
+    @@map(name: "verification_requests")
+}

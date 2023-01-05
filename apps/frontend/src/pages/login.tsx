@@ -1,5 +1,6 @@
-import { useSignIn } from "@clerk/clerk-react";
+import { useAuth, useSignIn } from "@clerk/clerk-react";
 import {
+    Alert,
     Anchor,
     Button,
     Container,
@@ -15,9 +16,14 @@ import {
     createStyles
 } from "@mantine/core";
 import { matches, useForm } from "@mantine/form";
+import { IconAlertCircle } from "@tabler/icons";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
-import MainLayout from "@src/layouts/AuthLayout";
+import callAPI from "@lib/callAPI";
+
+import MainLayout from "@layouts/MainLayout";
 
 const useStyles = createStyles((theme) => ({
     form: {
@@ -47,6 +53,10 @@ const useStyles = createStyles((theme) => ({
 const Login = () => {
     const { classes } = useStyles();
     const { isLoaded, signIn } = useSignIn();
+    const [error, setError] = useState("");
+    const router = useRouter();
+    const { isSignedIn } = useAuth();
+    const [loggedIn, setLoggedIn] = useState(false);
 
     const form = useForm({
         initialValues: {
@@ -62,6 +72,12 @@ const Login = () => {
         }
     });
 
+    useEffect(() => {
+        if (isSignedIn || loggedIn) {
+            router.push("/dashboard");
+        }
+    }, [isSignedIn, router, loggedIn]);
+
     const submitHandler = async ({ email, password }: typeof form.values) => {
         try {
             const response = await signIn?.create({
@@ -69,29 +85,38 @@ const Login = () => {
                 password
             });
             console.log(response);
-        } catch (e) {
-            console.log(e);
+            console.log(isSignedIn);
+            setLoggedIn(true);
+            if (response?.status === "complete") {
+                await callAPI("");
+            }
+        } catch (e: any) {
+            setError(e.errors[0].message);
         }
     };
 
     return (
         <MainLayout pageTitle="Login">
-            <Container size={420} my={40}>
-                <Paper
-                    withBorder
-                    className={classes.form}
-                    radius="md"
-                    p={30}
-                    mt="8rem"
-                >
+            <Container size={420} mt="8rem">
+                <Paper withBorder className={classes.form} radius="md" p={30}>
                     <Title
                         className={classes.title}
                         align="center"
                         mt="md"
                         mb={20}
                     >
-                        Welcome back
+                        Login
                     </Title>
+                    {error && (
+                        <Alert
+                            icon={<IconAlertCircle size={16} />}
+                            title="Something went wrong!"
+                            color="red"
+                            mt="md"
+                        >
+                            {error}
+                        </Alert>
+                    )}
                     <form onSubmit={form.onSubmit(submitHandler)}>
                         <LoadingOverlay visible={!isLoaded} overlayBlur={2} />
                         <TextInput
@@ -118,7 +143,7 @@ const Login = () => {
                         </Stack>
 
                         <Button type="submit" fullWidth mt="xl">
-                            Login
+                            Log in
                         </Button>
                     </form>
 

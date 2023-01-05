@@ -5,19 +5,13 @@
     "main": "index.js",
     "scripts": {
         "format": "npx prettier -w src/**/*.ts",
-        "lint": "npm run format && npx eslint --ext .ts,.json,.prisma --fix",
+        "lint": "npm run format && npx eslint --ext .ts,.json --fix",
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "doppler run npm run build && node build/index.js",
         "open_docs_win": "start http://localhost:8000/docs && start ./docs/index.html",
         "open_docs_mac": "open http://localhost:8000/docs && open ./docs/index.html",
         "dev": "npm run open_docs_mac && doppler run npx nodemon",
         "build": "rimraf ./build && tsc",
-        "generate": "doppler run npx prisma generate",
-        "reset": "doppler run npx prisma db seed",
-        "studio": "doppler run npx prisma studio"
-    },
-    "prisma": {
-        "seed": "ts-node prisma/seed.ts"
     },
     "repository": {
         "type": "git",
@@ -33,6 +27,7 @@
         "@fastify/cookie": "^8.3.0",
         "@prisma/client": "^4.8.0",
         "alchemy-sdk": "^2.2.5",
+        "bcrypt": "^5.1.0",
         "cookies": "^0.8.0",
         "ethers": "^5.7.2",
         "fastify": "^4.10.2",

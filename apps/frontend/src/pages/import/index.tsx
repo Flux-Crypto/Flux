@@ -6,7 +6,7 @@ import { useState } from "react";
 import ImportTable from "@src/components/ImportTable";
 
 import CSVImport from "../../components/CSVImport";
-import { Transaction } from "../../lib/types";
+import { Transaction } from "../../lib/types/types";
 
 const Import = () => {
     const [txns, setTxns] = useState<Transaction[]>([]);

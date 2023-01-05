@@ -8,3 +8,11 @@ export interface Transaction {
     feeCurrency: string;
     tag: string;
 }
+
+export interface ClerkAuthError {
+    errors: {
+        code: string;
+        longMessage: string;
+        message: string;
+    }[];
+}

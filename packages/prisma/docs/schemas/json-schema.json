@@ -8,8 +8,10 @@
           "type": "string"
         },
         "seedPhrase": {
-          "type": "string",
-          "default": ""
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "rdUsers": {
           "type": "array",
@@ -23,12 +25,26 @@
             "$ref": "#/definitions/User"
           }
         }
-      }
+      },
+      "required": [
+        "address",
+        "rdUserIds",
+        "rdwrUserIds"
+      ]
     },
     "User": {
       "type": "object",
       "properties": {
         "id": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
           "type": "string"
         },
         "apiKey": {
@@ -77,7 +93,16 @@
             "$ref": "#/definitions/ChainTransaction"
           }
         }
-      }
+      },
+      "required": [
+        "email",
+        "firstName",
+        "lastName",
+        "processorAPIKeys",
+        "exchangeAPIKeys",
+        "rdWalletAddresses",
+        "rdwrWalletAddresses"
+      ]
     },
     "WalletName": {
       "type": "object",
@@ -88,7 +113,11 @@
         "name": {
           "type": "string"
         }
-      }
+      },
+      "required": [
+        "address",
+        "name"
+      ]
     },
     "ImportTransaction": {
       "type": "object",
@@ -125,10 +154,13 @@
           "default": ""
         },
         "tag": {
-          "type": "string",
-          "default": ""
+          "type": [
+            "string",
+            "null"
+          ]
         }
-      }
+      },
+      "required": []
     },
     "ChainTransaction": {
       "type": "object",
@@ -137,10 +169,15 @@
           "type": "string"
         },
         "tag": {
-          "type": "string",
-          "default": ""
+          "type": [
+            "string",
+            "null"
+          ]
         }
-      }
+      },
+      "required": [
+        "hash"
+      ]
     }
   },
   "type": "object",

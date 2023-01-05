@@ -4,8 +4,9 @@ import { ImportTransaction } from "@prisma/client";
  *  /users
  */
 export interface UsersRequestBody {
-    userId: string;
-    sessionId: string;
+    email: string;
+    firstName: string;
+    lastName: string;
 }
 
 /**

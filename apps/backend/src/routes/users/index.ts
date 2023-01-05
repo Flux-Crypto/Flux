@@ -2,6 +2,7 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 import { logAndSendReply } from "@lib/logger";
+import { FastifyDone } from "@lib/types/fastifyTypes";
 import { UsersIndexSchema } from "@lib/types/jsonObjects";
 import { UsersRequestBody } from "@lib/types/routeParams";
 import { FastifyDone } from "@src/lib/types/fastifyTypes";
@@ -44,51 +45,56 @@ const indexRoute = (
         "/",
         postSchema,
         async (request: FastifyRequest, reply: FastifyReply) => {
-            const { userId, sessionId } = request.body as UsersRequestBody;
+            console.info(request.body);
+            // const { email, firstName, lastName } = request.body as UsersRequestBody;
 
-            const clientToken = request.cookies.__session;
+            reply.code(HttpStatus.OK).send({ status: "ok" });
 
-            if (!sessionId || !clientToken)
-                logAndSendReply(
-                    log.error,
-                    reply,
-                    HttpStatus.UNAUTHORIZED,
-                    "Authentication required"
-                );
+            // if (!email || !firstName || !lastName)
+            //     logAndSendReply(
+            //         log.error,
+            //         reply,
+            //         HttpStatus.BAD_REQUEST,
+            //         "Incomplete registration body"
+            //     );
 
-            // TODO: check expire time
+            // try {
+            //     let userExists = true;
+            //     let user = await prisma.user.findUnique({
+            //         where: {
+            //             email
+            //         }
+            //     });
 
-            if (!userId)
-                logAndSendReply(
-                    log.error,
-                    reply,
-                    HttpStatus.BAD_REQUEST,
-                    "Missing user id parameter"
-                );
+            //     if (!user) {
+            //         userExists = false;
+            //         user = await prisma.user.create({
+            //             data: {
+            //                 email,
+            //                 firstName,
+            //                 lastName
+            //             }
+            //         });
+            //     }
 
-            try {
-                const user = await prisma.user.create({
-                    data: {
-                        id: userId
-                    }
-                });
+            //     reply
+            //         .code(userExists ? HttpStatus.OK : HttpStatus.CREATED)
+            //         .send();
+            // } catch (e) {
+            //     if (e instanceof PrismaClientKnownRequestError) {
+            //         log.fatal(e);
+            //         reply
+            //             .code(HttpStatus.INTERNAL_SERVER_ERROR)
+            //             .send("Server error");
+            //     }
 
-                reply.code(201).send(user);
-            } catch (e) {
-                if (e instanceof PrismaClientKnownRequestError) {
-                    log.fatal(e);
-                    reply
-                        .code(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .send("Server error");
-                }
-
-                logAndSendReply(
-                    log.error,
-                    reply,
-                    HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Couldn't create user."
-                );
-            }
+            //     logAndSendReply(
+            //         log.error,
+            //         reply,
+            //         HttpStatus.INTERNAL_SERVER_ERROR,
+            //         "Couldn't create user."
+            //     );
+            // }
         }
     );
 

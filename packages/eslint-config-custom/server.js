@@ -37,7 +37,14 @@ module.exports = {
                 project: [
                     path.resolve(__dirname, "../../tsconfig.json"),
                     path.resolve(__dirname, "../../apps/backend/tsconfig.json"),
-                    path.resolve(__dirname, "../../apps/frontend/tsconfig.json")
+                    path.resolve(
+                        __dirname,
+                        "../../apps/frontend/tsconfig.json"
+                    ),
+                    path.resolve(
+                        __dirname,
+                        "../../packages/prisma/tsconfig.json"
+                    )
                 ]
             }
         }

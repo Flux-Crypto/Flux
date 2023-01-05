@@ -13,8 +13,7 @@
             "@src/*": ["src/*"],
             "@lib/*": ["src/lib/*"],
             "@routes/*": ["src/routes/*"],
-            "@plugins/*": ["src/plugins/*"],
-            "@docs/*": ["docs/*"]
+            "@plugins/*": ["src/plugins/*"]
         },
         "strictNullChecks": true
     },

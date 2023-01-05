@@ -2,9 +2,10 @@ import { useSignUp } from "@clerk/clerk-react";
 import {
     Alert,
     Anchor,
+    Box,
     Button,
-    Checkbox,
     Container,
+    Grid,
     LoadingOverlay,
     Paper,
     Text,
@@ -22,10 +23,10 @@ import {
     RegisterFormProvider,
     useRegisterForm
 } from "@contexts/register-form-context";
-import MainLayout from "@src/layouts/AuthLayout";
-import callAPI from "@src/lib/callAPI";
+import callAPI from "@lib/callAPI";
 
 import PasswordStrength from "@components/PasswordStrength";
+import MainLayout from "@layouts/MainLayout";
 
 const useStyles = createStyles((theme) => ({
     form: {
@@ -110,16 +111,10 @@ const Register = () => {
 
             if (response?.status === "complete") {
                 await callAPI("");
-                router.replace("/dashboard");
+                router.push("/dashboard");
             }
         } catch (e: any) {
-            if (e.status === 422) {
-                setError(
-                    "Insecure password or duplicate email, you figure it out."
-                );
-            } else {
-                setError("Something went wrong. Try again later.");
-            }
+            setError(e.errors[0].message);
             form.resetTouched();
         }
     };
@@ -131,7 +126,7 @@ const Register = () => {
 
     return (
         <MainLayout pageTitle="Register">
-            <Container size={420} my={40}>
+            <Container size={420} mt="8rem">
                 <Paper
                     withBorder
                     shadow="md"
@@ -154,7 +149,7 @@ const Register = () => {
                             icon={<IconAlertCircle size={16} />}
                             title="Something went wrong!"
                             color="red"
-                            mt="xl"
+                            mt="md"
                         >
                             {error}
                         </Alert>
@@ -165,40 +160,42 @@ const Register = () => {
                                 visible={!isLoaded}
                                 overlayBlur={2}
                             />
-                            <TextInput
-                                label="First Name"
-                                placeholder="John"
-                                required
-                                mt="md"
-                                mb="md"
-                                {...form.getInputProps("firstName")}
-                            />
-                            <TextInput
-                                label="Last Name"
-                                placeholder="Doe"
-                                required
-                                mt="md"
-                                mb="md"
-                                {...form.getInputProps("lastName")}
-                            />
+                            <Grid>
+                                <Grid.Col span={6}>
+                                    <TextInput
+                                        label="First Name"
+                                        placeholder="John"
+                                        required
+                                        mt="md"
+                                        withAsterisk={false}
+                                        {...form.getInputProps("firstName")}
+                                    />
+                                </Grid.Col>
+                                <Grid.Col span={6}>
+                                    <TextInput
+                                        label="Last Name"
+                                        placeholder="Doe"
+                                        required
+                                        mt="md"
+                                        withAsterisk={false}
+                                        {...form.getInputProps("lastName")}
+                                    />
+                                </Grid.Col>
+                            </Grid>
                             <TextInput
                                 label="Email"
                                 placeholder="johndoe@email.com"
                                 required
+                                withAsterisk={false}
                                 mt="md"
-                                mb="md"
                                 {...form.getInputProps("email")}
                             />
-                            <PasswordStrength
-                                strength={passwordStrength}
-                                {...{ requirements }}
-                            />
-
-                            <Checkbox
-                                label="Remember me"
-                                sx={{ lineHeight: 1 }}
-                                mt="md"
-                            />
+                            <Box mt="md">
+                                <PasswordStrength
+                                    strength={passwordStrength}
+                                    {...{ requirements }}
+                                />
+                            </Box>
 
                             <Button
                                 type="submit"
