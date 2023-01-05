@@ -6,7 +6,7 @@
         "build": "doppler run next build",
         "start": "doppler run next start",
         "format": "npx prettier -w src/**/*.{ts,tsx}",
-        "lint": "npm run format && npx eslint --ext .ts,.tsx --fix-dry-run",
+        "lint": "npm run format && npx eslint --ext .ts,.tsx --fix",
         "storybook": "start-storybook -p 6006",
         "build-storybook": "build-storybook"
     },
