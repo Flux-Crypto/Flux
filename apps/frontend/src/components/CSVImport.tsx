@@ -1,9 +1,9 @@
 import { Button, Container, Group, Text, createStyles } from "@mantine/core";
 import { Dropzone, FileWithPath, MIME_TYPES } from "@mantine/dropzone";
-import { IconUpload, IconDownload, IconX } from "@tabler/icons";
+import { IconDownload, IconUpload, IconX } from "@tabler/icons";
 import { Dispatch, SetStateAction, useRef } from "react";
 
-import { Transaction } from "../../lib/types";
+import { Transaction } from "../lib/types";
 
 const useStyles = createStyles((theme) => ({
     wrapper: {

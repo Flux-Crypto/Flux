@@ -14,16 +14,18 @@ import {
     Title,
     createStyles
 } from "@mantine/core";
-import { matches } from "@mantine/form";
+import { matches, notEmpty } from "@mantine/form";
 import { IconAlertCircle } from "@tabler/icons";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 import {
     RegisterFormProvider,
     useRegisterForm
 } from "@contexts/register-form-context";
-import MainLayout from "@src/layouts/MainLayout";
+import MainLayout from "@src/layouts/AuthLayout";
+import callAPI from "@src/lib/callAPI";
 
 import PasswordStrength from "@components/PasswordStrength";
 
@@ -64,9 +66,12 @@ function getStrength(password: string) {
 
 const Register = () => {
     const { classes } = useStyles();
-    const [error, setError] = useState("");
+    const router = useRouter();
+
     const { isLoaded, signUp } = useSignUp();
+
     const [passwordStrength, setPasswordStrength] = useState(0);
+    const [error, setError] = useState("");
 
     const form = useRegisterForm({
         initialValues: {
@@ -77,6 +82,8 @@ const Register = () => {
         },
 
         validate: {
+            firstName: notEmpty("Missing first name"),
+            lastName: notEmpty("Missing last name"),
             email: matches(
                 /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
                 "Invalid email"
@@ -89,24 +96,41 @@ const Register = () => {
         setPasswordStrength(strength);
     }, [form.values.password]);
 
-    const submitHandler = async ({ email, password }: typeof form.values) => {
+    const submitHandler = async ({
+        firstName,
+        lastName,
+        email,
+        password
+    }: typeof form.values) => {
         try {
             const response = await signUp?.create({
-                firstName: "abc",
-                lastName: "asd",
+                firstName,
+                lastName,
                 emailAddress: email,
                 password
             });
-            console.log(response);
-        } catch (e) {
+
+            if (response?.status === "complete") {
+                await callAPI("");
+                router.replace("/dashboard");
+            }
+        } catch (e: any) {
             console.log(e.errors);
             if (e.status === 422) {
-                setError("Insecure password.");
+                setError(
+                    "Insecure password or duplicate email, you figure it out."
+                );
             } else {
                 setError("Something went wrong. Try again later.");
             }
+            form.resetTouched();
         }
     };
+
+    const formTouched = form.isTouched();
+    useEffect(() => {
+        if (formTouched) setError("");
+    }, [formTouched]);
 
     return (
         <MainLayout pageTitle="Register">
@@ -133,6 +157,7 @@ const Register = () => {
                             icon={<IconAlertCircle size={16} />}
                             title="Something went wrong!"
                             color="red"
+                            mt="xl"
                         >
                             {error}
                         </Alert>

@@ -1,56 +1,56 @@
-import { ImportTransaction } from "@prisma/client"
+import { ImportTransaction } from "@prisma/client";
 
 /**
  *  /users
  */
 export interface UsersRequestBody {
-    email: string
-    name?: string
+    userId: string;
+    sessionId: string;
 }
 
 /**
  *  /users/:userId
  */
 export interface UserRequestParams {
-    userId: string
+    userId: string;
 }
 
 export interface UsersTransactionsRequestParams extends UserRequestParams {
-    transactionId: string
+    transactionId: string;
 }
 
 /**
  *  /users/:userId/wallets
  */
 export interface UserWalletsRequestBody {
-    walletAddress: string
-    seedPhrase: string
+    walletAddress: string;
+    seedPhrase: string;
 }
 
 /**
  *  /users/:userId/wallets/:walletAddress
  */
 export interface UserWalletsRequestParams extends UserRequestParams {
-    walletAddress: string
+    walletAddress: string;
 }
 
 /**
  * /users/:userId/transactions
  */
 export interface UserTransactionsRequestBody {
-    transaction: ImportTransaction
+    transaction: ImportTransaction;
 }
 
 /**
  * /explorer/wallet/:walletAddress
  */
 export interface ExplorerWalletRequestParams {
-    walletAddress: string
+    walletAddress: string;
 }
 
 /**
  * /explorer/transaction/:transactionHash
  */
 export interface ExplorerTransactionRequestParams {
-    transactionHash: string
+    transactionHash: string;
 }

@@ -1,5 +1,3 @@
-import { Transaction } from "lib/types";
-
 import {
     Checkbox,
     Group,
@@ -10,6 +8,8 @@ import {
 } from "@mantine/core";
 import _ from "lodash";
 import { useState } from "react";
+
+import { Transaction } from "@src/lib/types";
 
 const useStyles = createStyles((theme) => ({
     rowSelected: {

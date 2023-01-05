@@ -46,6 +46,7 @@ type ChainTransaction {
 
 model User {
     id                  String              @id @map("_id")
+    apiKey              String              @unique @default("")
     processorAPIKeys    String[]
     exchangeAPIKeys     String[]
     rdWalletAddresses   String[] // read-only

@@ -31,8 +31,10 @@
     "homepage": "https://github.com/tot/aurora#readme",
     "dependencies": {
         "@clerk/clerk-sdk-node": "^4.5.14",
+        "@fastify/cookie": "^8.3.0",
         "@prisma/client": "^4.8.0",
         "alchemy-sdk": "^2.2.5",
+        "cookies": "^0.8.0",
         "ethers": "^5.7.2",
         "fastify": "^4.10.2",
         "fastify-plugin": "^4.4.0",

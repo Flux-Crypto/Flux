@@ -1,33 +1,35 @@
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime"
-import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
+import { sessions } from "@clerk/clerk-sdk-node";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
-import { logAndSendReply } from "@lib/logger"
-import { UsersIndexSchema } from "@lib/types/jsonObjects"
-import { UsersRequestBody } from "@lib/types/routeParams"
-import { FastifyDone } from "@src/lib/types/fastifyTypes"
-import HttpStatus from "@src/lib/types/httpStatus"
+import { logAndSendReply } from "@lib/logger";
+import { UsersIndexSchema } from "@lib/types/jsonObjects";
+import { UsersRequestBody } from "@lib/types/routeParams";
+import clerkPreHandler from "@src/lib/clerkPreHandler";
+import { FastifyDone } from "@src/lib/types/fastifyTypes";
+import HttpStatus from "@src/lib/types/httpStatus";
 
 const indexRoute = (
     server: FastifyInstance,
     { get: getSchema, post: postSchema }: UsersIndexSchema,
     done: FastifyDone
 ) => {
-    const { prisma, log } = server
+    const { prisma, log } = server;
 
     server.get(
         "/",
         getSchema,
         async (_request: FastifyRequest, reply: FastifyReply) => {
             try {
-                const users = await prisma.user.findMany()
+                const users = await prisma.user.findMany();
 
-                reply.send(users)
+                reply.send(users);
             } catch (e) {
                 if (e instanceof PrismaClientKnownRequestError) {
-                    log.fatal(e)
+                    log.fatal(e);
                     reply
                         .code(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .send("Server error")
+                        .send("Server error");
                 }
 
                 logAndSendReply(
@@ -35,40 +37,64 @@ const indexRoute = (
                     reply,
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     "Couldn't get users."
-                )
+                );
             }
         }
-    )
+    );
 
     server.post(
         "/",
         postSchema,
         async (request: FastifyRequest, reply: FastifyReply) => {
-            const { email, name } = request.body as UsersRequestBody
+            const { userId, sessionId } = request.body as UsersRequestBody;
 
-            if (!email)
+            const clientToken = request.cookies.__session;
+
+            if (!sessionId || !clientToken)
+                logAndSendReply(
+                    log.error,
+                    reply,
+                    HttpStatus.UNAUTHORIZED,
+                    "Authentication required"
+                );
+
+            const session = await sessions.verifySession(
+                sessionId as string,
+                clientToken as string
+            );
+
+            // TODO: check expire time
+
+            if (!userId)
                 logAndSendReply(
                     log.error,
                     reply,
                     HttpStatus.BAD_REQUEST,
-                    "Missing email parameters"
-                )
+                    "Missing user id parameter"
+                );
+
+            if (session?.userId !== userId)
+                logAndSendReply(
+                    log.error,
+                    reply,
+                    HttpStatus.UNAUTHORIZED,
+                    "Authorization required"
+                );
 
             try {
                 const user = await prisma.user.create({
                     data: {
-                        email,
-                        name
+                        id: userId
                     }
-                })
+                });
 
-                reply.code(201).send(user)
+                reply.code(201).send(user);
             } catch (e) {
                 if (e instanceof PrismaClientKnownRequestError) {
-                    log.fatal(e)
+                    log.fatal(e);
                     reply
                         .code(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .send("Server error")
+                        .send("Server error");
                 }
 
                 logAndSendReply(
@@ -76,12 +102,12 @@ const indexRoute = (
                     reply,
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     "Couldn't create user."
-                )
+                );
             }
         }
-    )
+    );
 
-    done()
-}
+    done();
+};
 
-export default indexRoute
+export default indexRoute;
