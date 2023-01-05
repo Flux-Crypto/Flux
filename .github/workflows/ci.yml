@@ -2,9 +2,29 @@ on:
     push:
         branches:
             - staging
+            - dev
     pull_request:
         branches:
             - dev
+    workflow_dispatch:
+        inputs:
+            logLevel:
+                description: "Log level"
+                required: true
+                default: "warning"
+                type: choice
+                options:
+                    - info
+                    - warning
+                    - debug
+            tags:
+                description: "Test scenario tags"
+                required: false
+                type: boolean
+            environment:
+                description: "Environment to run tests against"
+                type: environment
+                required: true
 
 jobs:
     test:
@@ -29,5 +49,3 @@ jobs:
                   npm run lint:backend
                   echo "Formatting frontend..."
                   npm run lint:frontend
-              env:
-                  ci: true
