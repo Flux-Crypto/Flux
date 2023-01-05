@@ -5,7 +5,6 @@ import { logAndSendReply } from "@lib/logger";
 import { FastifyDone } from "@lib/types/fastifyTypes";
 import { UsersIndexSchema } from "@lib/types/jsonObjects";
 import { UsersRequestBody } from "@lib/types/routeParams";
-import { FastifyDone } from "@src/lib/types/fastifyTypes";
 import HttpStatus from "@src/lib/types/httpStatus";
 
 const indexRoute = (

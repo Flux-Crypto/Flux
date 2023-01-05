@@ -10,8 +10,8 @@
         "start": "doppler run npm run build && node build/index.js",
         "open_docs_win": "start http://localhost:8000/docs && start ./docs/index.html",
         "open_docs_mac": "open http://localhost:8000/docs && open ./docs/index.html",
-        "dev": "npm run open_docs_mac && doppler run npx nodemon",
-        "build": "rimraf ./build && tsc",
+        "dev": "doppler run npx nodemon",
+        "build": "rimraf ./build && tsc"
     },
     "repository": {
         "type": "git",
