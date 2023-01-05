@@ -1,4 +1,5 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
+import dayjs from "dayjs";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 import { logAndSendReply } from "@lib/logger";
@@ -44,56 +45,63 @@ const indexRoute = (
         "/",
         postSchema,
         async (request: FastifyRequest, reply: FastifyReply) => {
-            console.info(request.body);
-            // const { email, firstName, lastName } = request.body as UsersRequestBody;
+            const { email, firstName, lastName } =
+                request.body as UsersRequestBody;
 
-            reply.code(HttpStatus.OK).send({ status: "ok" });
+            if (!email)
+                logAndSendReply(
+                    log.error,
+                    reply,
+                    HttpStatus.BAD_REQUEST,
+                    "Missing email parameter"
+                );
 
-            // if (!email || !firstName || !lastName)
-            //     logAndSendReply(
-            //         log.error,
-            //         reply,
-            //         HttpStatus.BAD_REQUEST,
-            //         "Incomplete registration body"
-            //     );
+            try {
+                let userExists = true;
+                let user = await prisma.user.findUnique({
+                    where: {
+                        email
+                    }
+                });
 
-            // try {
-            //     let userExists = true;
-            //     let user = await prisma.user.findUnique({
-            //         where: {
-            //             email
-            //         }
-            //     });
+                if (!user) {
+                    if (!firstName || !lastName)
+                        logAndSendReply(
+                            log.error,
+                            reply,
+                            HttpStatus.BAD_REQUEST,
+                            "Missing first name and last name parameters"
+                        );
 
-            //     if (!user) {
-            //         userExists = false;
-            //         user = await prisma.user.create({
-            //             data: {
-            //                 email,
-            //                 firstName,
-            //                 lastName
-            //             }
-            //         });
-            //     }
+                    userExists = false;
+                    user = await prisma.user.create({
+                        data: {
+                            email,
+                            firstName,
+                            lastName,
+                            verificationExpiry: dayjs().add(5, "day").toDate()
+                        }
+                    });
+                }
 
-            //     reply
-            //         .code(userExists ? HttpStatus.OK : HttpStatus.CREATED)
-            //         .send();
-            // } catch (e) {
-            //     if (e instanceof PrismaClientKnownRequestError) {
-            //         log.fatal(e);
-            //         reply
-            //             .code(HttpStatus.INTERNAL_SERVER_ERROR)
-            //             .send("Server error");
-            //     }
+                reply
+                    .code(userExists ? HttpStatus.OK : HttpStatus.CREATED)
+                    .send();
+            } catch (e) {
+                if (e instanceof PrismaClientKnownRequestError) {
+                    log.fatal(e);
+                    reply
+                        .code(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .send("Server error");
+                }
 
-            //     logAndSendReply(
-            //         log.error,
-            //         reply,
-            //         HttpStatus.INTERNAL_SERVER_ERROR,
-            //         "Couldn't create user."
-            //     );
-            // }
+                logAndSendReply(
+                    log.error,
+                    reply,
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Couldn't create user."
+                );
+            }
         }
     );
 

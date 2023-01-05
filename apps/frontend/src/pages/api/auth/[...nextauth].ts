@@ -1,10 +1,10 @@
-import * as Prisma from "@aurora/prisma";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { PrismaClient } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
-import { NextAuthOptions } from "next-auth";
+import { NextAuthOptions, User } from "next-auth";
 import NextAuth from "next-auth/next";
 import Email from "next-auth/providers/email";
+
+import prisma from "../../../lib/db/prismadb";
 
 // Sign in
 const ONE_DAY = 86400;
@@ -33,26 +33,17 @@ const SEVEN_DAYS = 604800;
 //     };
 // }
 
-const emailOptions = {
-    server: {
-        host: process.env.EMAIL_SERVER_HOST,
-        port: Number(process.env.EMAIL_SERVER_PORT),
-        auth: {
-            user: process.env.EMAIL_SERVER_USER,
-            pass: process.env.EMAIL_SERVER_PASSWORD
-        }
-    },
-    from: process.env.EMAIL_FROM
-};
+interface UserBody extends User {
+    firstName: string | undefined;
+    lastName: string | undefined;
+}
 
-export const authOptions = (
-    req: NextApiRequest,
-    prisma: PrismaClient
-): NextAuthOptions => ({
+export const authOptions = (): NextAuthOptions => ({
     adapter: PrismaAdapter(prisma),
     providers: [
         Email({
-            ...emailOptions
+            server: "smtp://2baa5311b2c6f0:40af579663b135@smtp.mailtrap.io:465",
+            from: "Account Support accountsupport@useaurora.ai"
             // async sendVerificationRequest({
             //     identifier: email,
             //     url,
@@ -78,28 +69,19 @@ export const authOptions = (
             }
             return token;
         },
-        async signIn({ user, email }) {
-            console.log(user);
-            // triggered by verification request flow
-            if (email?.verificationRequest) {
-                console.log(email);
-                return true;
-            }
-            console.log("registering user");
-            console.log({ email: user.email });
-            // registering user
-            const res = await fetch("http://localhost:8000/api/v1/users", {
-                method: "POST",
-                body: JSON.stringify({ email: user.email }),
-                headers: {
-                    "Content-Type": "application/json",
-                    accept: "application/json"
+        async signIn({ user: { email } }) {
+            const res = await fetch(
+                `${process.env.API_HOSTNAME}/api/v1/users`,
+                {
+                    method: "POST",
+                    body: JSON.stringify({ email }),
+                    headers: {
+                        "Content-Type": "application/json",
+                        accept: "application/json"
+                    }
                 }
-            });
-            console.log(res);
-            // const foundUser = await res.json();
-            // console.log(foundUser);
-            return false;
+            );
+            return res.ok;
         }
     },
     session: {
@@ -110,6 +92,5 @@ export const authOptions = (
 });
 
 export default async function auth(req: NextApiRequest, res: NextApiResponse) {
-    const { prisma } = await Prisma.createContext();
-    return NextAuth(req, res, authOptions(req, prisma));
+    return NextAuth(req, res, authOptions(req));
 }

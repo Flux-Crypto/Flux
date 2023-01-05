@@ -47,6 +47,8 @@ type ChainTransaction {
 model User {
     id                  String              @id @default(auto()) @map("_id") @db.ObjectId
     email               String              @unique
+    verified            Boolean             @default(false)
+    verificationExpiry  DateTime
     firstName           String
     lastName            String
     apiKey              String              @unique @default("")
@@ -59,8 +61,6 @@ model User {
     walletNames         WalletName[]
     importTransactions  ImportTransaction[]
     chainTransactions   ChainTransaction[]
-    accessToken         String?             @map(name: "access_token")
-    accessTokenExpires  DateTime?           @map(name: "access_token_expires")
     createdAt           DateTime            @default(now()) @map(name: "created_at")
     updatedAt           DateTime            @default(now()) @map(name: "updated_at")
 

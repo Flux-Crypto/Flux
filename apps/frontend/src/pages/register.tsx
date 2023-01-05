@@ -1,31 +1,22 @@
-import { useSignUp } from "@clerk/clerk-react";
 import {
     Alert,
     Anchor,
-    Box,
     Button,
     Container,
     Grid,
-    LoadingOverlay,
+    Modal,
     Paper,
     Text,
     TextInput,
     Title,
     createStyles
 } from "@mantine/core";
-import { matches, notEmpty } from "@mantine/form";
+import { matches, notEmpty, useForm } from "@mantine/form";
+import { useDisclosure } from "@mantine/hooks";
 import { IconAlertCircle } from "@tabler/icons";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
-import {
-    RegisterFormProvider,
-    useRegisterForm
-} from "@contexts/register-form-context";
-import callAPI from "@lib/callAPI";
-
-import PasswordStrength from "@components/PasswordStrength";
 import MainLayout from "@layouts/MainLayout";
 
 const useStyles = createStyles((theme) => ({
@@ -43,41 +34,17 @@ const useStyles = createStyles((theme) => ({
     }
 }));
 
-const requirements = [
-    { re: /.{8,}/, label: "Has at least 8 characters" },
-    { re: /[0-9]/, label: "Includes number" },
-    { re: /[a-z]/, label: "Includes lowercase letter" },
-    { re: /[A-Z]/, label: "Includes uppercase letter" },
-    { re: /[$&+,:;=?@#|'<>.^*()%!-]/, label: "Includes special symbol" }
-];
-
-function getStrength(password: string) {
-    let multiplier = 0;
-
-    requirements.forEach((requirement) => {
-        if (!requirement.re.test(password)) {
-            multiplier += 1;
-        }
-    });
-
-    return Math.max(100 - (100 / (requirements.length + 1)) * multiplier, 0);
-}
-
 const Register = () => {
     const { classes } = useStyles();
-    const router = useRouter();
-
-    const { isLoaded, signUp } = useSignUp();
-
-    const [passwordStrength, setPasswordStrength] = useState(0);
+    const [opened, { close, open }] = useDisclosure(false);
     const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
 
-    const form = useRegisterForm({
+    const form = useForm({
         initialValues: {
             firstName: "",
             lastName: "",
-            email: "",
-            password: ""
+            email: ""
         },
 
         validate: {
@@ -90,32 +57,26 @@ const Register = () => {
         }
     });
 
-    useEffect(() => {
-        const strength = getStrength(form.values.password);
-        setPasswordStrength(strength);
-    }, [form.values.password]);
-
     const submitHandler = async ({
         firstName,
         lastName,
-        email,
-        password
+        email
     }: typeof form.values) => {
-        try {
-            const response = await signUp?.create({
-                firstName,
-                lastName,
-                emailAddress: email,
-                password
-            });
-
-            if (response?.status === "complete") {
-                await callAPI("");
-                router.push("/dashboard");
+        const res = await fetch(`http://localhost:8000/api/v1/users`, {
+            method: "POST",
+            body: JSON.stringify({ email, firstName, lastName }),
+            headers: {
+                "Content-Type": "application/json",
+                accept: "application/json"
             }
-        } catch (e: any) {
-            setError(e.errors[0].message);
+        });
+
+        console.log(res);
+        if (!res.ok) {
+            setError("Unable to register.");
             form.resetTouched();
+        } else {
+            console.log("success");
         }
     };
 
@@ -126,6 +87,17 @@ const Register = () => {
 
     return (
         <MainLayout pageTitle="Register">
+            <Modal
+                transition="slide-down"
+                transitionDuration={600}
+                transitionTimingFunction="ease"
+                opened={opened}
+                onClose={close}
+                size="auto"
+                title="Successfuly registed!"
+            >
+                <Text>Check your email for a magic link to sign in.</Text>
+            </Modal>
             <Container size={420} mt="8rem">
                 <Paper
                     withBorder
@@ -154,59 +126,45 @@ const Register = () => {
                             {error}
                         </Alert>
                     )}
-                    <RegisterFormProvider form={form}>
-                        <form onSubmit={form.onSubmit(submitHandler)}>
-                            <LoadingOverlay
-                                visible={!isLoaded}
-                                overlayBlur={2}
-                            />
-                            <Grid>
-                                <Grid.Col span={6}>
-                                    <TextInput
-                                        label="First Name"
-                                        placeholder="John"
-                                        required
-                                        mt="md"
-                                        withAsterisk={false}
-                                        {...form.getInputProps("firstName")}
-                                    />
-                                </Grid.Col>
-                                <Grid.Col span={6}>
-                                    <TextInput
-                                        label="Last Name"
-                                        placeholder="Doe"
-                                        required
-                                        mt="md"
-                                        withAsterisk={false}
-                                        {...form.getInputProps("lastName")}
-                                    />
-                                </Grid.Col>
-                            </Grid>
-                            <TextInput
-                                label="Email"
-                                placeholder="johndoe@email.com"
-                                required
-                                withAsterisk={false}
-                                mt="md"
-                                {...form.getInputProps("email")}
-                            />
-                            <Box mt="md">
-                                <PasswordStrength
-                                    strength={passwordStrength}
-                                    {...{ requirements }}
+                    <form onSubmit={form.onSubmit(submitHandler)}>
+                        <Grid mt="md">
+                            <Grid.Col span={6}>
+                                <TextInput
+                                    label="First Name"
+                                    placeholder="John"
+                                    required
+                                    withAsterisk={false}
+                                    {...form.getInputProps("firstName")}
                                 />
-                            </Box>
+                            </Grid.Col>
+                            <Grid.Col span={6}>
+                                <TextInput
+                                    label="Last Name"
+                                    placeholder="Doe"
+                                    required
+                                    withAsterisk={false}
+                                    {...form.getInputProps("lastName")}
+                                />
+                            </Grid.Col>
+                        </Grid>
+                        <TextInput
+                            label="Email"
+                            placeholder="johndoe@email.com"
+                            required
+                            withAsterisk={false}
+                            mt="md"
+                            {...form.getInputProps("email")}
+                        />
 
-                            <Button
-                                type="submit"
-                                fullWidth
-                                mt="xl"
-                                disabled={passwordStrength !== 100}
-                            >
-                                Create Account
-                            </Button>
-                        </form>
-                    </RegisterFormProvider>
+                        <Button
+                            type="submit"
+                            fullWidth
+                            mt="xl"
+                            disabled={!form.isValid()}
+                        >
+                            Create Account
+                        </Button>
+                    </form>
                 </Paper>
             </Container>
         </MainLayout>

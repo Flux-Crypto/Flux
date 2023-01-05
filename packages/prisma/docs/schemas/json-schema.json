@@ -41,6 +41,14 @@
         "email": {
           "type": "string"
         },
+        "verified": {
+          "type": "boolean",
+          "default": false
+        },
+        "verificationExpiry": {
+          "type": "string",
+          "format": "date-time"
+        },
         "firstName": {
           "type": "string"
         },
@@ -93,19 +101,6 @@
             "$ref": "#/definitions/ChainTransaction"
           }
         },
-        "accessToken": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "accessTokenExpires": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "format": "date-time"
-        },
         "createdAt": {
           "type": "string",
           "format": "date-time"
@@ -117,6 +112,7 @@
       },
       "required": [
         "email",
+        "verificationExpiry",
         "firstName",
         "lastName",
         "processorAPIKeys",

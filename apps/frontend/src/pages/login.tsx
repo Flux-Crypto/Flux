@@ -1,4 +1,3 @@
-import { useAuth, useSignIn } from "@clerk/clerk-react";
 import {
     Alert,
     Anchor,
@@ -17,11 +16,9 @@ import {
 } from "@mantine/core";
 import { matches, useForm } from "@mantine/form";
 import { IconAlertCircle } from "@tabler/icons";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-
-import callAPI from "@lib/callAPI";
+import { useState } from "react";
 
 import MainLayout from "@layouts/MainLayout";
 
@@ -52,16 +49,11 @@ const useStyles = createStyles((theme) => ({
 
 const Login = () => {
     const { classes } = useStyles();
-    const { isLoaded, signIn } = useSignIn();
     const [error, setError] = useState("");
-    const router = useRouter();
-    const { isSignedIn } = useAuth();
-    const [loggedIn, setLoggedIn] = useState(false);
 
     const form = useForm({
         initialValues: {
-            email: "",
-            password: ""
+            email: ""
         },
 
         validate: {
@@ -72,24 +64,9 @@ const Login = () => {
         }
     });
 
-    useEffect(() => {
-        if (isSignedIn || loggedIn) {
-            router.push("/dashboard");
-        }
-    }, [isSignedIn, router, loggedIn]);
-
-    const submitHandler = async ({ email, password }: typeof form.values) => {
+    const submitHandler = async ({ email }: typeof form.values) => {
         try {
-            const response = await signIn?.create({
-                identifier: email,
-                password
-            });
-            console.log(response);
-            console.log(isSignedIn);
-            setLoggedIn(true);
-            if (response?.status === "complete") {
-                await callAPI("");
-            }
+            await signIn(email);
         } catch (e: any) {
             setError(e.errors[0].message);
         }
@@ -118,31 +95,18 @@ const Login = () => {
                         </Alert>
                     )}
                     <form onSubmit={form.onSubmit(submitHandler)}>
-                        <LoadingOverlay visible={!isLoaded} overlayBlur={2} />
                         <TextInput
                             label="Email address"
                             placeholder="johndoe@email.com"
                             {...form.getInputProps("email")}
                         />
-                        <Stack>
-                            <PasswordInput
-                                label="Password"
-                                mt="md"
-                                placeholder="Your password"
-                                {...form.getInputProps("password")}
-                            />
-                            <Group position="right">
-                                <Anchor
-                                    component={Link}
-                                    href="/forgotpassword"
-                                    className={classes.link}
-                                >
-                                    Forgot your password?
-                                </Anchor>
-                            </Group>
-                        </Stack>
 
-                        <Button type="submit" fullWidth mt="xl">
+                        <Button
+                            type="submit"
+                            fullWidth
+                            mt="xl"
+                            disabled={!form.isValid()}
+                        >
                             Log in
                         </Button>
                     </form>
