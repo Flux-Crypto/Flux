@@ -43,9 +43,12 @@ jobs:
                   node-version: ${{ matrix.node_version }}
             - name: Install and Format
               run: |
-                  echo -e "\nInstalling dependencies..."
+                  echo ""
+                  echo "Installing dependencies..."
                   npm install
-                  echo -e "\nFormatting backend..."
+                  echo ""
+                  echo "Formatting backend..."
                   npm run lint:backend
-                  echo -e "\nFormatting frontend..."
+                  echo ""
+                  echo "Formatting frontend..."
                   npm run lint:frontend
