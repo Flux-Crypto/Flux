@@ -1,20 +1,23 @@
-import { useClerk } from "@clerk/nextjs";
+import { useAuth, useClerk } from "@clerk/nextjs";
 import { AppShell, Box, Button, Flex } from "@mantine/core";
 import { useRouter } from "next/router";
 
-import AuthLayout from "@src/layouts/AuthLayout";
+import MainLayout from "@layouts/MainLayout";
 
 const Dashboard = () => {
     const router = useRouter();
     const { signOut } = useClerk();
+    const { sessionId } = useAuth();
 
     const logout = async () => {
         await signOut();
         router.push("/login");
     };
 
+    console.log(sessionId);
+
     return (
-        <AuthLayout pageTitle="Dashboard">
+        <MainLayout pageTitle="Dashboard">
             <AppShell padding="md">
                 <Flex h="100%" justify="center" align="center">
                     <Box>
@@ -29,7 +32,7 @@ const Dashboard = () => {
                     </Box>
                 </Flex>
             </AppShell>
-        </AuthLayout>
+        </MainLayout>
     );
 };
 

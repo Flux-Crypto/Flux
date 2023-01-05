@@ -3,7 +3,7 @@ import { Dropzone, FileWithPath, MIME_TYPES } from "@mantine/dropzone";
 import { IconDownload, IconUpload, IconX } from "@tabler/icons";
 import { Dispatch, SetStateAction, useRef } from "react";
 
-import { Transaction } from "../lib/types";
+import { Transaction } from "../lib/types/types";
 
 const useStyles = createStyles((theme) => ({
     wrapper: {

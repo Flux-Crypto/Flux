@@ -4,7 +4,6 @@ import {
     Anchor,
     Box,
     Button,
-    Checkbox,
     Container,
     Grid,
     LoadingOverlay,
@@ -24,10 +23,10 @@ import {
     RegisterFormProvider,
     useRegisterForm
 } from "@contexts/register-form-context";
-import MainLayout from "@src/layouts/AuthLayout";
-import callAPI from "@src/lib/callAPI";
+import callAPI from "@lib/callAPI";
 
 import PasswordStrength from "@components/PasswordStrength";
+import MainLayout from "@layouts/MainLayout";
 
 const useStyles = createStyles((theme) => ({
     form: {
@@ -112,17 +111,10 @@ const Register = () => {
 
             if (response?.status === "complete") {
                 await callAPI("");
-                router.replace("/dashboard");
+                router.push("/dashboard");
             }
         } catch (e: any) {
-            console.log(e.errors);
-            if (e.status === 422) {
-                setError(
-                    "Insecure password or duplicate email, you figure it out."
-                );
-            } else {
-                setError("Something went wrong. Try again later.");
-            }
+            setError(e.errors[0].message);
             form.resetTouched();
         }
     };
@@ -157,7 +149,7 @@ const Register = () => {
                             icon={<IconAlertCircle size={16} />}
                             title="Something went wrong!"
                             color="red"
-                            mt="xl"
+                            mt="md"
                         >
                             {error}
                         </Alert>
