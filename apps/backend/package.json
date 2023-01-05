@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "format": "npx prettier -w src/**/*.ts",
-        "lint": "npm run format && npx eslint --ext .ts,.json,.prisma --fix-dry-run",
+        "lint": "npm run format && npx eslint --ext .ts,.json,.prisma --fix",
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "doppler run npm run build && node build/index.js",
         "dev": "doppler run npx nodemon && npm run open_docs_mac",
