@@ -33,6 +33,18 @@ const SEVEN_DAYS = 604800;
 //     };
 // }
 
+const emailOptions = {
+    server: {
+        host: process.env.EMAIL_SERVER_HOST,
+        port: Number(process.env.EMAIL_SERVER_PORT),
+        auth: {
+            user: process.env.EMAIL_SERVER_USER,
+            pass: process.env.EMAIL_SERVER_PASSWORD
+        }
+    },
+    from: process.env.EMAIL_FROM
+};
+
 export const authOptions = (
     req: NextApiRequest,
     prisma: PrismaClient
@@ -40,15 +52,14 @@ export const authOptions = (
     adapter: PrismaAdapter(prisma),
     providers: [
         Email({
-            server: {
-                host: process.env.SMTP_HOST,
-                port: process.env.SMTP_PORT,
-                auth: {
-                    user: process.env.SMTP_USER,
-                    pass: process.env.SMTP_PASSWORD
-                }
-            },
-            from: process.env.SMTP_FROM
+            ...emailOptions
+            // async sendVerificationRequest({
+            //     identifier: email,
+            //     url,
+            //     provider: { server, from }
+            // }) {
+            //     console.log(email, url, server, from);
+            // }
         })
     ],
     secret: process.env.NEXTAUTH_SECRET,
@@ -72,7 +83,7 @@ export const authOptions = (
             // triggered by verification request flow
             if (email?.verificationRequest) {
                 console.log(email);
-                // return false;
+                return true;
             }
             console.log("registering user");
             console.log({ email: user.email });

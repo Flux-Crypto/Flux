@@ -92,6 +92,27 @@
           "items": {
             "$ref": "#/definitions/ChainTransaction"
           }
+        },
+        "accessToken": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "accessTokenExpires": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
         }
       },
       "required": [
@@ -102,6 +123,95 @@
         "exchangeAPIKeys",
         "rdWalletAddresses",
         "rdwrWalletAddresses"
+      ]
+    },
+    "Session": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "expires": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "sessionToken": {
+          "type": "string"
+        },
+        "accessToken": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "userId",
+        "expires",
+        "sessionToken",
+        "accessToken"
+      ]
+    },
+    "VerificationRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "identifier": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        },
+        "expires": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "identifier",
+        "token",
+        "expires"
+      ]
+    },
+    "VerificationToken": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "identifier": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        },
+        "expires": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "identifier",
+        "token",
+        "expires"
       ]
     },
     "WalletName": {
@@ -187,6 +297,15 @@
     },
     "user": {
       "$ref": "#/definitions/User"
+    },
+    "session": {
+      "$ref": "#/definitions/Session"
+    },
+    "verificationRequest": {
+      "$ref": "#/definitions/VerificationRequest"
+    },
+    "verificationToken": {
+      "$ref": "#/definitions/VerificationToken"
     }
   }
 }
