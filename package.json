@@ -15,9 +15,9 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "dev:frontend": "npm run dev --workspace=frontend",
         "dev:backend": "npm run dev --workspace=backend",
-        "generate": "npm run generate --workspace=backend",
-        "reset": "npm run generate && npm run reset --workspace=backend",
-        "studio": "npm run studio --workspace=backend"
+        "generate": "npm run generate --workspace=@aurora/prisma",
+        "reset": "npm run generate && npm run reset --workspace=@aurora/prisma",
+        "studio": "npm run studio --workspace=@aurora/prisma"
     },
     "repository": {
         "type": "git",

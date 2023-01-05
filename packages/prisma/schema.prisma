@@ -16,9 +16,9 @@ datasource db {
 model Wallet {
     address     String   @id @map("_id")
     seedPhrase  String?
-    rdUserIds   String[] // read-only
+    rdUserIds   String[] @db.ObjectId // read-only
     rdUsers     User[]   @relation(fields: [rdUserIds], references: [id], name: "readOnly")
-    rdwrUserIds String[] // read-write
+    rdwrUserIds String[] @db.ObjectId // read-write
     rdwrUsers   User[]   @relation(fields: [rdwrUserIds], references: [id], name: "readWrite")
 }
 
@@ -45,7 +45,10 @@ type ChainTransaction {
 }
 
 model User {
-    id                  String              @id @map("_id")
+    id                  String              @id @default(auto()) @map("_id") @db.ObjectId
+    email               String              @unique
+    firstName           String
+    lastName            String
     apiKey              String              @unique @default("")
     processorAPIKeys    String[]
     exchangeAPIKeys     String[]

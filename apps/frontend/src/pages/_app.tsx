@@ -1,5 +1,6 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import { MantineProvider } from "@mantine/core";
+import colors from "@theme/index";
 import { AppProps } from "next/app";
 import { useRouter } from "next/router";
 
