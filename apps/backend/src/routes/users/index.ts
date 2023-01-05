@@ -1,11 +1,9 @@
-import { sessions } from "@clerk/clerk-sdk-node";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 import { logAndSendReply } from "@lib/logger";
 import { UsersIndexSchema } from "@lib/types/jsonObjects";
 import { UsersRequestBody } from "@lib/types/routeParams";
-import clerkPreHandler from "@src/lib/clerkPreHandler";
 import { FastifyDone } from "@src/lib/types/fastifyTypes";
 import HttpStatus from "@src/lib/types/httpStatus";
 
@@ -58,11 +56,6 @@ const indexRoute = (
                     "Authentication required"
                 );
 
-            const session = await sessions.verifySession(
-                sessionId as string,
-                clientToken as string
-            );
-
             // TODO: check expire time
 
             if (!userId)
@@ -71,14 +64,6 @@ const indexRoute = (
                     reply,
                     HttpStatus.BAD_REQUEST,
                     "Missing user id parameter"
-                );
-
-            if (session?.userId !== userId)
-                logAndSendReply(
-                    log.error,
-                    reply,
-                    HttpStatus.UNAUTHORIZED,
-                    "Authorization required"
                 );
 
             try {

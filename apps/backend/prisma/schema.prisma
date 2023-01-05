@@ -2,10 +2,14 @@ generator client {
     provider = "prisma-client-js"
 }
 
+generator docs {
+    provider = "node ../../node_modules/prisma-docs-generator serve"
+    output   = "../docs"
+}
+
 generator jsonSchema {
-    provider              = "prisma-json-schema-generator"
-    output                = "../docs/schemas"
-    includeRequiredFields = "true"
+    provider = "prisma-json-schema-generator"
+    output   = "../docs/schemas"
 }
 
 datasource db {
@@ -15,7 +19,7 @@ datasource db {
 
 model Wallet {
     address     String   @id @map("_id")
-    seedPhrase  String?
+    seedPhrase  String   @default("") //optional
     rdUserIds   String[] // read-only
     rdUsers     User[]   @relation(fields: [rdUserIds], references: [id], name: "readOnly")
     rdwrUserIds String[] // read-write
@@ -36,12 +40,12 @@ type ImportTransaction {
     sentCurrency     String   @default("")
     feeAmount        Float    @default(0)
     feeCurrency      String   @default("")
-    tag              String?
+    tag              String   @default("") // optional
 }
 
 type ChainTransaction {
     hash String
-    tag  String?
+    tag  String @default("") //optional
 }
 
 model User {

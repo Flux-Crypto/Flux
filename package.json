@@ -28,5 +28,9 @@
     "bugs": {
         "url": "https://github.com/tot/aurora/issues"
     },
-    "homepage": "https://github.com/tot/aurora#readme"
+    "homepage": "https://github.com/tot/aurora#readme",
+    "devDependencies": {
+        "@prisma/client": "^4.8.1",
+        "prisma": "^4.8.1"
+    }
 }

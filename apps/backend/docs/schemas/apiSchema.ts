@@ -8,7 +8,7 @@ export const WalletSchema = {
         type: "string"
     },
     seedPhrase: {
-        type: ["string", "null"]
+        type: "string"
     },
     rdUserIds: {
         type: "array",
@@ -85,7 +85,7 @@ export const ImportTransactionSchema = {
         default: ""
     },
     tag: {
-        type: ["string", "null"]
+        type: "string"
     }
 };
 
@@ -109,7 +109,7 @@ export const ChainTransactionSchema = {
         type: "string"
     },
     tag: {
-        type: ["string", "null"]
+        type: "string"
     }
 };
 
@@ -129,7 +129,7 @@ export const UserSchema = {
         type: "string"
     },
     name: {
-        type: ["string", "null"]
+        type: "string"
     },
     processorAPIKeys: {
         type: "array",
