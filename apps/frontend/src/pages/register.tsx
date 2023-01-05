@@ -2,9 +2,11 @@ import { useSignUp } from "@clerk/clerk-react";
 import {
     Alert,
     Anchor,
+    Box,
     Button,
     Checkbox,
     Container,
+    Grid,
     LoadingOverlay,
     Paper,
     Text,
@@ -97,6 +99,7 @@ const Register = () => {
             });
             console.log(response);
         } catch (e) {
+            console.log(e.errors);
             if (e.status === 422) {
                 setError("Insecure password.");
             } else {
@@ -107,7 +110,7 @@ const Register = () => {
 
     return (
         <MainLayout pageTitle="Register">
-            <Container size={420} my={40}>
+            <Container size={420} mt="8rem">
                 <Paper
                     withBorder
                     shadow="md"
@@ -140,40 +143,42 @@ const Register = () => {
                                 visible={!isLoaded}
                                 overlayBlur={2}
                             />
-                            <TextInput
-                                label="First Name"
-                                placeholder="John"
-                                required
-                                mt="md"
-                                mb="md"
-                                {...form.getInputProps("firstName")}
-                            />
-                            <TextInput
-                                label="Last Name"
-                                placeholder="Doe"
-                                required
-                                mt="md"
-                                mb="md"
-                                {...form.getInputProps("lastName")}
-                            />
+                            <Grid>
+                                <Grid.Col span={6}>
+                                    <TextInput
+                                        label="First Name"
+                                        placeholder="John"
+                                        required
+                                        mt="md"
+                                        withAsterisk={false}
+                                        {...form.getInputProps("firstName")}
+                                    />
+                                </Grid.Col>
+                                <Grid.Col span={6}>
+                                    <TextInput
+                                        label="Last Name"
+                                        placeholder="Doe"
+                                        required
+                                        mt="md"
+                                        withAsterisk={false}
+                                        {...form.getInputProps("lastName")}
+                                    />
+                                </Grid.Col>
+                            </Grid>
                             <TextInput
                                 label="Email"
                                 placeholder="johndoe@email.com"
                                 required
+                                withAsterisk={false}
                                 mt="md"
-                                mb="md"
                                 {...form.getInputProps("email")}
                             />
-                            <PasswordStrength
-                                strength={passwordStrength}
-                                {...{ requirements }}
-                            />
-
-                            <Checkbox
-                                label="Remember me"
-                                sx={{ lineHeight: 1 }}
-                                mt="md"
-                            />
+                            <Box mt="md">
+                                <PasswordStrength
+                                    strength={passwordStrength}
+                                    {...{ requirements }}
+                                />
+                            </Box>
 
                             <Button
                                 type="submit"

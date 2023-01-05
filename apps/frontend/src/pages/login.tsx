@@ -70,27 +70,21 @@ const Login = () => {
             });
             console.log(response);
         } catch (e) {
-            console.log(e);
+            console.log(e.errors);
         }
     };
 
     return (
         <MainLayout pageTitle="Login">
-            <Container size={420} my={40}>
-                <Paper
-                    withBorder
-                    className={classes.form}
-                    radius="md"
-                    p={30}
-                    mt="8rem"
-                >
+            <Container size={420} mt="8rem">
+                <Paper withBorder className={classes.form} radius="md" p={30}>
                     <Title
                         className={classes.title}
                         align="center"
                         mt="md"
                         mb={20}
                     >
-                        Welcome back
+                        Login
                     </Title>
                     <form onSubmit={form.onSubmit(submitHandler)}>
                         <LoadingOverlay visible={!isLoaded} overlayBlur={2} />
@@ -118,7 +112,7 @@ const Login = () => {
                         </Stack>
 
                         <Button type="submit" fullWidth mt="xl">
-                            Login
+                            Log in
                         </Button>
                     </form>
 

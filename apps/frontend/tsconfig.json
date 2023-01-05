@@ -27,7 +27,8 @@
             "@layouts/*": ["src/layouts/*"],
             "@stories/*": ["stories/*"],
             "@pages/*": ["src/pages/*"],
-            "@contexts/*": ["src/contexts/*"]
+            "@contexts/*": ["src/contexts/*"],
+            "@theme/*": ["src/theme/*"]
         }
     },
     "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

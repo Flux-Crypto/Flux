@@ -16,27 +16,28 @@ interface PasswordRequirementProps {
     label: string;
 }
 
-function PasswordRequirement({ meets, label }: PasswordRequirementProps) {
-    return (
-        <Text color={meets ? "teal" : "red"} mt={5} size="sm">
-            <Center inline>
-                {meets ? (
-                    <IconCheck size={14} stroke={1.5} />
-                ) : (
-                    <IconX size={14} stroke={1.5} />
-                )}
-                <Box ml={7}>{label}</Box>
-            </Center>
-        </Text>
-    );
-}
+const PasswordRequirement = ({ meets, label }: PasswordRequirementProps) => (
+    <Text color={meets ? "teal" : "red"} mt={5} size="sm">
+        <Center inline>
+            {meets ? (
+                <IconCheck size={14} stroke={1.5} />
+            ) : (
+                <IconX size={14} stroke={1.5} />
+            )}
+            <Box ml={7}>{label}</Box>
+        </Center>
+    </Text>
+);
 
 interface PasswordStrengthProps {
     strength: number;
     requirements: { re: RegExp; label: string }[];
 }
 
-function PasswordStrength({ strength, requirements }: PasswordStrengthProps) {
+const PasswordStrength = ({
+    strength,
+    requirements
+}: PasswordStrengthProps) => {
     const form = useRegisterFormContext();
     const { password } = form.values;
 
@@ -48,6 +49,7 @@ function PasswordStrength({ strength, requirements }: PasswordStrengthProps) {
     return (
         <div>
             <PasswordInput
+                withAsterisk={false}
                 placeholder="Your password"
                 label="Password"
                 required
@@ -81,6 +83,6 @@ function PasswordStrength({ strength, requirements }: PasswordStrengthProps) {
             ))}
         </div>
     );
-}
+};
 
 export default PasswordStrength;
