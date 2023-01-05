@@ -1,12 +1,12 @@
 const callAPI = (
     path: string,
     options: RequestInit = {},
-    sessionId?: string | null | undefined
+    sessionId?: string | undefined
 ) =>
     fetch(path, {
         headers: {
-            Authorization: `Bearer ${sessionId}`
-        },
+            sessionId
+        } as HeadersInit,
         ...options
     });
 

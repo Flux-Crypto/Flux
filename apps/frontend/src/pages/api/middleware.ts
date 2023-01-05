@@ -16,6 +16,7 @@ export default withClerkMiddleware((request: NextRequest) => {
     }
     // if the user is not signed in redirect them to the sign in page.
     const { userId } = getAuth(request);
+    console.log("WORK");
 
     if (!userId) {
         // redirect the users to /pages/login.ts

@@ -15,14 +15,15 @@ import {
 import { matches, notEmpty } from "@mantine/form";
 import { IconAlertCircle } from "@tabler/icons";
 import Link from "next/link";
-import { Router, useRouter } from "next/router";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 import {
     RegisterFormProvider,
     useRegisterForm
 } from "@contexts/register-form-context";
-import MainLayout from "@src/layouts/MainLayout";
+import MainLayout from "@src/layouts/AuthLayout";
+import callAPI from "@src/lib/callAPI";
 
 import PasswordStrength from "@components/PasswordStrength";
 
@@ -107,7 +108,10 @@ const Register = () => {
                 password
             });
 
-            if (response?.status === "complete") router.replace("/dashboard");
+            if (response?.status === "complete") {
+                await callAPI("");
+                router.replace("/dashboard");
+            }
         } catch (e: any) {
             if (e.status === 422) {
                 setError(

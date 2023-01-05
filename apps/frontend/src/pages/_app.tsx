@@ -3,7 +3,7 @@ import { MantineProvider } from "@mantine/core";
 import { AppProps } from "next/app";
 import { useRouter } from "next/router";
 
-export default function App({ Component, pageProps }: AppProps) {
+const App = ({ Component, pageProps }: AppProps) => {
     const { push } = useRouter();
 
     return (
@@ -21,4 +21,6 @@ export default function App({ Component, pageProps }: AppProps) {
             </MantineProvider>
         </ClerkProvider>
     );
-}
+};
+
+export default App;

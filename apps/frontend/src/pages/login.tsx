@@ -17,7 +17,7 @@ import {
 import { matches, useForm } from "@mantine/form";
 import Link from "next/link";
 
-import MainLayout from "@layouts/MainLayout";
+import MainLayout from "@src/layouts/AuthLayout";
 
 const useStyles = createStyles((theme) => ({
     form: {
@@ -44,7 +44,7 @@ const useStyles = createStyles((theme) => ({
     }
 }));
 
-function Login() {
+const Login = () => {
     const { classes } = useStyles();
     const { isLoaded, signIn } = useSignIn();
 
@@ -138,6 +138,6 @@ function Login() {
             </Container>
         </MainLayout>
     );
-}
+};
 
 export default Login;

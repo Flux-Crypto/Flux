@@ -12,6 +12,7 @@
     },
     "dependencies": {
         "@clerk/clerk-react": "^4.7.0",
+        "@clerk/clerk-sdk-node": "^4.5.14",
         "@clerk/nextjs": "^4.6.15",
         "@emotion/react": "^11.10.5",
         "@emotion/server": "^11.10.0",
