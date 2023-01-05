@@ -11,5 +11,5 @@ const Template: ComponentStory<typeof CSVImport> = () => <CSVImport />;
 export const CSVImportStory = Template.bind({});
 
 CSVImportStory.args = {
-    /*👇 The args you need here will depend on your component */
+    /* 👇 The args you need here will depend on your component */
 };

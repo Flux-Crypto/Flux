@@ -34,7 +34,7 @@ const useStyles = createStyles((theme) => ({
     }
 }));
 
-function ForgotPassword() {
+const ForgotPassword = () => {
     const { classes } = useStyles();
 
     return (
@@ -68,6 +68,6 @@ function ForgotPassword() {
             </Paper>
         </Container>
     );
-}
+};
 
 export default ForgotPassword;

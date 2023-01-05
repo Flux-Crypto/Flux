@@ -24,7 +24,7 @@ interface TableSelectionProps {
     data: (Transaction & { idx: number })[];
 }
 
-function ImportTable({ data }: TableSelectionProps) {
+const ImportTable = ({ data }: TableSelectionProps) => {
     const { classes, cx } = useStyles();
     const [selection, setSelection] = useState(_.range(0, data.length));
     const toggleRow = (idx: number) =>
@@ -129,6 +129,6 @@ function ImportTable({ data }: TableSelectionProps) {
             </Table>
         </ScrollArea>
     );
-}
+};
 
 export default ImportTable;

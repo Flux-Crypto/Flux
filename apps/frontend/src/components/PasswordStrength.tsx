@@ -56,21 +56,23 @@ const PasswordStrength = ({
             />
 
             <Group spacing={5} grow mt="xs" mb="md">
-                {_.range(4).map((index) => (
-                    <Progress
-                        styles={{ bar: { transitionDuration: "0ms" } }}
-                        value={
-                            password.length > 0 && index === 0
-                                ? 100
-                                : strength >= ((index + 1) / 4) * 100
-                                ? 100
-                                : 0
-                        }
-                        color={color}
-                        key={index}
-                        size={4}
-                    />
-                ))}
+                {_.range(4).map((index) => {
+                    let value = 0;
+                    if (index === 0 && password.length > 0) {
+                        value = 100;
+                    } else if (strength >= ((index + 1) / 4) * 100) {
+                        value = 100;
+                    }
+                    return (
+                        <Progress
+                            styles={{ bar: { transitionDuration: "0ms" } }}
+                            value={value}
+                            color={color}
+                            key={index}
+                            size={4}
+                        />
+                    );
+                })}
             </Group>
 
             {requirements.map((requirement) => (

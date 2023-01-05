@@ -59,7 +59,7 @@ interface CSVImportProps {
     updateData: Dispatch<SetStateAction<Transaction[]>>;
 }
 
-function CSVImport({ updateData }: CSVImportProps) {
+const CSVImport = ({ updateData }: CSVImportProps) => {
     const { classes, theme } = useStyles();
 
     const openRef = useRef<() => void>(null);
@@ -153,6 +153,6 @@ function CSVImport({ updateData }: CSVImportProps) {
             </Button>
         </div>
     );
-}
+};
 
 export default CSVImport;

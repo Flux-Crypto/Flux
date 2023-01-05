@@ -8,7 +8,7 @@ import ImportTable from "@src/components/ImportTable";
 import CSVImport from "../../components/CSVImport";
 import { Transaction } from "../../lib/types";
 
-function Import() {
+const Import = () => {
     const [txns, setTxns] = useState<Transaction[]>([]);
     const [isFetching, setFetching] = useState(false);
 
