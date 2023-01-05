@@ -1,4 +1,4 @@
-import { UserExample, UserSchema } from "@docs/schemas/apiSchema";
+import { UserExample, UserSchema } from "../apiSchema";
 
 export default {
     get: {

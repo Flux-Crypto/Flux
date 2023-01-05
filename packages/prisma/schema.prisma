@@ -4,7 +4,7 @@ generator client {
 
 generator jsonSchema {
     provider              = "prisma-json-schema-generator"
-    output                = "../docs/schemas"
+    output                = "./docs/schemas"
     includeRequiredFields = "true"
 }
 
@@ -59,6 +59,33 @@ model User {
     walletNames         WalletName[]
     importTransactions  ImportTransaction[]
     chainTransactions   ChainTransaction[]
+    accessToken         String?             @map(name: "access_token")
+    accessTokenExpires  DateTime?           @map(name: "access_token_expires")
+    createdAt           DateTime            @default(now()) @map(name: "created_at")
+    updatedAt           DateTime            @default(now()) @map(name: "updated_at")
 
     @@index([walletNames.address, importTransactions.id, chainTransactions.hash])
+}
+
+model Session {
+    id           String   @id @default(auto()) @map("_id") @db.ObjectId
+    userId       String   @map(name: "user_id")
+    expires      DateTime
+    sessionToken String   @unique @map(name: "session_token")
+    accessToken  String   @unique @map(name: "access_token")
+    createdAt    DateTime @default(now()) @map(name: "created_at")
+    updatedAt    DateTime @default(now()) @map(name: "updated_at")
+
+    @@map(name: "sessions")
+}
+
+model VerificationRequest {
+    id         String   @id @default(auto()) @map("_id") @db.ObjectId
+    identifier String
+    token      String   @unique
+    expires    DateTime
+    createdAt  DateTime @default(now()) @map(name: "created_at")
+    updatedAt  DateTime @default(now()) @map(name: "updated_at")
+
+    @@map(name: "verification_requests")
 }

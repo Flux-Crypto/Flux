@@ -38,6 +38,15 @@
         "id": {
           "type": "string"
         },
+        "email": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
         "apiKey": {
           "type": "string",
           "default": ""
@@ -86,7 +95,9 @@
         }
       },
       "required": [
-        "id",
+        "email",
+        "firstName",
+        "lastName",
         "processorAPIKeys",
         "exchangeAPIKeys",
         "rdWalletAddresses",
