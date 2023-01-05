@@ -5,11 +5,12 @@
     "tabWidth": 4,
     "useTabs": false,
     "importOrder": [
-        "^@?(?!src|lib|docs|routes|plugins)\\w+",
+        "^@?(?!src|lib|docs|routes|plugins|layouts|pages|components|stories|contexts)\\w+",
         "^@plugins/(.*)$",
-        "^@(src|routes|lib|)/(.*)$",
+        "^@(src|routes|lib|contexts)/(.*)$",
+        "^@(pages|components|stories|layouts)/(.*)$",
         "^@docs/(.*)$",
-        "^[./]"
+        "^..?/"
     ],
     "importOrderSeparation": true,
     "importOrderSortSpecifiers": true

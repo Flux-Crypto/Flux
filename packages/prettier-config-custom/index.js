@@ -1,7 +1,7 @@
 module.exports = {
     semi: true,
     trailingComma: "none",
-    singleQuote: true,
+    singleQuote: false,
     tabWidth: 4,
     useTabs: false,
     importOrder: [
@@ -9,7 +9,8 @@ module.exports = {
         "^@src/(.*)$",
         "^@lib/(.*)$",
         "^@routes/(.*)$",
-        "^@plugins/(.*)$"
+        "^@plugins/(.*)$",
+        "^..?/"
     ],
     importOrderSeparation: true,
     importOrderSortSpecifiers: true

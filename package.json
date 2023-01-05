@@ -8,13 +8,15 @@
         "packages/*"
     ],
     "scripts": {
-        "format:backend": "npx prettier -w apps/backend/src/**/*.ts",
-        "lint:backend": "npm run format:backend && npx eslint --ext .ts,.json,.prisma --fix-dry-run",
+        "format:frontend": "npm run format --workspace=frontend",
+        "format:backend": "npm run format --workspace=backend",
+        "lint:frontend": "npm run lint --workspace=frontend",
+        "lint:backend": "npm run lint --workspace=backend",
         "test": "echo \"Error: no test specified\" && exit 1",
         "dev:frontend": "npm run dev --workspace=frontend",
         "dev:backend": "npm run dev --workspace=backend",
         "generate": "npm run generate --workspace=backend",
-        "reset": "npm run reset --workspace=backend",
+        "reset": "npm run generate && npm run reset --workspace=backend",
         "studio": "npm run studio --workspace=backend"
     },
     "repository": {

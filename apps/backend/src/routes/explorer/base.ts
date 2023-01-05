@@ -1,19 +1,19 @@
-import { FastifyInstance, FastifyServerOptions } from "fastify";
+import { FastifyInstance, FastifyServerOptions } from "fastify"
 
-import { FastifyDone } from "@src/lib/types/fastifyTypes";
+import { FastifyDone } from "@src/lib/types/fastifyTypes"
 
-import transactionRoute from "./transaction";
-import transactionsRoute from "./transactions";
+import transactionRoute from "./transaction"
+import transactionsRoute from "./transactions"
 
 const users = (
     server: FastifyInstance,
     _opts: FastifyServerOptions,
     done: FastifyDone
 ) => {
-    server.register(transactionsRoute, { prefix: "/transactions" });
-    server.register(transactionRoute, { prefix: "/transaction" });
+    server.register(transactionsRoute, { prefix: "/transactions" })
+    server.register(transactionRoute, { prefix: "/transaction" })
 
-    done();
-};
+    done()
+}
 
-export default users;
+export default users

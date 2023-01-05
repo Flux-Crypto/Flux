@@ -24,8 +24,7 @@ const main = async () => {
 
     await prisma.user.create({
         data: {
-            email: "alice@prisma.io",
-            name: "Alice",
+            id: "// TODO: replace with sample clerk id",
             processorAPIKeys: ["abcdef12345"],
             exchangeAPIKeys: ["uvwxyz67890"],
             rdWallets: {
@@ -49,8 +48,7 @@ const main = async () => {
 
     await prisma.user.create({
         data: {
-            email: "bob@prisma.io",
-            name: "Bob",
+            id: "// TODO: replace with sample clerk id",
             rdWallets: {
                 connect: [
                     {

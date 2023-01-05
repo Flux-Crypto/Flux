@@ -1,3 +1,5 @@
+import type { FastifyCookieOptions } from "@fastify/cookie";
+import cookie from "@fastify/cookie";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import swagger from "@fastify/swagger";
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -28,6 +30,10 @@ const runServer = async () => {
     });
 
     await fastifyServer.register(prismaPlugin);
+    fastifyServer.register(cookie, {
+        secret: "__session", // for cookies signature
+        parseOptions: {} // options for parsing cookies
+    } as FastifyCookieOptions);
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore:next-line
