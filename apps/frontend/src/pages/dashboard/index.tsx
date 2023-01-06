@@ -1,6 +1,5 @@
 import { AppShell, Box, Button, Flex } from "@mantine/core";
 import { signOut, useSession } from "next-auth/react";
-import { useRouter } from "next/router";
 
 import MainLayout from "@layouts/MainLayout";
 

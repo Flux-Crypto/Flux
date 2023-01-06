@@ -7,6 +7,7 @@ declare global {
             API_HOSTNAME: string;
             EMAIL_USER: string;
             EMAIL_PASSWORD: string;
+            EMAIL_FROM: string;
             EMAIL_HOST: string;
             EMAIL_PORT: string;
         }

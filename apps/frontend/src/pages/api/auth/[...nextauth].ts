@@ -1,51 +1,27 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { NextApiRequest, NextApiResponse } from "next";
-import { NextAuthOptions, User } from "next-auth";
+import { NextAuthOptions } from "next-auth";
 import NextAuth from "next-auth/next";
 import Email from "next-auth/providers/email";
 
-import prisma from "../../../lib/db/prismadb";
+import prisma from "@lib/db/prismadb";
 
-// Sign in
 const ONE_DAY = 86400;
 const SEVEN_DAYS = 604800;
-// async function authorize(credentials: { email: string } | undefined) {
-//     if (!credentials) {
-//         throw new Error("Credentials must be provided.");
-//     }
-
-//     // call api for user
-//     const res = await fetch("http://localhost:3000/api/v1/users", {
-//         method: "POST",
-//         body: JSON.stringify(credentials),
-//         headers: { "Content-Type": "application/json" }
-//     });
-//     const user = await res.json();
-
-//     return {
-//         id: user.id,
-//         email: user.email,
-//         name: user.name,
-//         accountVerified: user.accountVerified,
-//         emailVerified: user.emailVerified,
-//         image: user.image,
-//         role: user.role
-//     };
-// }
 
 export const authOptions = (): NextAuthOptions => ({
     adapter: PrismaAdapter(prisma),
     providers: [
         Email({
             server: {
-                host: "smtp.ethereal.email",
-                port: 587,
+                host: process.env.EMAIL_HOST,
+                port: Number(process.env.EMAIL_PORT),
                 auth: {
-                    user: "prince.schumm84@ethereal.email",
-                    pass: "X5gZW8RbHtXzcmePvJ"
+                    user: process.env.EMAIL_USER,
+                    pass: process.env.EMAIL_PASSWORD
                 }
             },
-            from: "prince.schumm84@ethereal.email"
+            from: process.env.EMAIL_FROM
             // async sendVerificationRequest({
             //     identifier: email,
             //     url,
