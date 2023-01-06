@@ -33,17 +33,19 @@ const SEVEN_DAYS = 604800;
 //     };
 // }
 
-interface UserBody extends User {
-    firstName: string | undefined;
-    lastName: string | undefined;
-}
-
 export const authOptions = (): NextAuthOptions => ({
     adapter: PrismaAdapter(prisma),
     providers: [
         Email({
-            server: "smtp://2baa5311b2c6f0:40af579663b135@smtp.mailtrap.io:465",
-            from: "Account Support accountsupport@useaurora.ai"
+            server: {
+                host: "smtp.ethereal.email",
+                port: 587,
+                auth: {
+                    user: "prince.schumm84@ethereal.email",
+                    pass: "X5gZW8RbHtXzcmePvJ"
+                }
+            },
+            from: "prince.schumm84@ethereal.email"
             // async sendVerificationRequest({
             //     identifier: email,
             //     url,
@@ -68,20 +70,6 @@ export const authOptions = (): NextAuthOptions => ({
                 token.user = user;
             }
             return token;
-        },
-        async signIn({ user: { email } }) {
-            const res = await fetch(
-                `${process.env.API_HOSTNAME}/api/v1/users`,
-                {
-                    method: "POST",
-                    body: JSON.stringify({ email }),
-                    headers: {
-                        "Content-Type": "application/json",
-                        accept: "application/json"
-                    }
-                }
-            );
-            return res.ok;
         }
     },
     session: {
@@ -92,5 +80,5 @@ export const authOptions = (): NextAuthOptions => ({
 });
 
 export default async function auth(req: NextApiRequest, res: NextApiResponse) {
-    return NextAuth(req, res, authOptions(req));
+    return NextAuth(req, res, authOptions());
 }

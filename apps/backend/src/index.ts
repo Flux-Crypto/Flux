@@ -1,5 +1,6 @@
 import type { FastifyCookieOptions } from "@fastify/cookie";
 import cookie from "@fastify/cookie";
+import cors from "@fastify/cors";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import swagger from "@fastify/swagger";
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -28,11 +29,17 @@ const runServer = async () => {
         logger: envToLogger[NODE_ENV] ?? true
     });
 
+    // change this in
+    await fastifyServer.register(cors, {
+        origin: NODE_ENV === "dev" ? "*" : process.env.HOSTNAME
+    });
+
     await fastifyServer.register(prismaPlugin);
-    fastifyServer.register(cookie, {
-        secret: "__session", // for cookies signature
-        parseOptions: {} // options for parsing cookies
-    } as FastifyCookieOptions);
+
+    // fastifyServer.register(cookie, {
+    //     secret: "__session", // for cookies signature
+    //     parseOptions: {} // options for parsing cookies
+    // } as FastifyCookieOptions);
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore:next-line

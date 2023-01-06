@@ -25,6 +25,7 @@
     "homepage": "https://github.com/tot/aurora#readme",
     "dependencies": {
         "@fastify/cookie": "^8.3.0",
+        "@fastify/cors": "^8.2.0",
         "@prisma/client": "^4.8.0",
         "alchemy-sdk": "^2.2.5",
         "bcrypt": "^5.1.0",

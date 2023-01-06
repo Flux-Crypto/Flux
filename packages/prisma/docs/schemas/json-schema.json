@@ -41,9 +41,12 @@
         "email": {
           "type": "string"
         },
-        "verified": {
-          "type": "boolean",
-          "default": false
+        "emailVerified": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
         },
         "verificationExpiry": {
           "type": "string",

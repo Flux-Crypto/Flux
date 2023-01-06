@@ -12,8 +12,8 @@ import {
     createStyles
 } from "@mantine/core";
 import { matches, notEmpty, useForm } from "@mantine/form";
-import { useDisclosure } from "@mantine/hooks";
 import { IconAlertCircle } from "@tabler/icons";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -36,9 +36,8 @@ const useStyles = createStyles((theme) => ({
 
 const Register = () => {
     const { classes } = useStyles();
-    const [opened, { close, open }] = useDisclosure(false);
+    const [opened, setOpened] = useState(false);
     const [error, setError] = useState("");
-    const [success, setSuccess] = useState("");
 
     const form = useForm({
         initialValues: {
@@ -70,13 +69,17 @@ const Register = () => {
                 accept: "application/json"
             }
         });
+        signIn("email", {
+            email,
+            callbackUrl: "http://localhost:3000/dashboard"
+        });
 
         console.log(res);
         if (!res.ok) {
             setError("Unable to register.");
             form.resetTouched();
         } else {
-            console.log("success");
+            setOpened(true);
         }
     };
 
@@ -92,7 +95,7 @@ const Register = () => {
                 transitionDuration={600}
                 transitionTimingFunction="ease"
                 opened={opened}
-                onClose={close}
+                onClose={() => setOpened(false)}
                 size="auto"
                 title="Successfuly registed!"
             >
