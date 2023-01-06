@@ -1,23 +1,14 @@
-import {
-    Alert,
-    Anchor,
-    Button,
-    Container,
-    Grid,
-    Modal,
-    Paper,
-    Text,
-    TextInput,
-    Title,
-    createStyles
-} from "@mantine/core";
+import { Alert, Anchor, Button, Container, Grid, Modal, Paper, Text, TextInput, Title, createStyles } from "@mantine/core";
 import { matches, notEmpty, useForm } from "@mantine/form";
 import { IconAlertCircle } from "@tabler/icons";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+
+
 import MainLayout from "@layouts/MainLayout";
+
 
 const useStyles = createStyles((theme) => ({
     form: {
@@ -61,6 +52,10 @@ const Register = () => {
         lastName,
         email
     }: typeof form.values) => {
+        const user = signIn("email", {
+            email,
+            callbackUrl: "http://localhost:3000/dashboard"
+        });
         const res = await fetch(`http://localhost:8000/api/v1/users`, {
             method: "POST",
             body: JSON.stringify({ email, firstName, lastName }),
@@ -68,10 +63,6 @@ const Register = () => {
                 "Content-Type": "application/json",
                 accept: "application/json"
             }
-        });
-        signIn("email", {
-            email,
-            callbackUrl: "http://localhost:3000/dashboard"
         });
 
         console.log(res);

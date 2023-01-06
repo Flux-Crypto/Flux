@@ -47,8 +47,7 @@ type ChainTransaction {
 model User {
     id                  String              @id @default(auto()) @map("_id") @db.ObjectId
     email               String              @unique
-    emailVerified       DateTime?
-    verificationExpiry  DateTime
+    emailVerified       DateTime            @default(now())
     firstName           String
     lastName            String
     apiKey              String              @unique @default("")

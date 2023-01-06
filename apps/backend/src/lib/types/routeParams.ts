@@ -3,19 +3,28 @@ import { ImportTransaction } from "@prisma/client";
 /**
  *  /users
  */
-export interface UsersRequestBody {
+export interface UsersPostRequestBody {
     email: string;
-    firstName: string;
-    lastName: string;
 }
 
 /**
- *  /users/:userId
+ *  /users?id=<userId>&email=<email>
+ */
+export interface UserRequestQuery {
+    id: string;
+    email: string;
+}
+
+/**
+ * /users/:userId
  */
 export interface UserRequestParams {
     userId: string;
 }
 
+/**
+ * /users/:userId/transactions/:transactionId
+ */
 export interface UsersTransactionsRequestParams extends UserRequestParams {
     transactionId: string;
 }

@@ -4,6 +4,8 @@ import {
     Button,
     Container,
     Flex,
+    Modal,
+    Paper,
     Text,
     TextInput,
     Title,
@@ -44,6 +46,7 @@ const useStyles = createStyles((theme) => ({
 
 const Login = () => {
     const { classes } = useStyles();
+    const [opened, setOpened] = useState(false);
     const [error, setError] = useState("");
 
     const form = useForm({
@@ -60,15 +63,26 @@ const Login = () => {
     });
 
     const submitHandler = async ({ email }: typeof form.values) => {
-        try {
-            await signIn(email);
-        } catch (e: any) {
-            setError(e.errors[0].message);
-        }
+        const response = await signIn("email", { redirect: false, email });
+        if (!response?.ok)
+            setError(
+                "Try again L nerd. Ratio + did it better + no bitches + yb better"
+            );
     };
 
     return (
         <MainLayout pageTitle="Login">
+            <Modal
+                transition="slide-down"
+                transitionDuration={600}
+                transitionTimingFunction="ease"
+                opened={opened}
+                onClose={() => setOpened(false)}
+                size="auto"
+                title="Successfuly registed!"
+            >
+                <Text>Check your email for a magic link to sign in.</Text>
+            </Modal>
             <Container size={420} mt="8rem">
                 <Paper withBorder className={classes.form} radius="md" p={30}>
                     <Title

@@ -42,13 +42,6 @@
           "type": "string"
         },
         "emailVerified": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "format": "date-time"
-        },
-        "verificationExpiry": {
           "type": "string",
           "format": "date-time"
         },
@@ -115,7 +108,6 @@
       },
       "required": [
         "email",
-        "verificationExpiry",
         "firstName",
         "lastName",
         "processorAPIKeys",

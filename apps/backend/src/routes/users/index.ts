@@ -1,11 +1,10 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
-import dayjs from "dayjs";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 import { logAndSendReply } from "@lib/logger";
 import { FastifyDone } from "@lib/types/fastifyTypes";
 import { UsersIndexSchema } from "@lib/types/jsonObjects";
-import { UsersRequestBody } from "@lib/types/routeParams";
+import { UsersPostRequestBody } from "@lib/types/routeParams";
 import HttpStatus from "@src/lib/types/httpStatus";
 
 const indexRoute = (
@@ -45,8 +44,7 @@ const indexRoute = (
         "/",
         postSchema,
         async (request: FastifyRequest, reply: FastifyReply) => {
-            const { email, firstName, lastName } =
-                request.body as UsersRequestBody;
+            const { email } = request.body as UsersPostRequestBody;
 
             if (!email)
                 logAndSendReply(
@@ -57,36 +55,18 @@ const indexRoute = (
                 );
 
             try {
-                let userExists = true;
-                let user = await prisma.user.findUnique({
-                    where: {
-                        email
+                // ? Redo? not sure why tho but that's a **__t o n y__** problem
+                await prisma.user.upsert({
+                    where: { email: email || "" },
+                    update: {},
+                    create: {
+                        email,
+                        firstName: "",
+                        lastName: ""
                     }
                 });
 
-                if (!user) {
-                    if (!firstName || !lastName)
-                        logAndSendReply(
-                            log.error,
-                            reply,
-                            HttpStatus.BAD_REQUEST,
-                            "Missing first name and last name parameters"
-                        );
-
-                    userExists = false;
-                    user = await prisma.user.create({
-                        data: {
-                            email,
-                            firstName,
-                            lastName,
-                            verificationExpiry: dayjs().add(5, "day").toDate()
-                        }
-                    });
-                }
-
-                reply
-                    .code(userExists ? HttpStatus.OK : HttpStatus.CREATED)
-                    .send();
+                reply.send();
             } catch (e) {
                 if (e instanceof PrismaClientKnownRequestError) {
                     log.fatal(e);
@@ -104,6 +84,8 @@ const indexRoute = (
             }
         }
     );
+
+    // TODO: PUT /users/:userId or :email
 
     done();
 };

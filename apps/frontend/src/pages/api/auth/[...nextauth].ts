@@ -1,6 +1,7 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { NextApiRequest, NextApiResponse } from "next";
 import { NextAuthOptions } from "next-auth";
+import type { AdapterUser } from "next-auth/adapters";
 import NextAuth from "next-auth/next";
 import Email from "next-auth/providers/email";
 
@@ -46,6 +47,26 @@ export const authOptions = (): NextAuthOptions => ({
                 token.user = user;
             }
             return token;
+        },
+        async signIn({ user }) {
+            const { email } = user as AdapterUser;
+
+            const response = await fetch(`http://localhost:8000/api/v1/users`, {
+                method: "POST",
+                body: JSON.stringify({ email, firstName: "", lastName: "" }),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            // (LOGIN) REGISTERED + VERIFIED ==> dbUser && emailVerified ==> continue
+            // (LOGIN) REGISTERED + NOT VERIFIED ==> dbUser && !emailVerified ==> continue
+            // (LOGIN) UNREGISTERED ==> !dbUser && !emailVerified ==> return false
+            // (REGISTER) REGISTERED + VERIFIED ==> dbUser && emailVerified ==> continue
+            // (REGISTER) REGISTERED + NOT VERIFIED ==> dbUser && !emailVerified ==> continue
+            // (REGISTER) UNREGISTERED ==> !dbUser && !emailVerified ==> true
+
+            return response.ok;
         }
     },
     session: {

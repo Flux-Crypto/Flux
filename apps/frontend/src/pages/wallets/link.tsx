@@ -1,4 +1,3 @@
-import { useAuth } from "@clerk/nextjs";
 import {
     Alert,
     Box,
@@ -14,6 +13,7 @@ import {
 import { useForm } from "@mantine/form";
 import { IconAlertCircle, IconLink } from "@tabler/icons";
 import { ethers } from "ethers";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 
 import callAPI from "@lib/callAPI";
@@ -42,7 +42,7 @@ const useStyles = createStyles((theme) => ({
 const Wallets = () => {
     const { classes } = useStyles();
 
-    const { isLoaded, userId, sessionId } = useAuth();
+    const { data: session } = useSession();
     const [isFetching, setFetching] = useState(false);
     const [error, setError] = useState("");
 
