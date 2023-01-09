@@ -1,4 +1,5 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import jwt from "jsonwebtoken";
 import { NextApiRequest, NextApiResponse } from "next";
 import { NextAuthOptions } from "next-auth";
 import type { AdapterUser } from "next-auth/adapters";
@@ -32,13 +33,22 @@ export const authOptions = (): NextAuthOptions => ({
             // }
         })
     ],
+    pages: {
+        signIn: "/authentication",
+        signOut: "/signout",
+        error: "/auth/error", // Error code passed in query string as ?error=
+        verifyRequest: "/auth/verify-request", // (used for check email message)
+        newUser: "/onboard" // New users will be directed here on first sign in (leave the property out if not of interest)
+    },
     secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
         async session({ session, token }: any) {
             const { user } = token;
+            const authToken = jwt.sign(token, process.env.NEXTAUTH_SECRET);
             session = {
                 ...session,
-                user
+                user,
+                authToken
             };
             return session;
         },
@@ -58,13 +68,6 @@ export const authOptions = (): NextAuthOptions => ({
                     "Content-Type": "application/json"
                 }
             });
-
-            // (LOGIN) REGISTERED + VERIFIED ==> dbUser && emailVerified ==> continue
-            // (LOGIN) REGISTERED + NOT VERIFIED ==> dbUser && !emailVerified ==> continue
-            // (LOGIN) UNREGISTERED ==> !dbUser && !emailVerified ==> return false
-            // (REGISTER) REGISTERED + VERIFIED ==> dbUser && emailVerified ==> continue
-            // (REGISTER) REGISTERED + NOT VERIFIED ==> dbUser && !emailVerified ==> continue
-            // (REGISTER) UNREGISTERED ==> !dbUser && !emailVerified ==> true
 
             return response.ok;
         }

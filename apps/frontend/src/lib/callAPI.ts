@@ -1,11 +1,7 @@
-const callAPI = (
-    path: string,
-    options: RequestInit = {},
-    sessionId?: string | undefined
-) =>
+const callAPI = (path: string, authToken: string, options: RequestInit = {}) =>
     fetch(path, {
         headers: {
-            sessionId
+            Authorization: `Bearer ${authToken}`
         } as HeadersInit,
         ...options
     });

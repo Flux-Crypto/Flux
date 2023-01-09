@@ -27,6 +27,7 @@
         "@aurora/prisma": "^0.1.0",
         "@fastify/cookie": "^8.3.0",
         "@fastify/cors": "^8.2.0",
+        "@fastify/jwt": "^6.5.0",
         "@prisma/client": "^4.8.0",
         "alchemy-sdk": "^2.2.5",
         "bcrypt": "^5.1.0",
