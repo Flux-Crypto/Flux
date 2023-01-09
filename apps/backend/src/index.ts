@@ -1,5 +1,3 @@
-import type { FastifyCookieOptions } from "@fastify/cookie";
-import cookie from "@fastify/cookie";
 import cors from "@fastify/cors";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import swagger from "@fastify/swagger";
@@ -19,7 +17,8 @@ import { envToLogger } from "@lib/logger";
 import { swaggerOptions, swaggerUIOptions } from "@lib/swaggerOptions";
 import { FastifyDone } from "@lib/types/fastifyTypes";
 import explorer from "@routes/explorer/base";
-import users from "@routes/users/base";
+import user from "@routes/user";
+import users from "@routes/users";
 
 const runServer = async () => {
     // TODO: fix
@@ -53,6 +52,7 @@ const runServer = async () => {
             done: FastifyDone
         ) => {
             server.register(users, { prefix: "/users" });
+            server.register(user, { prefix: "/user" });
             server.register(explorer, { prefix: "/explorer" });
 
             done();

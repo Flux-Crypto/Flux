@@ -3,16 +3,16 @@ import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 import { logAndSendReply } from "@lib/logger";
 import HttpStatus from "@lib/types/httpStatus";
-import { UserIndexSchema } from "@lib/types/jsonObjects";
+import { UserBaseSchema } from "@lib/types/jsonObjects";
 import {
     UserRequestParams,
     UserRequestQuery,
     UsersPutRequestBody
 } from "@lib/types/routeParams";
 
-const userRoute = (
+const baseRoute = (
     server: FastifyInstance,
-    { get: getSchema, put: putSchema }: UserIndexSchema,
+    { get: getSchema, put: putSchema }: UserBaseSchema,
     done: () => void
 ) => {
     const { prisma, log } = server;
@@ -110,4 +110,4 @@ const userRoute = (
     done();
 };
 
-export default userRoute;
+export default baseRoute;

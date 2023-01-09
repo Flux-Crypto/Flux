@@ -4,7 +4,7 @@ import { FastifyInstance } from "fastify";
 
 import { logAndSendReply } from "@lib/logger";
 import HttpStatus from "@lib/types/httpStatus";
-import { UserWalletsSchema } from "@lib/types/jsonObjects";
+import { WalletsBaseSchema } from "@lib/types/jsonObjects";
 import {
     UserRequestParams,
     UserWalletsRequestBody,
@@ -13,7 +13,7 @@ import {
 
 const walletsRoute = (
     server: FastifyInstance,
-    { post: postSchema, delete: deleteSchema }: UserWalletsSchema,
+    { post: postSchema, delete: deleteSchema }: WalletsBaseSchema,
     done: () => void
 ) => {
     const { prisma, log } = server;

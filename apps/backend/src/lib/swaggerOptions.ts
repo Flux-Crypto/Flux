@@ -19,7 +19,12 @@ export const swaggerOptions = {
                 url: "http://127.0.0.1:8000"
             }
         ],
-        tags: [{ name: "users", description: "User specific endpoints" }],
+        tags: [
+            { name: "users", description: "Global users endpoints" },
+            { name: "user", description: "User specific endpoints" },
+            { name: "wallets", description: "User wallets endpoints" },
+            { name: "transactions", description: "User transactions endpoints" }
+        ],
         components: {
             schemas: {
                 User: {
