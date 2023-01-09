@@ -1,4 +1,5 @@
 import cors from "@fastify/cors";
+import jwtAuth from "@fastify/jwt";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import swagger from "@fastify/swagger";
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -19,6 +20,8 @@ import { FastifyDone } from "@lib/types/fastifyTypes";
 import explorer from "@routes/explorer/base";
 import user from "@routes/user";
 import users from "@routes/users";
+
+import HttpStatus from "./lib/types/httpStatus";
 
 const runServer = async () => {
     // TODO: fix
@@ -44,6 +47,17 @@ const runServer = async () => {
     // @ts-ignore:next-line
     await fastifyServer.register(swagger, swaggerOptions);
     await fastifyServer.register(swaggerUI, swaggerUIOptions);
+    await fastifyServer.register(jwtAuth, {
+        secret: process.env.NEXTAUTH_SECRET as string
+    });
+
+    await fastifyServer.addHook("onRequest", async (request, reply) => {
+        try {
+            await request.jwtVerify();
+        } catch (err) {
+            reply.code(HttpStatus.BAD_REQUEST).send("Invalid authentication.");
+        }
+    });
 
     fastifyServer.register(
         (

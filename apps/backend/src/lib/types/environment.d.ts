@@ -5,6 +5,7 @@ declare global {
             HOSTNAME: string;
             ALCHEMY_API_KEY: string;
             DB_URL: string;
+            NEXTAUTH_SECRET: string;
         }
     }
 }

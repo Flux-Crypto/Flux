@@ -69,12 +69,12 @@ const Wallets = () => {
 
         // replace HOSTNAME with env var
         const response = await callAPI(
-            `http://localhost:8000/users/${userId}/wallets`,
+            `http://localhost:8000/users/${session?.user?.id}/wallets`,
+            session?.authToken,
             {
                 method: "POST",
                 body: JSON.stringify(values)
-            },
-            sessionId as string | undefined
+            }
         );
 
         setFetching(false);
