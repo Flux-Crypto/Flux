@@ -1,4 +1,3 @@
-import { useClerk } from "@clerk/nextjs";
 import { AppShell, Box, Button, Flex } from "@mantine/core";
 
 import MainLayout from "@layouts/MainLayout";

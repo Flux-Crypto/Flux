@@ -13,8 +13,8 @@ import {
 } from "@mantine/core";
 import { matches, useForm } from "@mantine/form";
 import { IconAlertCircle } from "@tabler/icons";
-import { signIn } from "next-auth/react";
-import Link from "next/link";
+import { GetServerSidePropsContext } from "next";
+import { getSession, signIn } from "next-auth/react";
 import { useState } from "react";
 
 import MainLayout from "@layouts/MainLayout";
@@ -33,6 +33,13 @@ const useStyles = createStyles((theme) => ({
         fontFamily: `Greycliff CF, ${theme.fontFamily}`,
         fontSize: "1.75rem"
     },
+
+    subtext: {
+        color: theme.colorScheme === "dark" ? theme.white : theme.black,
+        fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+        fontSize: "1rem"
+    },
+
     link: {
         paddingTop: 2,
         color: theme.colors[theme.primaryColor][
@@ -44,7 +51,7 @@ const useStyles = createStyles((theme) => ({
     }
 }));
 
-const Login = () => {
+const Authentication = () => {
     const { classes } = useStyles();
     const [opened, setOpened] = useState(false);
     const [error, setError] = useState("");
@@ -63,11 +70,12 @@ const Login = () => {
     });
 
     const submitHandler = async ({ email }: typeof form.values) => {
-        const response = await signIn("email", { redirect: false, email });
-        if (!response?.ok)
-            setError(
-                "Try again L nerd. Ratio + did it better + no bitches + yb better"
-            );
+        const response = await signIn("email", {
+            redirect: false,
+            email,
+            callbackUrl: "http://localhost:3000/dashboard"
+        });
+        if (!response?.ok) setError("Unable to login at the moment.");
     };
 
     return (
@@ -79,20 +87,24 @@ const Login = () => {
                 opened={opened}
                 onClose={() => setOpened(false)}
                 size="auto"
-                title="Successfuly registed!"
+                title="Welcome!"
             >
                 <Text>Check your email for a magic link to sign in.</Text>
             </Modal>
             <Container size={420} mt="8rem">
                 <Paper withBorder className={classes.form} radius="md" p={30}>
-                    <Title
-                        className={classes.title}
+                    <Title className={classes.title} align="center" mt="md">
+                        Alpha Access
+                    </Title>
+                    <Text
+                        className={classes.subtext}
+                        color="gray"
                         align="center"
-                        mt="md"
+                        mt="0.25rem"
                         mb={20}
                     >
-                        Login
-                    </Title>
+                        Welcome to Aurora
+                    </Text>
                     {error && (
                         <Alert
                             icon={<IconAlertCircle size={16} />}
@@ -119,23 +131,26 @@ const Login = () => {
                             Log in
                         </Button>
                     </form>
-
-                    <Flex gap="xs" justify="center" align="center" mt="md">
-                        <Text align="center" size="sm">
-                            Don&apos;t have an account?{" "}
-                        </Text>
-                        <Anchor
-                            component={Link}
-                            href="/register"
-                            className={classes.link}
-                        >
-                            <Text size="sm">Register</Text>
-                        </Anchor>
-                    </Flex>
                 </Paper>
             </Container>
         </MainLayout>
     );
 };
 
-export default Login;
+export default Authentication;
+
+export async function getServerSideProps({ req }: GetServerSidePropsContext) {
+    const session = await getSession({ req });
+
+    if (session) {
+        return {
+            redirect: {
+                destination: "/dashboard"
+            }
+        };
+    }
+
+    return {
+        props: {}
+    };
+}
