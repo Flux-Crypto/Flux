@@ -85,8 +85,6 @@ const indexRoute = (
         }
     );
 
-    // TODO: PUT /users/:userId or :email
-
     done();
 };
 

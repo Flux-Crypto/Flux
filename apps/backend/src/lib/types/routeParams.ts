@@ -7,6 +7,15 @@ export interface UsersPostRequestBody {
     email: string;
 }
 
+export interface UsersPutRequestBody {
+    email?: string;
+    firstName?: string;
+    lastName?: string;
+    apiKey?: string;
+    processorAPIKeys?: string[];
+    exchangeAPIKeys?: string[];
+}
+
 /**
  *  /users?id=<userId>&email=<email>
  */
