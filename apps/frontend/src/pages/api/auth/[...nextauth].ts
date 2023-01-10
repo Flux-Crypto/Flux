@@ -35,9 +35,7 @@ const EmailProvider = Email({
 const session = async ({ session: sessionObj, token }: SessionParams) => {
     // TODO: type this
     const { user } = token;
-    console.log(token);
     const authToken = jwt.sign(token, process.env.NEXTAUTH_SECRET);
-    console.log(user);
 
     return {
         ...sessionObj,
