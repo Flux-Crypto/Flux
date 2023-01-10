@@ -1,4 +1,4 @@
-import { AppShell, Box, Button, Flex } from "@mantine/core";
+import { AppShell, Box, Flex } from "@mantine/core";
 
 import MainLayout from "@layouts/MainLayout";
 

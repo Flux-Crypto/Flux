@@ -1,5 +1,4 @@
 import { MantineProvider } from "@mantine/core";
-import { colors } from "@theme/index";
 import { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { AppProps } from "next/app";
