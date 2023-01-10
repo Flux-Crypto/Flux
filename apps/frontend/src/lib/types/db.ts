@@ -1,5 +1,5 @@
 export interface Transaction {
-    date: string;
+    date: Date;
     receivedQuantity: number;
     receivedCurrency: string;
     sentQuantity: number;

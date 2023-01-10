@@ -19,8 +19,9 @@ import { useSession } from "next-auth/react";
 import { useState } from "react";
 
 import callAPI from "@lib/callAPI";
-import DashboardLayout from "@src/layouts/DashboardLayout";
-import { UserSession } from "@src/lib/types/auth";
+import { UserSession } from "@lib/types/auth";
+
+import DashboardLayout from "@layouts/DashboardLayout";
 
 const useStyles = createStyles((theme) => ({
     root: {
@@ -71,30 +72,33 @@ const Wallets = () => {
     });
 
     const submitHandler = async (values: typeof form.values) => {
+        if (!session) return;
+
         setFetching(true);
 
-        if (session) {
-            const { authToken } = session as UserSession;
+        const { authToken } = session as UserSession;
 
-            // TODO: replace HOSTNAME with env var
-            const response = await callAPI(
-                `http://localhost:8000/api/v1/wallets`,
-                authToken,
-                {
-                    method: "POST",
-                    body: JSON.stringify(values)
-                }
-            );
-
-            // TODO: incorporate better error checking? (duplicate wallet)
-            if (!response.ok) setError(response.statusText);
-            else {
-                toggleNotificationVisible(true);
-                setTimeout(() => toggleNotificationVisible(false), 5000);
+        // TODO: replace HOSTNAME with env var
+        const response = await callAPI(
+            `http://localhost:8000/api/v1/wallets`,
+            authToken,
+            {
+                method: "POST",
+                body: JSON.stringify(values)
             }
-        }
+        );
 
         setFetching(false);
+
+        // TODO: incorporate better error checking? (duplicate wallet)
+        if (!response.ok) {
+            setError(response.statusText);
+            return;
+        }
+
+        toggleNotificationVisible(true);
+        setTimeout(() => toggleNotificationVisible(false), 5000);
+
         form.reset();
     };
 

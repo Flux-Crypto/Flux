@@ -17,10 +17,11 @@ import { apiKeyAuthPlugin, jwtAuthPlugin, prismaPlugin } from "@plugins/index";
 import { envToLogger } from "@lib/logger";
 import { swaggerOptions, swaggerUIOptions } from "@lib/swaggerOptions";
 import { FastifyDone } from "@lib/types/fastifyTypes";
+import explorer from "@routes/explorer";
+import transactions from "@routes/transactions";
 import user from "@routes/user";
 import users from "@routes/users";
 import wallets from "@routes/wallets";
-import explorer from "@src/routes/explorer";
 
 const runServer = async () => {
     // TODO: fix `Type 'undefined' cannot be used as an index type`
@@ -51,6 +52,7 @@ const runServer = async () => {
             server.register(users, { prefix: "/users" });
             server.register(user, { prefix: "/user" });
             server.register(wallets, { prefix: "/wallets" });
+            server.register(transactions, { prefix: "/transactions" });
             server.register(explorer, { prefix: "/explorer" });
 
             done();

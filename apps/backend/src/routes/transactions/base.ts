@@ -68,7 +68,7 @@ const baseRoute = (
             const { transactions: transactionsData } =
                 request.body as TransactionsRequestBody;
             if (!transactionsData) {
-                const message = "Missing or empty transaction data";
+                const message = "Missing or empty transactions data";
                 log.error(message);
                 reply.code(HttpStatus.BAD_REQUEST).send(message);
                 return;

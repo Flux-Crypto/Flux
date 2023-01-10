@@ -11,15 +11,6 @@ export default {
             description: "Gets user transactions based on supplied user id.",
             tags: ["transactions"],
             summary: "Gets user transactions.",
-            params: {
-                type: "object",
-                properties: {
-                    userId: {
-                        type: "string",
-                        description: "user id"
-                    }
-                }
-            },
             response: {
                 "200": {
                     description: "OK",
@@ -45,22 +36,23 @@ export default {
     post: {
         schema: {
             description:
-                "Creates a transaction for a provided user based on supplied transaction details.",
+                "Creates transactions for a provided user based on supplied transactions details.",
             tags: ["transactions"],
-            summary: "Creates user transaction.",
-            params: {
-                type: "object",
-                properties: {
-                    userId: {
-                        type: "string",
-                        description: "user id"
-                    }
-                }
-            },
+            summary: "Creates user transactions.",
             body: {
                 type: "object",
-                properties: _.omit(ImportTransactionSchema, ["id"]),
-                examples: [_.omit(ImportTransactionExample, ["id"])]
+                properties: {
+                    transactions: {
+                        type: "array",
+                        items: {
+                            type: "object",
+                            properties: _.omit(ImportTransactionSchema, ["id"])
+                        }
+                    }
+                },
+                examples: [
+                    { transactions: [_.omit(ImportTransactionExample, ["id"])] }
+                ]
             },
             response: {
                 "201": {
@@ -90,10 +82,6 @@ export default {
             params: {
                 type: "object",
                 properties: {
-                    userId: {
-                        type: "string",
-                        description: "user id"
-                    },
                     transactionId: {
                         type: "string",
                         description: "database id of transaction"

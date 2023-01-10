@@ -9,7 +9,7 @@ import {
 import _ from "lodash";
 import { useState } from "react";
 
-import { Transaction } from "@src/lib/types/auth";
+import { Transaction } from "@lib/types/db";
 
 const useStyles = createStyles((theme) => ({
     rowSelected: {
@@ -64,7 +64,7 @@ const ImportTable = ({ data }: TableSelectionProps) => {
                         />
                     </td>
                     <td>
-                        <Text align="center">{date}</Text>
+                        <Text align="center">{date.toISOString()}</Text>
                     </td>
                     <td>
                         <Group spacing="sm" align="center">

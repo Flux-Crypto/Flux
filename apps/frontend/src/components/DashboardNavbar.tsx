@@ -30,7 +30,7 @@ const mockdata = [
         icon: IconWallet,
         links: [
             { label: "Manage", link: "/" },
-            { label: "Link", link: "/link-wallet" }
+            { label: "Link", link: "/wallets/link" }
         ]
     },
     {
@@ -38,7 +38,7 @@ const mockdata = [
         icon: IconReceipt,
         links: [
             { label: "Overview", link: "/" },
-            { label: "Import", link: "/import" }
+            { label: "Import", link: "/transactions/import" }
         ]
     },
     { label: "Explorer", icon: IconZoomCode },
@@ -121,7 +121,7 @@ const DashboardNavbar = () => {
                 </Group>
             </Navbar.Section>
 
-            <LoadingOverlay visible={status === "loading"} />
+            <LoadingOverlay visible={status === "loading"} overlayBlur={2} />
 
             <Navbar.Section
                 grow

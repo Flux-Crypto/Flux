@@ -3,7 +3,7 @@ import { Dropzone, FileWithPath, MIME_TYPES } from "@mantine/dropzone";
 import { IconDownload, IconUpload, IconX } from "@tabler/icons";
 import { Dispatch, SetStateAction, useRef } from "react";
 
-import { Transaction } from "../lib/types/auth";
+import { Transaction } from "@lib/types/db";
 
 const useStyles = createStyles((theme) => ({
     wrapper: {
@@ -39,7 +39,7 @@ const parseCSV = (csvData: string) => {
         const rawTxn = rawData[i].split(",");
 
         const txn: Transaction = {
-            date: rawTxn[0],
+            date: new Date(rawTxn[0]),
             receivedQuantity: parseFloat(rawTxn[1]) || 0,
             receivedCurrency: rawTxn[2] || "",
             sentQuantity: parseFloat(rawTxn[3]) || 0,

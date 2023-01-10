@@ -3,7 +3,6 @@ import {
     Box,
     Collapse,
     Group,
-    Text,
     ThemeIcon,
     UnstyledButton,
     createStyles
