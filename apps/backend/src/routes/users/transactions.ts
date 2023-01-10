@@ -54,6 +54,7 @@ const transactionsRoute = (
                     reply
                         .code(HttpStatus.INTERNAL_SERVER_ERROR)
                         .send("Server error");
+                    return;
                 }
 
                 logAndSendReply(
@@ -111,6 +112,7 @@ const transactionsRoute = (
                     reply
                         .code(HttpStatus.INTERNAL_SERVER_ERROR)
                         .send("Server error");
+                    return;
                 }
 
                 logAndSendReply(
@@ -161,6 +163,7 @@ const transactionsRoute = (
                     reply
                         .code(HttpStatus.INTERNAL_SERVER_ERROR)
                         .send("Server error");
+                    return;
                 }
 
                 logAndSendReply(

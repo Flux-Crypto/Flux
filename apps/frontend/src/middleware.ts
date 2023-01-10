@@ -1,7 +1,9 @@
 import { withAuth } from "next-auth/middleware";
 
+import { AuthorizedParams } from "./lib/types/auth";
+
 // TODO: TYPE THIS
-const authorized = ({ req, token }) => {
+const authorized = ({ req, token }: AuthorizedParams) => {
     // `/admin` requires admin role
     if (req.nextUrl.pathname === "/admin") {
         return token?.userRole === "admin";

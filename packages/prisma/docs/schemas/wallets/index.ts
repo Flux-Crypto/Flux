@@ -4,18 +4,9 @@ export default {
     post: {
         schema: {
             description:
-                "Creates a wallet based on supplied wallet address and links to provided user id.",
+                "Creates a wallet based on supplied wallet address and links to provided user.",
             tags: ["wallets"],
             summary: "Creates user wallet.",
-            params: {
-                type: "object",
-                properties: {
-                    userId: {
-                        type: "string",
-                        description: "user id"
-                    }
-                }
-            },
             body: {
                 type: "object",
                 properties: {
@@ -44,16 +35,12 @@ export default {
     delete: {
         schema: {
             description:
-                "Deletes (unlinks) a wallet based on supplied user id and wallet address.",
+                "Deletes (unlinks) a wallet for user based on wallet address.",
             tags: ["wallets"],
             summary: "Deletes user wallet.",
             params: {
                 type: "object",
                 properties: {
-                    userId: {
-                        type: "string",
-                        description: "user id"
-                    },
                     walletAddress: {
                         type: "string",
                         description: "address of wallet"

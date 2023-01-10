@@ -35,6 +35,7 @@ const apiKeyAuthPlugin: FastifyPluginAsync = fp(
                     const message = "Missing API key.";
                     log.error(message);
                     reply.code(HttpStatus.BAD_REQUEST).send(message);
+                    done();
                 }
 
                 try {
@@ -44,9 +45,9 @@ const apiKeyAuthPlugin: FastifyPluginAsync = fp(
                         }
                     });
                     if (!user) {
-                        reply
-                            .code(HttpStatus.UNAUTHORIZED)
-                            .send("User not found.");
+                        const message = "User not found.";
+                        log.error(message);
+                        reply.code(HttpStatus.UNAUTHORIZED).send(message);
                     }
 
                     done();
@@ -56,12 +57,15 @@ const apiKeyAuthPlugin: FastifyPluginAsync = fp(
                     if (e instanceof PrismaClientKnownRequestError) {
                         log.fatal(e);
                         reply.send("Server error");
+                        done();
                     }
 
                     const message = "Couldn't authenticate user";
                     log.error(message);
                     reply.send(message);
                 }
+
+                done();
             }
         );
     }

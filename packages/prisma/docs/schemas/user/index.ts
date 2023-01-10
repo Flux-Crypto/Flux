@@ -3,16 +3,14 @@ import { UserExample, UserSchema } from "../apiSchema";
 export default {
     get: {
         schema: {
-            description: "Gets user data based on supplied user id.",
+            description: "Gets user data.",
             tags: ["user"],
             summary: "Gets user data.",
-            params: {
+            querystring: {
                 type: "object",
                 properties: {
-                    userId: {
-                        type: "string",
-                        description: "user id"
-                    }
+                    id: { type: "string" },
+                    email: { type: "string" }
                 }
             },
             response: {
@@ -35,18 +33,9 @@ export default {
     },
     put: {
         schema: {
-            description: "Updates user data based on supplied user id.",
+            description: "Updates user data.",
             tags: ["user"],
             summary: "Updates user data.",
-            params: {
-                type: "object",
-                properties: {
-                    userId: {
-                        type: "string",
-                        description: "user id"
-                    }
-                }
-            },
             response: {
                 "204": {
                     description: "Successfully updated user.",

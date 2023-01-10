@@ -90,6 +90,7 @@ const baseRoute = (
                     reply
                         .code(HttpStatus.INTERNAL_SERVER_ERROR)
                         .send("Server error");
+                    return;
                 }
 
                 const message = "Couldn't create wallet";
@@ -112,6 +113,7 @@ const baseRoute = (
                 const message = "Invalid seed phrase mnemonic";
                 log.error(message);
                 reply.code(HttpStatus.BAD_REQUEST).send(message);
+                return;
             }
 
             try {
@@ -148,6 +150,7 @@ const baseRoute = (
                     reply
                         .code(HttpStatus.INTERNAL_SERVER_ERROR)
                         .send("Server error");
+                    return;
                 }
 
                 const message = "Couldn't delete wallet";
