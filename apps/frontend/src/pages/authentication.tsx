@@ -74,6 +74,7 @@ const Authentication = () => {
             callbackUrl: "http://localhost:3000/dashboard"
         });
         if (!response?.ok) setError("Unable to login at the moment.");
+        else setOpened(true);
     };
 
     return (
