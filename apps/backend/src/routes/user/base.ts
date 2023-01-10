@@ -58,7 +58,7 @@ const baseRoute = (
             ...putSchema
         },
         async (request: FastifyRequest, reply: FastifyReply) => {
-            const { id: userId } = (request.user as JWT).user;
+            const { id } = (request.user as JWT).user;
             const body = request.body as UsersPutRequestBody;
 
             // TODO: make API keys objects (for change queues) OR send full array
@@ -79,7 +79,7 @@ const baseRoute = (
 
             try {
                 await prisma.user.update({
-                    where: { id: userId },
+                    where: { id },
                     data: {
                         ...body
                     }

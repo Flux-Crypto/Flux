@@ -1,17 +1,15 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
-import { logAndSendReply } from "@lib/logger";
-import { FastifyDone } from "@lib/types/fastifyTypes";
+import { FastifyDone, JWT } from "@lib/types/fastifyTypes";
 import HttpStatus from "@lib/types/httpStatus";
 import { TransactionsBaseSchema } from "@lib/types/jsonObjects";
 import {
-    UserRequestParams,
-    UserTransactionsRequestBody,
-    UsersTransactionsRequestParams
+    TransactionsRequestBody,
+    TransactionsRequestParams
 } from "@lib/types/routeOptions";
 
-const transactionsRoute = (
+const baseRoute = (
     server: FastifyInstance,
     {
         get: getSchema,
@@ -29,19 +27,12 @@ const transactionsRoute = (
             ...getSchema
         },
         async (request: FastifyRequest, reply: FastifyReply) => {
-            const { userId } = request.params as UserRequestParams;
-            if (!userId)
-                logAndSendReply(
-                    log.error,
-                    reply,
-                    HttpStatus.BAD_REQUEST,
-                    "Missing user id parameter"
-                );
+            const { id } = (request.user as JWT).user;
 
             try {
                 const transactions = await prisma.user.findMany({
                     where: {
-                        id: userId
+                        id
                     },
                     select: {
                         importTransactions: true
@@ -58,12 +49,9 @@ const transactionsRoute = (
                     return;
                 }
 
-                logAndSendReply(
-                    log.error,
-                    reply,
-                    HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Couldn't get transactions"
-                );
+                const message = "Couldn't get transactions";
+                log.error(message);
+                reply.code(HttpStatus.INTERNAL_SERVER_ERROR).send(message);
             }
         }
     );
@@ -75,38 +63,30 @@ const transactionsRoute = (
             ...postSchema
         },
         async (request: FastifyRequest, reply: FastifyReply) => {
-            const { userId } = request.params as UserRequestParams;
-            if (!userId)
-                logAndSendReply(
-                    log.error,
-                    reply,
-                    HttpStatus.BAD_REQUEST,
-                    "Missing user id parameter"
-                );
+            const { id } = (request.user as JWT).user;
 
-            const { transaction: transactionData } =
-                request.body as UserTransactionsRequestBody;
-            if (!transactionData)
-                logAndSendReply(
-                    log.error,
-                    reply,
-                    HttpStatus.BAD_REQUEST,
-                    "Missing transaction parameter"
-                );
+            const { transactions: transactionsData } =
+                request.body as TransactionsRequestBody;
+            if (!transactionsData) {
+                const message = "Missing or empty transactions data";
+                log.error(message);
+                reply.code(HttpStatus.BAD_REQUEST).send(message);
+                return;
+            }
 
             try {
-                const transaction = await prisma.user.update({
+                const transactions = await prisma.user.update({
                     where: {
-                        id: userId
+                        id
                     },
                     data: {
                         importTransactions: {
-                            push: [{ ...transactionData }]
+                            push: transactionsData
                         }
                     }
                 });
 
-                reply.code(201).send(transaction);
+                reply.code(201).send(transactions);
             } catch (e) {
                 if (e instanceof PrismaClientKnownRequestError) {
                     log.fatal(e);
@@ -116,12 +96,9 @@ const transactionsRoute = (
                     return;
                 }
 
-                logAndSendReply(
-                    log.error,
-                    reply,
-                    HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Couldn't create transaction"
-                );
+                const message = "Couldn't create transaction(s)";
+                log.error(message);
+                reply.code(HttpStatus.INTERNAL_SERVER_ERROR).send(message);
             }
         }
     );
@@ -133,20 +110,20 @@ const transactionsRoute = (
             ...deleteSchema
         },
         async (request: FastifyRequest, reply: FastifyReply) => {
-            const { userId, transactionId } =
-                request.params as UsersTransactionsRequestParams;
-            if (!userId || !transactionId)
-                logAndSendReply(
-                    log.error,
-                    reply,
-                    HttpStatus.BAD_REQUEST,
-                    "Missing user id or transaction id parameter"
-                );
+            const { id } = (request.user as JWT).user;
+
+            const { transactionId } =
+                request.params as TransactionsRequestParams;
+            if (!transactionId) {
+                const message = "Missing transaction id parameter";
+                log.error(message);
+                reply.status(HttpStatus.BAD_REQUEST).send(message);
+            }
 
             try {
                 await prisma.user.update({
                     where: {
-                        id: userId
+                        id
                     },
                     data: {
                         importTransactions: {
@@ -167,12 +144,9 @@ const transactionsRoute = (
                     return;
                 }
 
-                logAndSendReply(
-                    log.error,
-                    reply,
-                    HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Couldn't delete wallet"
-                );
+                const message = "Couldn't delete transaction";
+                log.error(message);
+                reply.code(HttpStatus.INTERNAL_SERVER_ERROR).send(message);
             }
         }
     );
@@ -180,4 +154,4 @@ const transactionsRoute = (
     done();
 };
 
-export default transactionsRoute;
+export default baseRoute;

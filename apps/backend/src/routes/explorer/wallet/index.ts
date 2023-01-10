@@ -1,18 +1,17 @@
-import IndexSchema from "@aurora/prisma/docs/schemas/users";
 import { FastifyInstance, FastifyServerOptions } from "fastify";
 
 import { FastifyDone } from "@lib/types/fastifyTypes";
 
 import baseRoute from "./base";
 
-const users = (
+const wallet = (
     server: FastifyInstance,
     _opts: FastifyServerOptions,
     done: FastifyDone
 ) => {
-    server.register(baseRoute, IndexSchema);
+    server.register(baseRoute);
 
     done();
 };
 
-export default users;
+export default wallet;

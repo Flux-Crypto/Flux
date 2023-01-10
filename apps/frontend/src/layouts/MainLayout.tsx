@@ -1,3 +1,4 @@
+import { AppShell } from "@mantine/core";
 import { ReactNode } from "react";
 
 import NextHead from "@src/components/Head";
@@ -10,7 +11,7 @@ interface MainLayoutProps {
 const MainLayout = ({ pageTitle, children }: MainLayoutProps) => (
     <>
         <NextHead title={`Aurora | ${pageTitle}`} />
-        <main>{children}</main>
+        <AppShell padding="md">{children}</AppShell>
     </>
 );
 
