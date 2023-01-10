@@ -19,7 +19,12 @@ const baseRoute = (
 
     server.get(
         "/",
-        getSchema,
+        {
+            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey], {
+                relation: "or"
+            }),
+            ...getSchema
+        },
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { id, email } = request.query as UserRequestQuery;
             if (!id && !email) {
@@ -54,7 +59,12 @@ const baseRoute = (
     // TODO: PUT /users/:userId or :email
     server.put(
         "/",
-        putSchema,
+        {
+            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey], {
+                relation: "or"
+            }),
+            ...putSchema
+        },
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { userId } = request.params as UserRequestParams;
             const body = request.body as UsersPutRequestBody;

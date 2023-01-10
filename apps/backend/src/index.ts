@@ -1,5 +1,5 @@
+import authPlugin from "@fastify/auth";
 import cors from "@fastify/cors";
-import jwtAuth from "@fastify/jwt";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import swagger from "@fastify/swagger";
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -12,7 +12,9 @@ import fastify, {
 } from "fastify";
 import { env } from "process";
 
+import apiKeyAuthPlugin from "@plugins/apiKeyAuthPlugin";
 import { prismaPlugin } from "@plugins/index";
+import jwtAuthPlugin from "@plugins/jwtAuthPlugin";
 
 import { envToLogger } from "@lib/logger";
 import { swaggerOptions, swaggerUIOptions } from "@lib/swaggerOptions";
@@ -21,8 +23,6 @@ import explorer from "@routes/explorer/base";
 import user from "@routes/user";
 import users from "@routes/users";
 import wallets from "@routes/wallets";
-
-import HttpStatus from "./lib/types/httpStatus";
 
 const runServer = async () => {
     // TODO: fix
@@ -48,17 +48,9 @@ const runServer = async () => {
     // @ts-ignore:next-line
     await fastifyServer.register(swagger, swaggerOptions);
     await fastifyServer.register(swaggerUI, swaggerUIOptions);
-    await fastifyServer.register(jwtAuth, {
-        secret: process.env.NEXTAUTH_SECRET as string
-    });
-
-    await fastifyServer.addHook("onRequest", async (request, reply) => {
-        try {
-            await request.jwtVerify();
-        } catch (err) {
-            reply.code(HttpStatus.BAD_REQUEST).send("Invalid authentication.");
-        }
-    });
+    await fastifyServer.register(jwtAuthPlugin);
+    await fastifyServer.register(apiKeyAuthPlugin);
+    await fastifyServer.register(authPlugin);
 
     fastifyServer.register(
         (

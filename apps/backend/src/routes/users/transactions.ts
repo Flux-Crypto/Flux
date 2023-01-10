@@ -23,7 +23,12 @@ const transactionsRoute = (
 
     server.get(
         "/",
-        getSchema,
+        {
+            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey], {
+                relation: "or"
+            }),
+            ...getSchema
+        },
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { userId } = request.params as UserRequestParams;
             if (!userId)
@@ -65,7 +70,12 @@ const transactionsRoute = (
 
     server.post(
         "/",
-        postSchema,
+        {
+            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey], {
+                relation: "or"
+            }),
+            ...postSchema
+        },
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { userId } = request.params as UserRequestParams;
             if (!userId)
@@ -119,7 +129,12 @@ const transactionsRoute = (
 
     server.delete(
         "/:transactionId",
-        deleteSchema,
+        {
+            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey], {
+                relation: "or"
+            }),
+            ...deleteSchema
+        },
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { userId, transactionId } =
                 request.params as UsersTransactionsRequestParams;

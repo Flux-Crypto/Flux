@@ -15,7 +15,12 @@ const baseRoute = (
 
     server.get(
         "/",
-        getSchema,
+        {
+            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey], {
+                relation: "or"
+            }),
+            ...getSchema
+        },
         async (_request: FastifyRequest, reply: FastifyReply) => {
             try {
                 const users = await prisma.user.findMany();
@@ -38,7 +43,12 @@ const baseRoute = (
 
     server.post(
         "/",
-        postSchema,
+        {
+            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey], {
+                relation: "or"
+            }),
+            ...postSchema
+        },
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { email } = request.body as UsersPostRequestBody;
 

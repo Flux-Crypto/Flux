@@ -1,40 +1,45 @@
-import { AssetTransfersCategory, SortingOrder } from "alchemy-sdk"
-import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
-import _ from "lodash"
+import { AssetTransfersCategory, SortingOrder } from "alchemy-sdk";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import _ from "lodash";
 
-import { logAndSendReply } from "@lib/logger"
-import { AlchemyTransactionsOptions } from "@lib/types/apiOptions"
-import { ExplorerWalletRequestParams } from "@lib/types/routeParams"
-import { alchemy } from "@src/lib/blockchain"
-import HttpStatus from "@src/lib/types/httpStatus"
+import { logAndSendReply } from "@lib/logger";
+import { AlchemyTransactionsOptions } from "@lib/types/apiOptions";
+import { ExplorerWalletRequestParams } from "@lib/types/routeParams";
+import { alchemy } from "@src/lib/blockchain";
+import HttpStatus from "@src/lib/types/httpStatus";
 
 const wallet = (server: FastifyInstance, _opts: unknown, done: () => void) => {
-    const { log } = server
+    const { log } = server;
 
     server.get(
         "/:walletAddress",
+        {
+            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey], {
+                relation: "or"
+            })
+        },
         async (request: FastifyRequest, reply: FastifyReply) => {
-            const { "page-key": pageKey } = request.headers
+            const { "page-key": pageKey } = request.headers;
 
             const { walletAddress } =
-                request.params as ExplorerWalletRequestParams
+                request.params as ExplorerWalletRequestParams;
             if (!walletAddress)
                 logAndSendReply(
                     log.error,
                     reply,
                     HttpStatus.BAD_REQUEST,
                     "Missing wallet address parameter"
-                )
+                );
 
             // Validate wallet address
-            const WALLET_ADDRESS_REGEX = /^0[xX][0-9a-fA-F]+$/g
+            const WALLET_ADDRESS_REGEX = /^0[xX][0-9a-fA-F]+$/g;
             if (!walletAddress.match(WALLET_ADDRESS_REGEX))
                 logAndSendReply(
                     log.error,
                     reply,
                     HttpStatus.BAD_REQUEST,
                     "Invalid address"
-                )
+                );
 
             const alchemyOpts: AlchemyTransactionsOptions = {
                 fromBlock: "0x0",
@@ -47,18 +52,18 @@ const wallet = (server: FastifyInstance, _opts: unknown, done: () => void) => {
                     AssetTransfersCategory.EXTERNAL,
                     AssetTransfersCategory.ERC20
                 ]
-            }
+            };
 
             // Multiple pages of data
             // NOTE: Page key only lasts for 10 min before expiring!
             const PAGE_KEY_REGEX =
-                /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i
+                /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
             if (pageKey?.toString().match(PAGE_KEY_REGEX)) {
-                alchemyOpts.pageKey = pageKey.toString()
+                alchemyOpts.pageKey = pageKey.toString();
             }
 
-            const response = await alchemy.core.getAssetTransfers(alchemyOpts)
-            const { transfers } = response
+            const response = await alchemy.core.getAssetTransfers(alchemyOpts);
+            const { transfers } = response;
 
             if (transfers.length <= 0)
                 reply.send({
@@ -66,7 +71,7 @@ const wallet = (server: FastifyInstance, _opts: unknown, done: () => void) => {
                     data: {
                         message: "No transactions for this wallet."
                     }
-                })
+                });
 
             // TODO: provide type for transfer
             const results = transfers.map((transfer: unknown) =>
@@ -80,18 +85,18 @@ const wallet = (server: FastifyInstance, _opts: unknown, done: () => void) => {
                     "metadata",
                     "pageKey"
                 ])
-            )
+            );
 
             reply.send({
                 success: true,
                 data: {
                     results
                 }
-            })
+            });
         }
-    )
+    );
 
-    done()
-}
+    done();
+};
 
-export default wallet
+export default wallet;
