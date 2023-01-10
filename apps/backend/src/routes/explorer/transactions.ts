@@ -1,14 +1,28 @@
-import { AssetTransfersCategory, SortingOrder } from "alchemy-sdk";
-import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import {
+    AssetTransfersCategory,
+    AssetTransfersResult,
+    SortingOrder
+} from "alchemy-sdk";
+import {
+    FastifyInstance,
+    FastifyReply,
+    FastifyRequest,
+    FastifyServerOptions
+} from "fastify";
 import _ from "lodash";
 
+import { alchemy } from "@lib/blockchain";
 import { logAndSendReply } from "@lib/logger";
 import { AlchemyTransactionsOptions } from "@lib/types/apiOptions";
-import { alchemy } from "@src/lib/blockchain";
-import HttpStatus from "@src/lib/types/httpStatus";
-import { ExplorerWalletRequestParams } from "@src/lib/types/routeOptions";
+import { FastifyDone } from "@lib/types/fastifyTypes";
+import HttpStatus from "@lib/types/httpStatus";
+import { ExplorerWalletRequestParams } from "@lib/types/routeOptions";
 
-const wallet = (server: FastifyInstance, _opts: unknown, done: () => void) => {
+const wallet = (
+    server: FastifyInstance,
+    _opts: FastifyServerOptions,
+    done: FastifyDone
+) => {
     const { log } = server;
 
     server.get(
@@ -71,8 +85,7 @@ const wallet = (server: FastifyInstance, _opts: unknown, done: () => void) => {
                     }
                 });
 
-            // TODO: provide type for transfer
-            const results = transfers.map((transfer: unknown) =>
+            const results = transfers.map((transfer: AssetTransfersResult) =>
                 _.pick(transfer, [
                     "blockNum",
                     "hash",

@@ -9,7 +9,7 @@ import {
     UserRequestParams,
     UserWalletsRequestBody,
     UserWalletsRequestParams
-} from "@src/lib/types/routeOptions";
+} from "@lib/types/routeOptions";
 
 const walletsRoute = (
     server: FastifyInstance,

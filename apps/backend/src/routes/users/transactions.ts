@@ -8,7 +8,7 @@ import {
     UserRequestParams,
     UserTransactionsRequestBody,
     UsersTransactionsRequestParams
-} from "@src/lib/types/routeOptions";
+} from "@lib/types/routeOptions";
 
 const transactionsRoute = (
     server: FastifyInstance,

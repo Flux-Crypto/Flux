@@ -1,15 +1,21 @@
-import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import {
+    FastifyInstance,
+    FastifyReply,
+    FastifyRequest,
+    FastifyServerOptions
+} from "fastify";
 import _ from "lodash";
 
 import { alchemy } from "@lib/blockchain";
 import { logAndSendReply } from "@lib/logger";
 import HttpStatus from "@lib/types/httpStatus";
+import { FastifyDone } from "@src/lib/types/fastifyTypes";
 import { ExplorerTransactionRequestParams } from "@src/lib/types/routeOptions";
 
 const transaction = (
     server: FastifyInstance,
-    _opts: unknown,
-    done: () => void
+    _opts: FastifyServerOptions,
+    done: FastifyDone
 ) => {
     const { log } = server;
 
