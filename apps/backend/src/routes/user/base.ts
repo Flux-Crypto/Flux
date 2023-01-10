@@ -2,7 +2,6 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import _ from "lodash";
 
-import { logAndSendReply } from "@lib/logger";
 import HttpStatus from "@lib/types/httpStatus";
 import { UserBaseSchema } from "@lib/types/jsonObjects";
 import { JWT } from "@src/lib/types/fastifyTypes";
@@ -30,6 +29,7 @@ const baseRoute = (
                 const message = "Missing id or email parameter";
                 log.error(message);
                 reply.code(HttpStatus.BAD_REQUEST).send(message);
+                return;
             }
 
             try {
@@ -44,13 +44,12 @@ const baseRoute = (
                     reply
                         .code(HttpStatus.INTERNAL_SERVER_ERROR)
                         .send("Server error");
+                    return;
                 }
-                logAndSendReply(
-                    log.error,
-                    reply,
-                    HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Couldn't get user"
-                );
+
+                const message = "Couldn't get user";
+                log.error(message);
+                reply.code(HttpStatus.INTERNAL_SERVER_ERROR).send(message);
             }
         }
     );
@@ -75,12 +74,10 @@ const baseRoute = (
                 "processorAPIKeys"
             ];
             if (!body || _.every(properties, (prop) => !body[prop])) {
-                logAndSendReply(
-                    log.error,
-                    reply,
-                    HttpStatus.BAD_REQUEST,
-                    "Missing field(s) to update."
-                );
+                const message = "Missing field(s) to update.";
+                log.error(message);
+                reply.code(HttpStatus.INTERNAL_SERVER_ERROR).send(message);
+                return;
             }
 
             try {
@@ -98,14 +95,12 @@ const baseRoute = (
                     reply
                         .code(HttpStatus.INTERNAL_SERVER_ERROR)
                         .send("Server error");
+                    return;
                 }
 
-                logAndSendReply(
-                    log.error,
-                    reply,
-                    HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Couldn't create user."
-                );
+                const message = "Couldn't create user";
+                log.error(message);
+                reply.code(HttpStatus.INTERNAL_SERVER_ERROR).send(message);
             }
         }
     );

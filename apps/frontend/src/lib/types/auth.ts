@@ -2,6 +2,7 @@ import { Account, Profile, Session, User } from "next-auth";
 import { AdapterUser } from "next-auth/adapters";
 import { JWT } from "next-auth/jwt";
 import { CredentialInput } from "next-auth/providers/credentials";
+import { NextRequest } from "next/server";
 
 export interface SessionParams {
     session: Session;
@@ -19,4 +20,9 @@ export interface SignInParams {
           }
         | undefined;
     credentials?: Record<string, CredentialInput> | undefined;
+}
+
+export interface AuthorizedParams {
+    token: JWT | null;
+    req: NextRequest;
 }

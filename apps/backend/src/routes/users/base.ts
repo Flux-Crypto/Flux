@@ -30,6 +30,7 @@ const baseRoute = (
                     reply
                         .code(HttpStatus.INTERNAL_SERVER_ERROR)
                         .send("Server error");
+                    return;
                 }
 
                 const message = "Couldn't get users";
@@ -52,12 +53,13 @@ const baseRoute = (
                 const message = "Missing email parameter";
                 log.error(message);
                 reply.code(HttpStatus.BAD_REQUEST).send(message);
+                return;
             }
 
             try {
                 // ? Redo? not sure why tho but that's a **__t o n y__** problem
                 await prisma.user.upsert({
-                    where: { email: email || "" },
+                    where: { email },
                     update: {},
                     create: {
                         email,
@@ -73,6 +75,7 @@ const baseRoute = (
                     reply
                         .code(HttpStatus.INTERNAL_SERVER_ERROR)
                         .send("Server error");
+                    return;
                 }
 
                 const message = "Couldn't create user";
