@@ -10,8 +10,8 @@
         "start": "doppler run npm run build && node build/index.js",
         "open_docs_win": "start http://localhost:8000/docs && start ./docs/index.html",
         "open_docs_mac": "open http://localhost:8000/docs && open ./docs/index.html",
-        "dev": "npm run open_docs_mac && doppler run npx nodemon",
-        "build": "rimraf ./build && tsc",
+        "dev": "doppler run npx nodemon",
+        "build": "rimraf ./build && tsc"
     },
     "repository": {
         "type": "git",
@@ -24,11 +24,16 @@
     },
     "homepage": "https://github.com/tot/aurora#readme",
     "dependencies": {
+        "@aurora/prisma": "^0.1.0",
+        "@fastify/auth": "^4.2.0",
         "@fastify/cookie": "^8.3.0",
+        "@fastify/cors": "^8.2.0",
+        "@fastify/jwt": "^6.5.0",
         "@prisma/client": "^4.8.0",
         "alchemy-sdk": "^2.2.5",
         "bcrypt": "^5.1.0",
         "cookies": "^0.8.0",
+        "dayjs": "^1.11.7",
         "ethers": "^5.7.2",
         "fastify": "^4.10.2",
         "fastify-plugin": "^4.4.0",

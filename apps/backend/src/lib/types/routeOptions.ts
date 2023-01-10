@@ -1,21 +1,47 @@
 import { ImportTransaction } from "@prisma/client";
+import { IncomingHttpHeaders } from "http";
+
+/**
+ * Global
+ */
+export interface APIAuthenticationHeaders extends IncomingHttpHeaders {
+    "x-api-key": string;
+}
 
 /**
  *  /users
  */
-export interface UsersRequestBody {
+export interface UsersPostRequestBody {
     email: string;
-    firstName: string;
-    lastName: string;
+}
+
+export interface UsersPutRequestBody {
+    email?: string;
+    firstName?: string;
+    lastName?: string;
+    apiKey?: string;
+    processorAPIKeys?: string[];
+    exchangeAPIKeys?: string[];
 }
 
 /**
- *  /users/:userId
+ *  /users?id=<userId>&email=<email>
+ */
+export interface UserRequestQuery {
+    id?: string;
+    email?: string;
+}
+
+/**
+ * /users/:userId
  */
 export interface UserRequestParams {
     userId: string;
 }
 
+/**
+ * /users/:userId/transactions/:transactionId
+ */
 export interface UsersTransactionsRequestParams extends UserRequestParams {
     transactionId: string;
 }

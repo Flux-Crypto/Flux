@@ -2,13 +2,14 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 import { logAndSendReply } from "@lib/logger";
+import { FastifyDone } from "@lib/types/fastifyTypes";
 import HttpStatus from "@lib/types/httpStatus";
-import { UserTransactionsSchema } from "@lib/types/jsonObjects";
+import { TransactionsBaseSchema } from "@lib/types/jsonObjects";
 import {
     UserRequestParams,
     UserTransactionsRequestBody,
     UsersTransactionsRequestParams
-} from "@lib/types/routeParams";
+} from "@lib/types/routeOptions";
 
 const transactionsRoute = (
     server: FastifyInstance,
@@ -16,14 +17,17 @@ const transactionsRoute = (
         get: getSchema,
         post: postSchema,
         delete: deleteSchema
-    }: UserTransactionsSchema,
-    done: () => void
+    }: TransactionsBaseSchema,
+    done: FastifyDone
 ) => {
     const { prisma, log } = server;
 
     server.get(
         "/",
-        getSchema,
+        {
+            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey]),
+            ...getSchema
+        },
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { userId } = request.params as UserRequestParams;
             if (!userId)
@@ -51,6 +55,7 @@ const transactionsRoute = (
                     reply
                         .code(HttpStatus.INTERNAL_SERVER_ERROR)
                         .send("Server error");
+                    return;
                 }
 
                 logAndSendReply(
@@ -65,7 +70,10 @@ const transactionsRoute = (
 
     server.post(
         "/",
-        postSchema,
+        {
+            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey]),
+            ...postSchema
+        },
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { userId } = request.params as UserRequestParams;
             if (!userId)
@@ -105,6 +113,7 @@ const transactionsRoute = (
                     reply
                         .code(HttpStatus.INTERNAL_SERVER_ERROR)
                         .send("Server error");
+                    return;
                 }
 
                 logAndSendReply(
@@ -119,7 +128,10 @@ const transactionsRoute = (
 
     server.delete(
         "/:transactionId",
-        deleteSchema,
+        {
+            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey]),
+            ...deleteSchema
+        },
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { userId, transactionId } =
                 request.params as UsersTransactionsRequestParams;
@@ -152,6 +164,7 @@ const transactionsRoute = (
                     reply
                         .code(HttpStatus.INTERNAL_SERVER_ERROR)
                         .send("Server error");
+                    return;
                 }
 
                 logAndSendReply(

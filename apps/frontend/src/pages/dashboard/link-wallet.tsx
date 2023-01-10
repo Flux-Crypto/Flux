@@ -1,4 +1,3 @@
-import { useAuth } from "@clerk/nextjs";
 import {
     Alert,
     Box,
@@ -6,17 +5,21 @@ import {
     Card,
     Center,
     LoadingOverlay,
+    Notification,
     Stack,
     TextInput,
     Title,
+    Transition,
     createStyles
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IconAlertCircle, IconLink } from "@tabler/icons";
+import { IconAlertCircle, IconCheck, IconLink } from "@tabler/icons";
 import { ethers } from "ethers";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 
 import callAPI from "@lib/callAPI";
+import { UserSession } from "@src/lib/types/auth";
 
 const useStyles = createStyles((theme) => ({
     root: {
@@ -42,20 +45,22 @@ const useStyles = createStyles((theme) => ({
 const Wallets = () => {
     const { classes } = useStyles();
 
-    const { isLoaded, userId, sessionId } = useAuth();
+    const { data: session, status } = useSession();
     const [isFetching, setFetching] = useState(false);
     const [error, setError] = useState("");
+
+    const [isNotificationVisible, toggleNotificationVisible] = useState(false);
 
     const form = useForm({
         validateInputOnBlur: true,
 
         initialValues: {
-            address: "",
+            walletAddress: "",
             seedPhrase: ""
         },
 
         validate: {
-            address: (value) =>
+            walletAddress: (value) =>
                 ethers.utils.isAddress(value) ? null : "Invalid address",
             seedPhrase: (value) =>
                 !value || ethers.utils.isValidMnemonic(value)
@@ -67,23 +72,28 @@ const Wallets = () => {
     const submitHandler = async (values: typeof form.values) => {
         setFetching(true);
 
-        // replace HOSTNAME with env var
-        const response = await callAPI(
-            `http://localhost:8000/users/${userId}/wallets`,
-            {
-                method: "POST",
-                body: JSON.stringify(values)
-            },
-            sessionId as string | undefined
-        );
+        if (session) {
+            const { authToken } = session as UserSession;
 
-        setFetching(false);
+            // TODO: replace HOSTNAME with env var
+            const response = await callAPI(
+                `http://localhost:8000/api/v1/wallets`,
+                authToken,
+                {
+                    method: "POST",
+                    body: JSON.stringify(values)
+                }
+            );
 
-        if (!response.ok) {
-            setError(response.statusText);
-            return;
+            // TODO: incorporate better error checking? (duplicate wallet)
+            if (!response.ok) setError(response.statusText);
+            else {
+                toggleNotificationVisible(true);
+                setTimeout(() => toggleNotificationVisible(false), 5000);
+            }
         }
 
+        setFetching(false);
         form.reset();
     };
 
@@ -91,7 +101,10 @@ const Wallets = () => {
         <Center style={{ width: "100%", height: "100%" }} pt={20}>
             <Stack>
                 <Card withBorder radius="sm" shadow="md">
-                    <LoadingOverlay visible={!isLoaded} overlayBlur={2} />
+                    <LoadingOverlay
+                        visible={status === "loading"}
+                        overlayBlur={2}
+                    />
                     <Stack align="center">
                         <Title order={1} align="center">
                             Link Wallet
@@ -101,10 +114,11 @@ const Wallets = () => {
                                 <TextInput
                                     withAsterisk
                                     required
+                                    type="text"
                                     label="Wallet Address"
                                     placeholder="0x95222290dd7278aa3ddd389cc1e1d165cc4bafe5"
                                     classNames={classes}
-                                    {...form.getInputProps("address")}
+                                    {...form.getInputProps("walletAddress")}
                                 />
 
                                 <TextInput
@@ -143,6 +157,23 @@ const Wallets = () => {
                         {error}
                     </Alert>
                 )}
+
+                <Transition
+                    mounted={isNotificationVisible}
+                    transition="slide-down"
+                    duration={400}
+                    timingFunction="ease"
+                >
+                    {(styles) => (
+                        <Notification
+                            style={styles}
+                            icon={<IconCheck size={18} />}
+                            color="teal"
+                            title="Wallet linking successful!"
+                            onClose={() => toggleNotificationVisible(false)}
+                        />
+                    )}
+                </Transition>
             </Stack>
         </Center>
     );

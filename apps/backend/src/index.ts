@@ -1,5 +1,5 @@
-import type { FastifyCookieOptions } from "@fastify/cookie";
-import cookie from "@fastify/cookie";
+import authPlugin from "@fastify/auth";
+import cors from "@fastify/cors";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import swagger from "@fastify/swagger";
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -12,28 +12,31 @@ import fastify, {
 } from "fastify";
 import { env } from "process";
 
-import { prismaPlugin } from "@plugins/index";
+import { apiKeyAuthPlugin, jwtAuthPlugin, prismaPlugin } from "@plugins/index";
 
 import { envToLogger } from "@lib/logger";
 import { swaggerOptions, swaggerUIOptions } from "@lib/swaggerOptions";
 import { FastifyDone } from "@lib/types/fastifyTypes";
 import explorer from "@routes/explorer/base";
-import users from "@routes/users/base";
+import user from "@routes/user";
+import users from "@routes/users";
+import wallets from "@routes/wallets";
 
 const runServer = async () => {
-    // TODO: fix
+    // TODO: fix `Type 'undefined' cannot be used as an index type`
     const NODE_ENV = env.DOPPLER_ENVIRONMENT as "dev" | "stg" | "prd";
 
     const fastifyServer = fastify({
         logger: envToLogger[NODE_ENV] ?? true
     });
 
+    await fastifyServer.register(cors, {
+        origin: NODE_ENV === "dev" ? "*" : process.env.HOSTNAME
+    });
     await fastifyServer.register(prismaPlugin);
-    fastifyServer.register(cookie, {
-        secret: "__session", // for cookies signature
-        parseOptions: {} // options for parsing cookies
-    } as FastifyCookieOptions);
-
+    await fastifyServer.register(jwtAuthPlugin);
+    await fastifyServer.register(apiKeyAuthPlugin);
+    await fastifyServer.register(authPlugin);
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore:next-line
     await fastifyServer.register(swagger, swaggerOptions);
@@ -46,6 +49,8 @@ const runServer = async () => {
             done: FastifyDone
         ) => {
             server.register(users, { prefix: "/users" });
+            server.register(user, { prefix: "/user" });
+            server.register(wallets, { prefix: "/wallets" });
             server.register(explorer, { prefix: "/explorer" });
 
             done();

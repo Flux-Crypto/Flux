@@ -1,33 +1,89 @@
-import IndexSchema from "@aurora/prisma/docs/schemas/users";
-import TransactionsSchema from "@aurora/prisma/docs/schemas/users/transactions";
-import UserSchema from "@aurora/prisma/docs/schemas/users/user";
-import WalletsSchema from "@aurora/prisma/docs/schemas/users/wallets";
-import { FastifyInstance, FastifyServerOptions } from "fastify";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
-import { FastifyDone } from "@src/lib/types/fastifyTypes";
+import { FastifyDone } from "@lib/types/fastifyTypes";
+import HttpStatus from "@lib/types/httpStatus";
+import { UsersBaseSchema } from "@lib/types/jsonObjects";
+import { UsersPostRequestBody } from "@lib/types/routeOptions";
 
-import indexRoute from "./index";
-import transactionsRoute from "./transactions";
-import userRoute from "./user";
-import walletsRoute from "./wallets";
-
-const users = (
+const baseRoute = (
     server: FastifyInstance,
-    _opts: FastifyServerOptions,
+    { get: getSchema, post: postSchema }: UsersBaseSchema,
     done: FastifyDone
 ) => {
-    server.register(indexRoute, IndexSchema);
-    server.register(userRoute, { prefix: "/:userId", ...UserSchema });
-    server.register(walletsRoute, {
-        prefix: "/:userId/wallets",
-        ...WalletsSchema
-    });
-    server.register(transactionsRoute, {
-        prefix: "/:userId/transactions",
-        ...TransactionsSchema
-    });
+    const { prisma, log } = server;
+
+    server.get(
+        "/",
+        {
+            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey]),
+            ...getSchema
+        },
+        async (_request: FastifyRequest, reply: FastifyReply) => {
+            try {
+                const users = await prisma.user.findMany();
+
+                reply.send(users);
+            } catch (e) {
+                if (e instanceof PrismaClientKnownRequestError) {
+                    log.fatal(e);
+                    reply
+                        .code(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .send("Server error");
+                    return;
+                }
+
+                const message = "Couldn't get users";
+                log.error(message);
+                reply.code(HttpStatus.BAD_REQUEST).send(message);
+            }
+        }
+    );
+
+    server.post(
+        "/",
+        {
+            ...postSchema
+        },
+        async (request: FastifyRequest, reply: FastifyReply) => {
+            const { email } = request.body as UsersPostRequestBody;
+
+            if (!email) {
+                const message = "Missing email parameter";
+                log.error(message);
+                reply.code(HttpStatus.BAD_REQUEST).send(message);
+                return;
+            }
+
+            try {
+                await prisma.user.upsert({
+                    where: { email },
+                    update: {},
+                    create: {
+                        email,
+                        firstName: "",
+                        lastName: ""
+                    }
+                });
+
+                reply.send();
+            } catch (e) {
+                if (e instanceof PrismaClientKnownRequestError) {
+                    log.fatal(e);
+                    reply
+                        .code(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .send("Server error");
+                    return;
+                }
+
+                const message = "Couldn't create user";
+                log.error(message);
+                reply.code(HttpStatus.BAD_REQUEST).send(message);
+            }
+        }
+    );
 
     done();
 };
 
-export default users;
+export default baseRoute;

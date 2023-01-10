@@ -9,7 +9,7 @@ export default {
     get: {
         schema: {
             description: "Gets user transactions based on supplied user id.",
-            tags: ["users"],
+            tags: ["transactions"],
             summary: "Gets user transactions.",
             params: {
                 type: "object",
@@ -46,7 +46,7 @@ export default {
         schema: {
             description:
                 "Creates a transaction for a provided user based on supplied transaction details.",
-            tags: ["users"],
+            tags: ["transactions"],
             summary: "Creates user transaction.",
             params: {
                 type: "object",
@@ -85,7 +85,7 @@ export default {
         schema: {
             description:
                 "Deletes a transaction based on supplied user id and transaction id.",
-            tags: ["users"],
+            tags: ["transactions"],
             summary: "Deletes user transaction.",
             params: {
                 type: "object",

@@ -16,6 +16,26 @@ interface PasswordRequirementProps {
     label: string;
 }
 
+const requirements = [
+    { re: /.{8,}/, label: "Has at least 8 characters" },
+    { re: /[0-9]/, label: "Includes number" },
+    { re: /[a-z]/, label: "Includes lowercase letter" },
+    { re: /[A-Z]/, label: "Includes uppercase letter" },
+    { re: /[$&+,:;=?@#|'<>.^*()%!-]/, label: "Includes special symbol" }
+];
+
+function getStrength(password: string) {
+    let multiplier = 0;
+
+    requirements.forEach((requirement) => {
+        if (!requirement.re.test(password)) {
+            multiplier += 1;
+        }
+    });
+
+    return Math.max(100 - (100 / (requirements.length + 1)) * multiplier, 0);
+}
+
 const PasswordRequirement = ({ meets, label }: PasswordRequirementProps) => (
     <Text color={meets ? "teal" : "red"} mt={5} size="sm">
         <Center inline>

@@ -1,95 +1,81 @@
-import * as Prisma from "@aurora/prisma";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { PrismaClient } from "@prisma/client";
+import jwt from "jsonwebtoken";
+import _ from "lodash";
 import { NextApiRequest, NextApiResponse } from "next";
 import { NextAuthOptions } from "next-auth";
+import type { AdapterUser } from "next-auth/adapters";
 import NextAuth from "next-auth/next";
 import Email from "next-auth/providers/email";
 
-// Sign in
+import prisma from "@lib/db/prismadb";
+import { SessionParams, SignInParams } from "@lib/types/auth";
+
 const ONE_DAY = 86400;
 const SEVEN_DAYS = 604800;
-// async function authorize(credentials: { email: string } | undefined) {
-//     if (!credentials) {
-//         throw new Error("Credentials must be provided.");
-//     }
 
-//     // call api for user
-//     const res = await fetch("http://localhost:3000/api/v1/users", {
-//         method: "POST",
-//         body: JSON.stringify(credentials),
-//         headers: { "Content-Type": "application/json" }
-//     });
-//     const user = await res.json();
+const EmailProvider = Email({
+    server: {
+        host: process.env.EMAIL_HOST,
+        port: Number(process.env.EMAIL_PORT),
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASSWORD
+        }
+    },
+    from: process.env.EMAIL_FROM
+    // async sendVerificationRequest({
+    //     identifier: email,
+    //     url,
+    //     provider: { server, from }
+    // }) {
+    //     console.log(email, url, server, from);
+    // }
+});
 
-//     return {
-//         id: user.id,
-//         email: user.email,
-//         name: user.name,
-//         accountVerified: user.accountVerified,
-//         emailVerified: user.emailVerified,
-//         image: user.image,
-//         role: user.role
-//     };
-// }
+const session = async ({ session: sessionObj, token }: SessionParams) => {
+    // TODO: type this
+    const { user } = token;
+    const authToken = jwt.sign(token, process.env.NEXTAUTH_SECRET);
 
-export const authOptions = (
-    req: NextApiRequest,
-    prisma: PrismaClient
-): NextAuthOptions => ({
+    return {
+        ...sessionObj,
+        user: _.pick(user, ["email", "userId", "firstName", "lastName"]),
+        authToken
+    };
+};
+
+const jwtCallback = async ({ token, user }: any) =>
+    user ? { ...token, user } : token;
+
+const signIn = async ({ user }: SignInParams) => {
+    const { email } = user as AdapterUser;
+
+    const response = await fetch(`http://localhost:8000/api/v1/users`, {
+        method: "POST",
+        body: JSON.stringify({ email, firstName: "", lastName: "" }),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+
+    return response.ok;
+};
+
+export const authOptions = (): NextAuthOptions => ({
     adapter: PrismaAdapter(prisma),
-    providers: [
-        Email({
-            server: {
-                host: process.env.SMTP_HOST,
-                port: process.env.SMTP_PORT,
-                auth: {
-                    user: process.env.SMTP_USER,
-                    pass: process.env.SMTP_PASSWORD
-                }
-            },
-            from: process.env.SMTP_FROM
-        })
-    ],
+    providers: [EmailProvider],
+    pages: {
+        signIn: "/authentication"
+        // signOut: "/signout",
+        // error: "/auth/error", // error code passed in query string as ?error=
+        // verifyRequest: "/auth/verify-request", // used for check email message
+        // newUser: "/onboard" // new users will be directed here on first sign in (leave the property out if not of interest)
+    },
     secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
-        async session({ session, token }: any) {
-            const { user } = token;
-            session = {
-                ...session,
-                user
-            };
-            return session;
-        },
-        async jwt({ token, user }: any) {
-            if (user) {
-                token.user = user;
-            }
-            return token;
-        },
-        async signIn({ user, email }) {
-            console.log(user);
-            // triggered by verification request flow
-            if (email?.verificationRequest) {
-                console.log(email);
-                // return false;
-            }
-            console.log("registering user");
-            console.log({ email: user.email });
-            // registering user
-            const res = await fetch("http://localhost:8000/api/v1/users", {
-                method: "POST",
-                body: JSON.stringify({ email: user.email }),
-                headers: {
-                    "Content-Type": "application/json",
-                    accept: "application/json"
-                }
-            });
-            console.log(res);
-            // const foundUser = await res.json();
-            // console.log(foundUser);
-            return false;
-        }
+        session,
+        jwt: jwtCallback,
+        signIn
     },
     session: {
         strategy: "jwt",
@@ -99,6 +85,5 @@ export const authOptions = (
 });
 
 export default async function auth(req: NextApiRequest, res: NextApiResponse) {
-    const { prisma } = await Prisma.createContext();
-    return NextAuth(req, res, authOptions(req, prisma));
+    return NextAuth(req, res, authOptions());
 }

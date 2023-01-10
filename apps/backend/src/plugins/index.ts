@@ -1,2 +1,3 @@
-/* eslint-disable import/prefer-default-export */
-export { default as prismaPlugin } from "@src/plugins/prisma"
+export { default as prismaPlugin } from "@plugins/prisma";
+export { default as apiKeyAuthPlugin } from "@plugins/apiKeyAuthPlugin";
+export { default as jwtAuthPlugin } from "@plugins/jwtAuthPlugin";

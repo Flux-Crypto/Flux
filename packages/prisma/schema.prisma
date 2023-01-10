@@ -15,7 +15,7 @@ datasource db {
 
 model Wallet {
     address     String   @id @map("_id")
-    seedPhrase  String?
+    seedPhrase  String   @default("")
     rdUserIds   String[] @db.ObjectId // read-only
     rdUsers     User[]   @relation(fields: [rdUserIds], references: [id], name: "readOnly")
     rdwrUserIds String[] @db.ObjectId // read-write
@@ -36,19 +36,20 @@ type ImportTransaction {
     sentCurrency     String   @default("")
     feeAmount        Float    @default(0)
     feeCurrency      String   @default("")
-    tag              String?
+    tag              String   @default("")
 }
 
 type ChainTransaction {
     hash String
-    tag  String?
+    tag  String @default("")
 }
 
 model User {
     id                  String              @id @default(auto()) @map("_id") @db.ObjectId
     email               String              @unique
-    firstName           String
-    lastName            String
+    emailVerified       DateTime            @default(now())
+    firstName           String              @default("")
+    lastName            String              @default("")
     apiKey              String              @unique @default("")
     processorAPIKeys    String[]
     exchangeAPIKeys     String[]
@@ -59,8 +60,6 @@ model User {
     walletNames         WalletName[]
     importTransactions  ImportTransaction[]
     chainTransactions   ChainTransaction[]
-    accessToken         String?             @map(name: "access_token")
-    accessTokenExpires  DateTime?           @map(name: "access_token_expires")
     createdAt           DateTime            @default(now()) @map(name: "created_at")
     updatedAt           DateTime            @default(now()) @map(name: "updated_at")
 
@@ -88,4 +87,13 @@ model VerificationRequest {
     updatedAt  DateTime @default(now()) @map(name: "updated_at")
 
     @@map(name: "verification_requests")
+}
+
+model VerificationToken {
+    id         String   @id @default(auto()) @map("_id") @db.ObjectId
+    identifier String
+    token      String   @unique
+    expires    DateTime
+
+    @@unique([identifier, token])
 }

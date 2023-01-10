@@ -5,8 +5,8 @@ import { useState } from "react";
 
 import ImportTable from "@src/components/ImportTable";
 
-import CSVImport from "../../components/CSVImport";
-import { Transaction } from "../../lib/types/types";
+import CSVImport from "../../../components/CSVImport";
+import { Transaction } from "../../../lib/types/db";
 
 const Import = () => {
     const [txns, setTxns] = useState<Transaction[]>([]);
@@ -39,6 +39,6 @@ const Import = () => {
             </Stack>
         </Center>
     );
-}
+};
 
 export default Import;
