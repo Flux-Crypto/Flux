@@ -9,7 +9,7 @@ import {
     UserRequestParams,
     UserWalletsRequestBody,
     UserWalletsRequestParams
-} from "@lib/types/routeParams";
+} from "@src/lib/types/routeOptions";
 
 const walletsRoute = (
     server: FastifyInstance,
@@ -21,9 +21,7 @@ const walletsRoute = (
     server.post(
         "/",
         {
-            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey], {
-                relation: "or"
-            }),
+            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey]),
             ...postSchema
         },
         async (request, reply) => {
@@ -119,9 +117,7 @@ const walletsRoute = (
     server.delete(
         "/:walletAddress",
         {
-            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey], {
-                relation: "or"
-            }),
+            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey]),
             ...deleteSchema
         },
         async (request, reply) => {

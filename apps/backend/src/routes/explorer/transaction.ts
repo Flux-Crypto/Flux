@@ -4,7 +4,7 @@ import _ from "lodash";
 import { alchemy } from "@lib/blockchain";
 import { logAndSendReply } from "@lib/logger";
 import HttpStatus from "@lib/types/httpStatus";
-import { ExplorerTransactionRequestParams } from "@lib/types/routeParams";
+import { ExplorerTransactionRequestParams } from "@src/lib/types/routeOptions";
 
 const transaction = (
     server: FastifyInstance,
@@ -16,9 +16,7 @@ const transaction = (
     server.get(
         "/:transactionHash",
         {
-            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey], {
-                relation: "or"
-            })
+            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey])
         },
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { transactionHash } =

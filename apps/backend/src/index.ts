@@ -25,32 +25,24 @@ import users from "@routes/users";
 import wallets from "@routes/wallets";
 
 const runServer = async () => {
-    // TODO: fix
+    // TODO: fix `Type 'undefined' cannot be used as an index type`
     const NODE_ENV = env.DOPPLER_ENVIRONMENT as "dev" | "stg" | "prd";
 
     const fastifyServer = fastify({
         logger: envToLogger[NODE_ENV] ?? true
     });
 
-    // change this in -- IN WHAT??? IN WHAT TONY???????
     await fastifyServer.register(cors, {
         origin: NODE_ENV === "dev" ? "*" : process.env.HOSTNAME
     });
-
     await fastifyServer.register(prismaPlugin);
-
-    // fastifyServer.register(cookie, {
-    //     secret: "__session", // for cookies signature
-    //     parseOptions: {} // options for parsing cookies
-    // } as FastifyCookieOptions);
-
+    await fastifyServer.register(jwtAuthPlugin);
+    await fastifyServer.register(apiKeyAuthPlugin);
+    await fastifyServer.register(authPlugin);
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore:next-line
     await fastifyServer.register(swagger, swaggerOptions);
     await fastifyServer.register(swaggerUI, swaggerUIOptions);
-    await fastifyServer.register(jwtAuthPlugin);
-    await fastifyServer.register(apiKeyAuthPlugin);
-    await fastifyServer.register(authPlugin);
 
     fastifyServer.register(
         (

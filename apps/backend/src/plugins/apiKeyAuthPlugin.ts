@@ -1,3 +1,4 @@
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import {
     FastifyInstance,
     FastifyPluginAsync,
@@ -8,6 +9,7 @@ import fp from "fastify-plugin";
 
 import { FastifyDone } from "@lib/types/fastifyTypes";
 import HttpStatus from "@lib/types/httpStatus";
+import { APIAuthenticationHeaders } from "@src/lib/types/routeOptions";
 
 declare module "fastify" {
     interface FastifyInstance {
@@ -17,7 +19,7 @@ declare module "fastify" {
 
 const apiKeyAuthPlugin: FastifyPluginAsync = fp(
     async (server: FastifyInstance) => {
-        const { prisma } = server;
+        const { log, prisma } = server;
 
         server.decorate(
             "verifyAPIKey",
@@ -26,10 +28,13 @@ const apiKeyAuthPlugin: FastifyPluginAsync = fp(
                 reply: FastifyReply,
                 done: FastifyDone
             ) => {
-                const apiKey = request.headers["x-api-key"] as string;
+                const { "x-api-key": apiKey } =
+                    request.headers as APIAuthenticationHeaders;
 
                 if (!apiKey) {
-                    reply.code(HttpStatus.BAD_REQUEST).send("Missing API key.");
+                    const message = "Missing API key.";
+                    log.error(message);
+                    reply.code(HttpStatus.BAD_REQUEST).send(message);
                 }
 
                 try {
@@ -43,11 +48,19 @@ const apiKeyAuthPlugin: FastifyPluginAsync = fp(
                             .code(HttpStatus.UNAUTHORIZED)
                             .send("User not found.");
                     }
+
                     done();
-                } catch (err) {
-                    reply
-                        .code(HttpStatus.BAD_REQUEST)
-                        .send("Invalid authentication.");
+                } catch (e) {
+                    reply.code(HttpStatus.INTERNAL_SERVER_ERROR);
+
+                    if (e instanceof PrismaClientKnownRequestError) {
+                        log.fatal(e);
+                        reply.send("Server error");
+                    }
+
+                    const message = "Couldn't authenticate user";
+                    log.error(message);
+                    reply.send(message);
                 }
             }
         );

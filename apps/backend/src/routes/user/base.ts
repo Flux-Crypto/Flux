@@ -1,14 +1,15 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import _ from "lodash";
 
 import { logAndSendReply } from "@lib/logger";
 import HttpStatus from "@lib/types/httpStatus";
 import { UserBaseSchema } from "@lib/types/jsonObjects";
+import { JWT } from "@src/lib/types/fastifyTypes";
 import {
-    UserRequestParams,
     UserRequestQuery,
     UsersPutRequestBody
-} from "@lib/types/routeParams";
+} from "@src/lib/types/routeOptions";
 
 const baseRoute = (
     server: FastifyInstance,
@@ -20,9 +21,7 @@ const baseRoute = (
     server.get(
         "/",
         {
-            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey], {
-                relation: "or"
-            }),
+            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey]),
             ...getSchema
         },
         async (request: FastifyRequest, reply: FastifyReply) => {
@@ -56,30 +55,26 @@ const baseRoute = (
         }
     );
 
-    // TODO: PUT /users/:userId or :email
     server.put(
         "/",
         {
-            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey], {
-                relation: "or"
-            }),
+            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey]),
             ...putSchema
         },
         async (request: FastifyRequest, reply: FastifyReply) => {
-            const { userId } = request.params as UserRequestParams;
+            const { id: userId } = (request.user as JWT).user;
             const body = request.body as UsersPutRequestBody;
 
-            if (
-                !body ||
-                !(
-                    body.apiKey &&
-                    body.email &&
-                    body.exchangeAPIKeys &&
-                    body.firstName &&
-                    body.lastName &&
-                    body.processorAPIKeys
-                )
-            ) {
+            // TODO: make API keys objects (for change queues) OR send full array
+            const properties: (keyof UsersPutRequestBody)[] = [
+                "apiKey",
+                "email",
+                "exchangeAPIKeys",
+                "firstName",
+                "lastName",
+                "processorAPIKeys"
+            ];
+            if (!body || _.every(properties, (prop) => !body[prop])) {
                 logAndSendReply(
                     log.error,
                     reply,

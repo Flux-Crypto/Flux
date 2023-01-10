@@ -12,6 +12,7 @@ export type FastifyDone = (err?: FastifyError) => void;
 export interface JWT {
     email: string;
     sub: string;
+    // TODO: update to match session User
     user: User;
     iat: number;
     exp: number;

@@ -3,8 +3,8 @@ import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 import { FastifyDone } from "@lib/types/fastifyTypes";
 import { UsersBaseSchema } from "@lib/types/jsonObjects";
-import { UsersPostRequestBody } from "@lib/types/routeParams";
 import HttpStatus from "@src/lib/types/httpStatus";
+import { UsersPostRequestBody } from "@src/lib/types/routeOptions";
 
 const baseRoute = (
     server: FastifyInstance,
@@ -16,9 +16,7 @@ const baseRoute = (
     server.get(
         "/",
         {
-            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey], {
-                relation: "or"
-            }),
+            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey]),
             ...getSchema
         },
         async (_request: FastifyRequest, reply: FastifyReply) => {
@@ -44,9 +42,7 @@ const baseRoute = (
     server.post(
         "/",
         {
-            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey], {
-                relation: "or"
-            }),
+            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey]),
             ...postSchema
         },
         async (request: FastifyRequest, reply: FastifyReply) => {

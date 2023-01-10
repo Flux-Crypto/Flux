@@ -8,7 +8,7 @@ import {
     UserRequestParams,
     UserTransactionsRequestBody,
     UsersTransactionsRequestParams
-} from "@lib/types/routeParams";
+} from "@src/lib/types/routeOptions";
 
 const transactionsRoute = (
     server: FastifyInstance,
@@ -24,9 +24,7 @@ const transactionsRoute = (
     server.get(
         "/",
         {
-            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey], {
-                relation: "or"
-            }),
+            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey]),
             ...getSchema
         },
         async (request: FastifyRequest, reply: FastifyReply) => {
@@ -71,9 +69,7 @@ const transactionsRoute = (
     server.post(
         "/",
         {
-            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey], {
-                relation: "or"
-            }),
+            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey]),
             ...postSchema
         },
         async (request: FastifyRequest, reply: FastifyReply) => {
@@ -130,9 +126,7 @@ const transactionsRoute = (
     server.delete(
         "/:transactionId",
         {
-            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey], {
-                relation: "or"
-            }),
+            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey]),
             ...deleteSchema
         },
         async (request: FastifyRequest, reply: FastifyReply) => {

@@ -9,7 +9,7 @@ import {
 import _ from "lodash";
 import { useState } from "react";
 
-import { Transaction } from "@src/lib/types/types";
+import { Transaction } from "@src/lib/types/auth";
 
 const useStyles = createStyles((theme) => ({
     rowSelected: {

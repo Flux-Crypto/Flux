@@ -4,9 +4,9 @@ import _ from "lodash";
 
 import { logAndSendReply } from "@lib/logger";
 import { AlchemyTransactionsOptions } from "@lib/types/apiOptions";
-import { ExplorerWalletRequestParams } from "@lib/types/routeParams";
 import { alchemy } from "@src/lib/blockchain";
 import HttpStatus from "@src/lib/types/httpStatus";
+import { ExplorerWalletRequestParams } from "@src/lib/types/routeOptions";
 
 const wallet = (server: FastifyInstance, _opts: unknown, done: () => void) => {
     const { log } = server;
@@ -14,9 +14,7 @@ const wallet = (server: FastifyInstance, _opts: unknown, done: () => void) => {
     server.get(
         "/:walletAddress",
         {
-            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey], {
-                relation: "or"
-            })
+            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey])
         },
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { "page-key": pageKey } = request.headers;

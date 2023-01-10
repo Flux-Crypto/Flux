@@ -1,4 +1,12 @@
 import { ImportTransaction } from "@prisma/client";
+import { IncomingHttpHeaders } from "http";
+
+/**
+ * Global
+ */
+export interface APIAuthenticationHeaders extends IncomingHttpHeaders {
+    "x-api-key": string;
+}
 
 /**
  *  /users
@@ -20,8 +28,8 @@ export interface UsersPutRequestBody {
  *  /users?id=<userId>&email=<email>
  */
 export interface UserRequestQuery {
-    id: string;
-    email: string;
+    id?: string;
+    email?: string;
 }
 
 /**
