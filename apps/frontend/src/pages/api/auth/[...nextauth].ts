@@ -8,7 +8,7 @@ import NextAuth from "next-auth/next";
 import Email from "next-auth/providers/email";
 
 import prisma from "@lib/db/prismadb";
-import { SessionParams, SignInParams } from "@src/lib/types/auth";
+import { SessionParams, SignInParams } from "@lib/types/auth";
 
 const ONE_DAY = 86400;
 const SEVEN_DAYS = 604800;
@@ -35,7 +35,9 @@ const EmailProvider = Email({
 const session = async ({ session: sessionObj, token }: SessionParams) => {
     // TODO: type this
     const { user } = token;
+    console.log(token);
     const authToken = jwt.sign(token, process.env.NEXTAUTH_SECRET);
+    console.log(user);
 
     return {
         ...sessionObj,
@@ -44,7 +46,8 @@ const session = async ({ session: sessionObj, token }: SessionParams) => {
     };
 };
 
-const jwtCallback = async ({ token, user }: any) => ({ ...token, user });
+const jwtCallback = async ({ token, user }: any) =>
+    user ? { ...token, user } : token;
 
 const signIn = async ({ user }: SignInParams) => {
     const { email } = user as AdapterUser;
@@ -64,11 +67,11 @@ export const authOptions = (): NextAuthOptions => ({
     adapter: PrismaAdapter(prisma),
     providers: [EmailProvider],
     pages: {
-        signIn: "/authentication",
-        signOut: "/signout",
-        error: "/auth/error", // error code passed in query string as ?error=
-        verifyRequest: "/auth/verify-request", // used for check email message
-        newUser: "/onboard" // new users will be directed here on first sign in (leave the property out if not of interest)
+        signIn: "/authentication"
+        // signOut: "/signout",
+        // error: "/auth/error", // error code passed in query string as ?error=
+        // verifyRequest: "/auth/verify-request", // used for check email message
+        // newUser: "/onboard" // new users will be directed here on first sign in (leave the property out if not of interest)
     },
     secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
