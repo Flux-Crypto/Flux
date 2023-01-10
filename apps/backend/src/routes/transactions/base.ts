@@ -71,9 +71,8 @@ const baseRoute = (
                 const message = "Missing or empty transaction data";
                 log.error(message);
                 reply.code(HttpStatus.BAD_REQUEST).send(message);
+                return;
             }
-
-            // TODO: validate Transaction type for each transaction
 
             try {
                 const transactions = await prisma.user.update({

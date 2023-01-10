@@ -19,6 +19,7 @@ import { useSession } from "next-auth/react";
 import { useState } from "react";
 
 import callAPI from "@lib/callAPI";
+import DashboardLayout from "@src/layouts/DashboardLayout";
 import { UserSession } from "@src/lib/types/auth";
 
 const useStyles = createStyles((theme) => ({
@@ -98,7 +99,7 @@ const Wallets = () => {
     };
 
     return (
-        <Center style={{ width: "100%", height: "100%" }} pt={20}>
+        <DashboardLayout pageTitle="Link Wallet">
             <Stack>
                 <Card withBorder radius="sm" shadow="md">
                     <LoadingOverlay
@@ -175,7 +176,7 @@ const Wallets = () => {
                     )}
                 </Transition>
             </Stack>
-        </Center>
+        </DashboardLayout>
     );
 };
 

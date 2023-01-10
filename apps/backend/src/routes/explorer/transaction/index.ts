@@ -9,7 +9,7 @@ const transaction = (
     _opts: FastifyServerOptions,
     done: FastifyDone
 ) => {
-    server.register(baseRoute, { prefix: "/transaction" });
+    server.register(baseRoute);
 
     done();
 };

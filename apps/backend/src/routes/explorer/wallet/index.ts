@@ -9,7 +9,7 @@ const wallet = (
     _opts: FastifyServerOptions,
     done: FastifyDone
 ) => {
-    server.register(baseRoute, { prefix: "/wallet" });
+    server.register(baseRoute);
 
     done();
 };
