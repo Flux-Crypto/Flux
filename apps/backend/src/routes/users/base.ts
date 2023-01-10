@@ -1,7 +1,6 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
-import { logAndSendReply } from "@lib/logger";
 import { FastifyDone } from "@lib/types/fastifyTypes";
 import { UsersBaseSchema } from "@lib/types/jsonObjects";
 import { UsersPostRequestBody } from "@lib/types/routeParams";
@@ -30,12 +29,9 @@ const baseRoute = (
                         .send("Server error");
                 }
 
-                logAndSendReply(
-                    log.error,
-                    reply,
-                    HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Couldn't get users."
-                );
+                const message = "Couldn't get users";
+                log.error(message);
+                reply.code(HttpStatus.BAD_REQUEST).send(message);
             }
         }
     );
@@ -46,13 +42,11 @@ const baseRoute = (
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { email } = request.body as UsersPostRequestBody;
 
-            if (!email)
-                logAndSendReply(
-                    log.error,
-                    reply,
-                    HttpStatus.BAD_REQUEST,
-                    "Missing email parameter"
-                );
+            if (!email) {
+                const message = "Missing email parameter";
+                log.error(message);
+                reply.code(HttpStatus.BAD_REQUEST).send(message);
+            }
 
             try {
                 // ? Redo? not sure why tho but that's a **__t o n y__** problem
@@ -75,12 +69,9 @@ const baseRoute = (
                         .send("Server error");
                 }
 
-                logAndSendReply(
-                    log.error,
-                    reply,
-                    HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Couldn't create user."
-                );
+                const message = "Couldn't create user";
+                log.error(message);
+                reply.code(HttpStatus.BAD_REQUEST).send(message);
             }
         }
     );

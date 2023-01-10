@@ -22,13 +22,11 @@ const baseRoute = (
         getSchema,
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { id, email } = request.query as UserRequestQuery;
-            if (!id && !email)
-                logAndSendReply(
-                    log.error,
-                    reply,
-                    HttpStatus.BAD_REQUEST,
-                    "Missing id or email parameter"
-                );
+            if (!id && !email) {
+                const message = "Missing id or email parameter";
+                log.error(message);
+                reply.code(HttpStatus.BAD_REQUEST).send(message);
+            }
 
             try {
                 const user = await prisma.user.findUnique({
