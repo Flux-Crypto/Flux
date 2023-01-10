@@ -8,10 +8,8 @@
           "type": "string"
         },
         "seedPhrase": {
-          "type": [
-            "string",
-            "null"
-          ]
+          "type": "string",
+          "default": ""
         },
         "rdUsers": {
           "type": "array",
@@ -46,10 +44,12 @@
           "format": "date-time"
         },
         "firstName": {
-          "type": "string"
+          "type": "string",
+          "default": ""
         },
         "lastName": {
-          "type": "string"
+          "type": "string",
+          "default": ""
         },
         "apiKey": {
           "type": "string",
@@ -108,8 +108,6 @@
       },
       "required": [
         "email",
-        "firstName",
-        "lastName",
         "processorAPIKeys",
         "exchangeAPIKeys",
         "rdWalletAddresses",
@@ -255,10 +253,8 @@
           "default": ""
         },
         "tag": {
-          "type": [
-            "string",
-            "null"
-          ]
+          "type": "string",
+          "default": ""
         }
       },
       "required": []
@@ -270,10 +266,8 @@
           "type": "string"
         },
         "tag": {
-          "type": [
-            "string",
-            "null"
-          ]
+          "type": "string",
+          "default": ""
         }
       },
       "required": [

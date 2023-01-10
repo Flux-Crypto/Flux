@@ -53,7 +53,7 @@ To work on the database, here's how to get started:
 2. Run the following command (from the project root directory) to commit your changes to the Prisma schema:
 
 ```sh
-    npm run generate
+    npm run reset
 ```
 
 3. Update the Swagger schema in `docs/schemas/apiSchema.ts` to reflect the model changes. If it's a new model, then create a new schema and corresponding example.

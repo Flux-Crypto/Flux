@@ -70,6 +70,7 @@ const baseRoute = (
                     });
 
                     reply.code(201).send(wallet);
+                    return;
                 }
 
                 const wallet = await prisma.wallet.update({

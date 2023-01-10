@@ -5,18 +5,21 @@ import {
     Card,
     Center,
     LoadingOverlay,
+    Notification,
     Stack,
     TextInput,
     Title,
+    Transition,
     createStyles
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IconAlertCircle, IconLink } from "@tabler/icons";
+import { IconAlertCircle, IconCheck, IconLink } from "@tabler/icons";
 import { ethers } from "ethers";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 
 import callAPI from "@lib/callAPI";
+import { UserSession } from "@src/lib/types/auth";
 
 const useStyles = createStyles((theme) => ({
     root: {
@@ -46,6 +49,8 @@ const Wallets = () => {
     const [isFetching, setFetching] = useState(false);
     const [error, setError] = useState("");
 
+    const [isNotificationVisible, toggleNotificationVisible] = useState(false);
+
     const form = useForm({
         validateInputOnBlur: true,
 
@@ -67,24 +72,28 @@ const Wallets = () => {
     const submitHandler = async (values: typeof form.values) => {
         setFetching(true);
 
-        // TODO: replace HOSTNAME with env var
-        // TODO: type Session object
-        const response = await callAPI(
-            `http://localhost:8000/api/v1/wallets`,
-            session?.authToken,
-            {
-                method: "POST",
-                body: JSON.stringify(values)
+        if (session) {
+            const { authToken } = session as UserSession;
+
+            // TODO: replace HOSTNAME with env var
+            const response = await callAPI(
+                `http://localhost:8000/api/v1/wallets`,
+                authToken,
+                {
+                    method: "POST",
+                    body: JSON.stringify(values)
+                }
+            );
+
+            // TODO: incorporate better error checking? (duplicate wallet)
+            if (!response.ok) setError(response.statusText);
+            else {
+                toggleNotificationVisible(true);
+                setTimeout(() => toggleNotificationVisible(false), 5000);
             }
-        );
-
-        setFetching(false);
-
-        if (!response.ok) {
-            setError(response.statusText);
-            return;
         }
 
+        setFetching(false);
         form.reset();
     };
 
@@ -105,6 +114,7 @@ const Wallets = () => {
                                 <TextInput
                                     withAsterisk
                                     required
+                                    type="text"
                                     label="Wallet Address"
                                     placeholder="0x95222290dd7278aa3ddd389cc1e1d165cc4bafe5"
                                     classNames={classes}
@@ -147,6 +157,23 @@ const Wallets = () => {
                         {error}
                     </Alert>
                 )}
+
+                <Transition
+                    mounted={isNotificationVisible}
+                    transition="slide-down"
+                    duration={400}
+                    timingFunction="ease"
+                >
+                    {(styles) => (
+                        <Notification
+                            style={styles}
+                            icon={<IconCheck size={18} />}
+                            color="teal"
+                            title="Wallet linking successful!"
+                            onClose={() => toggleNotificationVisible(false)}
+                        />
+                    )}
+                </Transition>
             </Stack>
         </Center>
     );

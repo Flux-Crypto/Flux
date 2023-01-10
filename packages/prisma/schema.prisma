@@ -15,7 +15,7 @@ datasource db {
 
 model Wallet {
     address     String   @id @map("_id")
-    seedPhrase  String?
+    seedPhrase  String   @default("")
     rdUserIds   String[] @db.ObjectId // read-only
     rdUsers     User[]   @relation(fields: [rdUserIds], references: [id], name: "readOnly")
     rdwrUserIds String[] @db.ObjectId // read-write
@@ -36,20 +36,20 @@ type ImportTransaction {
     sentCurrency     String   @default("")
     feeAmount        Float    @default(0)
     feeCurrency      String   @default("")
-    tag              String?
+    tag              String   @default("")
 }
 
 type ChainTransaction {
     hash String
-    tag  String?
+    tag  String @default("")
 }
 
 model User {
     id                  String              @id @default(auto()) @map("_id") @db.ObjectId
     email               String              @unique
     emailVerified       DateTime            @default(now())
-    firstName           String
-    lastName            String
+    firstName           String              @default("")
+    lastName            String              @default("")
     apiKey              String              @unique @default("")
     processorAPIKeys    String[]
     exchangeAPIKeys     String[]

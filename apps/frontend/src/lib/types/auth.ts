@@ -26,3 +26,13 @@ export interface AuthorizedParams {
     token: JWT | null;
     req: NextRequest;
 }
+
+export interface UserSession extends Session {
+    user: {
+        email: string;
+        userId: string;
+        firstName: string;
+        lastName: string;
+    };
+    authToken: string;
+}
