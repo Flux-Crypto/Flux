@@ -6,8 +6,8 @@ import { FastifyDone, JWT } from "@lib/types/fastifyTypes";
 import HttpStatus from "@lib/types/httpStatus";
 import { WalletsBaseSchema } from "@lib/types/jsonObjects";
 import {
-    UserWalletsRequestBody,
-    UserWalletsRequestParams
+    WalletsRequestBody,
+    WalletsRequestParams
 } from "@lib/types/routeOptions";
 
 const baseRoute = (
@@ -24,10 +24,10 @@ const baseRoute = (
             ...postSchema
         },
         async (request, reply) => {
-            const { id: userId } = (request.user as JWT).user;
+            const { id } = (request.user as JWT).user;
 
             const { walletAddress, seedPhrase } =
-                request.body as UserWalletsRequestBody;
+                request.body as WalletsRequestBody;
             if (!walletAddress) {
                 const message = "Missing wallet address parameter";
                 log.error(message);
@@ -64,7 +64,7 @@ const baseRoute = (
                         data: {
                             address: walletAddress,
                             [seedPhrase ? "rdwrUsers" : "rdUsers"]: {
-                                connect: { id: userId }
+                                connect: { id }
                             }
                         }
                     });
@@ -79,7 +79,7 @@ const baseRoute = (
                     },
                     data: {
                         [seedPhrase ? "rdwrUsers" : "rdUsers"]: {
-                            connect: { id: userId }
+                            connect: { id }
                         }
                     }
                 });
@@ -108,9 +108,10 @@ const baseRoute = (
             ...deleteSchema
         },
         async (request, reply) => {
-            const { userId, walletAddress } =
-                request.params as UserWalletsRequestParams;
-            if (!userId || !walletAddress) {
+            const { id } = (request.user as JWT).user;
+
+            const { walletAddress } = request.params as WalletsRequestParams;
+            if (!walletAddress) {
                 const message = "Invalid seed phrase mnemonic";
                 log.error(message);
                 reply.code(HttpStatus.BAD_REQUEST).send(message);
@@ -124,10 +125,10 @@ const baseRoute = (
                     },
                     data: {
                         rdUsers: {
-                            disconnect: [{ id: userId }]
+                            disconnect: [{ id }]
                         },
                         rdwrUsers: {
-                            disconnect: [{ id: userId }]
+                            disconnect: [{ id }]
                         }
                     },
                     select: {

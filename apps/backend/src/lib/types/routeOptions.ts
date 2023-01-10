@@ -33,39 +33,32 @@ export interface UserRequestQuery {
 }
 
 /**
- * /users/:userId
+ * /transactions/:transactionId
  */
-export interface UserRequestParams {
-    userId: string;
-}
-
-/**
- * /users/:userId/transactions/:transactionId
- */
-export interface UsersTransactionsRequestParams extends UserRequestParams {
+export interface TransactionsRequestParams {
     transactionId: string;
 }
 
 /**
- *  /users/:userId/wallets
+ *  /wallets
  */
-export interface UserWalletsRequestBody {
+export interface WalletsRequestBody {
     walletAddress: string;
     seedPhrase: string;
 }
 
 /**
- *  /users/:userId/wallets/:walletAddress
+ *  /wallets/:walletAddress
  */
-export interface UserWalletsRequestParams extends UserRequestParams {
+export interface WalletsRequestParams {
     walletAddress: string;
 }
 
 /**
- * /users/:userId/transactions
+ * /transactions
  */
-export interface UserTransactionsRequestBody {
-    transaction: ImportTransaction;
+export interface TransactionsRequestBody {
+    transactions: ImportTransaction[];
 }
 
 /**
