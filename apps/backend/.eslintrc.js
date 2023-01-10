@@ -4,5 +4,8 @@ module.exports = {
         root: true,
         tsconfigRootDir: __dirname,
         project: ["./tsconfig.json"]
+    },
+    rules: {
+        "import/prefer-default-export": "warn"
     }
 };

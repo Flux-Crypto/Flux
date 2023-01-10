@@ -64,6 +64,10 @@ export interface TransactionsRequestBody {
 /**
  * /explorer/wallet/:walletAddress
  */
+export interface ExplorerWalletRequestHeaders extends IncomingHttpHeaders {
+    "x-page-key": string;
+}
+
 export interface ExplorerWalletRequestParams {
     walletAddress: string;
 }

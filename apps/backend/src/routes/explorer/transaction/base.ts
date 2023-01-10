@@ -11,7 +11,7 @@ import { FastifyDone } from "@lib/types/fastifyTypes";
 import HttpStatus from "@lib/types/httpStatus";
 import { ExplorerTransactionRequestParams } from "@lib/types/routeOptions";
 
-const transaction = (
+const baseRoute = (
     server: FastifyInstance,
     _opts: FastifyServerOptions,
     done: FastifyDone
@@ -22,6 +22,7 @@ const transaction = (
         "/:transactionHash",
         {
             onRequest: server.auth([server.verifyJWT, server.verifyAPIKey])
+            // TODO: add schema
         },
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { transactionHash } =
@@ -31,6 +32,7 @@ const transaction = (
                 const message = "Missing transaction hash parameter";
                 log.error(message);
                 reply.code(HttpStatus.BAD_REQUEST).send(message);
+                return;
             }
 
             // Validate transaction hash
@@ -39,13 +41,14 @@ const transaction = (
                 const message = "Invalid transaction hash";
                 log.error(message);
                 reply.code(HttpStatus.BAD_REQUEST).send(message);
+                return;
             }
 
             const transactionInfo = await alchemy.core.getTransaction(
                 transactionHash
             );
 
-            // No transaction found
+            // no transaction found
             if (!transactionInfo) {
                 reply.send({
                     data: {
@@ -54,7 +57,7 @@ const transaction = (
                 });
             }
 
-            const txn = _.pick(transactionInfo, [
+            let txn = _.pick(transactionInfo, [
                 "blockHash",
                 "blockNum",
                 "hash",
@@ -66,9 +69,13 @@ const transaction = (
             ]);
 
             if (txn.blockHash) {
-                txn.timestamp = (
-                    await alchemy.core.getBlock(txn.blockHash)
-                ).timestamp;
+                const { timestamp } = await alchemy.core.getBlock(
+                    txn.blockHash
+                );
+                txn = {
+                    ...txn,
+                    timestamp
+                };
             }
 
             reply.send({
@@ -82,4 +89,4 @@ const transaction = (
     done();
 };
 
-export default transaction;
+export default baseRoute;
