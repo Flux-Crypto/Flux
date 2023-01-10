@@ -42,7 +42,7 @@ const useStyles = createStyles((theme) => ({
 const Wallets = () => {
     const { classes } = useStyles();
 
-    const { data: session } = useSession();
+    const { data: session, status } = useSession();
     const [isFetching, setFetching] = useState(false);
     const [error, setError] = useState("");
 
@@ -50,12 +50,12 @@ const Wallets = () => {
         validateInputOnBlur: true,
 
         initialValues: {
-            address: "",
+            walletAddress: "",
             seedPhrase: ""
         },
 
         validate: {
-            address: (value) =>
+            walletAddress: (value) =>
                 ethers.utils.isAddress(value) ? null : "Invalid address",
             seedPhrase: (value) =>
                 !value || ethers.utils.isValidMnemonic(value)
@@ -67,9 +67,10 @@ const Wallets = () => {
     const submitHandler = async (values: typeof form.values) => {
         setFetching(true);
 
-        // replace HOSTNAME with env var
+        // TODO: replace HOSTNAME with env var
+        // TODO: type Session object
         const response = await callAPI(
-            `http://localhost:8000/users/${session?.user?.id}/wallets`,
+            `http://localhost:8000/api/v1/wallets`,
             session?.authToken,
             {
                 method: "POST",
@@ -91,7 +92,10 @@ const Wallets = () => {
         <Center style={{ width: "100%", height: "100%" }} pt={20}>
             <Stack>
                 <Card withBorder radius="sm" shadow="md">
-                    <LoadingOverlay visible={!isLoaded} overlayBlur={2} />
+                    <LoadingOverlay
+                        visible={status === "loading"}
+                        overlayBlur={2}
+                    />
                     <Stack align="center">
                         <Title order={1} align="center">
                             Link Wallet
@@ -104,7 +108,7 @@ const Wallets = () => {
                                     label="Wallet Address"
                                     placeholder="0x95222290dd7278aa3ddd389cc1e1d165cc4bafe5"
                                     classNames={classes}
-                                    {...form.getInputProps("address")}
+                                    {...form.getInputProps("walletAddress")}
                                 />
 
                                 <TextInput

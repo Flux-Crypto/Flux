@@ -3,7 +3,7 @@ import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 import { logAndSendReply } from "@lib/logger";
 import HttpStatus from "@lib/types/httpStatus";
-import { UserTransactionsSchema } from "@lib/types/jsonObjects";
+import { TransactionsBaseSchema } from "@lib/types/jsonObjects";
 import {
     UserRequestParams,
     UserTransactionsRequestBody,
@@ -16,7 +16,7 @@ const transactionsRoute = (
         get: getSchema,
         post: postSchema,
         delete: deleteSchema
-    }: UserTransactionsSchema,
+    }: TransactionsBaseSchema,
     done: () => void
 ) => {
     const { prisma, log } = server;

@@ -1,5 +1,3 @@
-import type { FastifyCookieOptions } from "@fastify/cookie";
-import cookie from "@fastify/cookie";
 import cors from "@fastify/cors";
 import jwtAuth from "@fastify/jwt";
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -20,7 +18,9 @@ import { envToLogger } from "@lib/logger";
 import { swaggerOptions, swaggerUIOptions } from "@lib/swaggerOptions";
 import { FastifyDone } from "@lib/types/fastifyTypes";
 import explorer from "@routes/explorer/base";
-import users from "@routes/users/base";
+import user from "@routes/user";
+import users from "@routes/users";
+import wallets from "@routes/wallets";
 
 import HttpStatus from "./lib/types/httpStatus";
 
@@ -32,7 +32,7 @@ const runServer = async () => {
         logger: envToLogger[NODE_ENV] ?? true
     });
 
-    // change this in
+    // change this in -- IN WHAT??? IN WHAT TONY???????
     await fastifyServer.register(cors, {
         origin: NODE_ENV === "dev" ? "*" : process.env.HOSTNAME
     });
@@ -67,6 +67,8 @@ const runServer = async () => {
             done: FastifyDone
         ) => {
             server.register(users, { prefix: "/users" });
+            server.register(user, { prefix: "/user" });
+            server.register(wallets, { prefix: "/wallets" });
             server.register(explorer, { prefix: "/explorer" });
 
             done();

@@ -5,7 +5,7 @@ export default {
         schema: {
             description:
                 "Creates a wallet based on supplied wallet address and links to provided user id.",
-            tags: ["users"],
+            tags: ["wallets"],
             summary: "Creates user wallet.",
             params: {
                 type: "object",
@@ -45,7 +45,7 @@ export default {
         schema: {
             description:
                 "Deletes (unlinks) a wallet based on supplied user id and wallet address.",
-            tags: ["users"],
+            tags: ["wallets"],
             summary: "Deletes user wallet.",
             params: {
                 type: "object",

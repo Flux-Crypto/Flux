@@ -4,7 +4,7 @@ export default {
     get: {
         schema: {
             description: "Gets user data based on supplied user id.",
-            tags: ["users"],
+            tags: ["user"],
             summary: "Gets user data.",
             params: {
                 type: "object",
@@ -36,7 +36,7 @@ export default {
     put: {
         schema: {
             description: "Updates user data based on supplied user id.",
-            tags: ["users"],
+            tags: ["user"],
             summary: "Updates user data.",
             params: {
                 type: "object",

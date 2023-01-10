@@ -2,16 +2,15 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { ethers } from "ethers";
 import { FastifyInstance } from "fastify";
 
-import { logAndSendReply } from "@lib/logger";
 import HttpStatus from "@lib/types/httpStatus";
 import { WalletsBaseSchema } from "@lib/types/jsonObjects";
 import {
-    UserRequestParams,
     UserWalletsRequestBody,
     UserWalletsRequestParams
 } from "@lib/types/routeParams";
+import { JWT } from "@src/lib/types/fastifyTypes";
 
-const walletsRoute = (
+const baseRoute = (
     server: FastifyInstance,
     { post: postSchema, delete: deleteSchema }: WalletsBaseSchema,
     done: () => void
@@ -19,44 +18,33 @@ const walletsRoute = (
     const { prisma, log } = server;
 
     server.post("/", postSchema, async (request, reply) => {
-        const { userId } = request.params as UserRequestParams;
-        if (!userId)
-            logAndSendReply(
-                log.error,
-                reply,
-                HttpStatus.BAD_REQUEST,
-                "Missing user id parameter"
-            );
+        const { id: userId } = (request.user as JWT).user;
 
         const { walletAddress, seedPhrase } =
             request.body as UserWalletsRequestBody;
-        if (!walletAddress)
-            logAndSendReply(
-                log.error,
-                reply,
-                HttpStatus.BAD_REQUEST,
-                "Missing wallet address parameter"
-            );
-        if (!ethers.utils.isAddress(walletAddress))
-            logAndSendReply(
-                log.error,
-                reply,
-                HttpStatus.BAD_REQUEST,
-                "Invalid wallet address"
-            );
+        if (!walletAddress) {
+            const message = "Missing wallet address parameter";
+            log.error(message);
+            reply.code(HttpStatus.BAD_REQUEST).send(message);
+            return;
+        }
+        if (!ethers.utils.isAddress(walletAddress)) {
+            const message = "Invalid wallet address";
+            log.error(message);
+            reply.code(HttpStatus.BAD_REQUEST).send(message);
+            return;
+        }
 
         try {
             if (seedPhrase) {
-                // check for authentication
-                if (!ethers.utils.isValidMnemonic(seedPhrase))
-                    logAndSendReply(
-                        log.error,
-                        reply,
-                        HttpStatus.BAD_REQUEST,
-                        "Invalid seed phrase mnemonic"
-                    );
+                if (!ethers.utils.isValidMnemonic(seedPhrase)) {
+                    const message = "Invalid seed phrase mnemonic";
+                    log.error(message);
+                    reply.code(HttpStatus.BAD_REQUEST).send(message);
+                    return;
+                }
 
-                // auth or kick
+                // check for authentication
             }
 
             const checkWallet = await prisma.wallet.findUnique({
@@ -98,25 +86,20 @@ const walletsRoute = (
                     .send("Server error");
             }
 
-            logAndSendReply(
-                log.error,
-                reply,
-                HttpStatus.INTERNAL_SERVER_ERROR,
-                "Couldn't create wallet"
-            );
+            const message = "Couldn't create wallet";
+            log.error(message);
+            reply.code(HttpStatus.BAD_REQUEST).send(message);
         }
     });
 
     server.delete("/:walletAddress", deleteSchema, async (request, reply) => {
         const { userId, walletAddress } =
             request.params as UserWalletsRequestParams;
-        if (!userId || !walletAddress)
-            logAndSendReply(
-                log.error,
-                reply,
-                HttpStatus.BAD_REQUEST,
-                "Missing user id or wallet address parameter"
-            );
+        if (!userId || !walletAddress) {
+            const message = "Invalid seed phrase mnemonic";
+            log.error(message);
+            reply.code(HttpStatus.BAD_REQUEST).send(message);
+        }
 
         try {
             const { rdUsers, rdwrUsers } = await prisma.wallet.update({
@@ -154,16 +137,13 @@ const walletsRoute = (
                     .send("Server error");
             }
 
-            logAndSendReply(
-                log.error,
-                reply,
-                HttpStatus.INTERNAL_SERVER_ERROR,
-                "Couldn't delete wallet"
-            );
+            const message = "Couldn't delete wallet";
+            log.error(message);
+            reply.code(HttpStatus.BAD_REQUEST).send(message);
         }
     });
 
     done();
 };
 
-export default walletsRoute;
+export default baseRoute;

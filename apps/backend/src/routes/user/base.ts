@@ -3,16 +3,16 @@ import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 import { logAndSendReply } from "@lib/logger";
 import HttpStatus from "@lib/types/httpStatus";
-import { UserIndexSchema } from "@lib/types/jsonObjects";
+import { UserBaseSchema } from "@lib/types/jsonObjects";
 import {
     UserRequestParams,
     UserRequestQuery,
     UsersPutRequestBody
 } from "@lib/types/routeParams";
 
-const userRoute = (
+const baseRoute = (
     server: FastifyInstance,
-    { get: getSchema, put: putSchema }: UserIndexSchema,
+    { get: getSchema, put: putSchema }: UserBaseSchema,
     done: () => void
 ) => {
     const { prisma, log } = server;
@@ -22,13 +22,11 @@ const userRoute = (
         getSchema,
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { id, email } = request.query as UserRequestQuery;
-            if (!id && !email)
-                logAndSendReply(
-                    log.error,
-                    reply,
-                    HttpStatus.BAD_REQUEST,
-                    "Missing id or email parameter"
-                );
+            if (!id && !email) {
+                const message = "Missing id or email parameter";
+                log.error(message);
+                reply.code(HttpStatus.BAD_REQUEST).send(message);
+            }
 
             try {
                 const user = await prisma.user.findUnique({
@@ -110,4 +108,4 @@ const userRoute = (
     done();
 };
 
-export default userRoute;
+export default baseRoute;

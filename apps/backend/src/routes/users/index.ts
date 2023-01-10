@@ -1,91 +1,30 @@
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
-import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import TransactionsSchema from "@aurora/prisma/docs/schemas/transactions";
+import IndexSchema from "@aurora/prisma/docs/schemas/users";
+import WalletsSchema from "@aurora/prisma/docs/schemas/wallets";
+import { FastifyInstance, FastifyServerOptions } from "fastify";
 
-import { logAndSendReply } from "@lib/logger";
-import { FastifyDone } from "@lib/types/fastifyTypes";
-import { UsersIndexSchema } from "@lib/types/jsonObjects";
-import { UsersPostRequestBody } from "@lib/types/routeParams";
-import HttpStatus from "@src/lib/types/httpStatus";
+import { FastifyDone } from "@src/lib/types/fastifyTypes";
 
-const indexRoute = (
+import baseRoute from "./base";
+import transactionsRoute from "./transactions";
+import walletsRoute from "./wallets";
+
+const users = (
     server: FastifyInstance,
-    { get: getSchema, post: postSchema }: UsersIndexSchema,
+    _opts: FastifyServerOptions,
     done: FastifyDone
 ) => {
-    const { prisma, log } = server;
-
-    server.get(
-        "/",
-        getSchema,
-        async (_request: FastifyRequest, reply: FastifyReply) => {
-            try {
-                const users = await prisma.user.findMany();
-
-                reply.send(users);
-            } catch (e) {
-                if (e instanceof PrismaClientKnownRequestError) {
-                    log.fatal(e);
-                    reply
-                        .code(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .send("Server error");
-                }
-
-                logAndSendReply(
-                    log.error,
-                    reply,
-                    HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Couldn't get users."
-                );
-            }
-        }
-    );
-
-    server.post(
-        "/",
-        postSchema,
-        async (request: FastifyRequest, reply: FastifyReply) => {
-            const { email } = request.body as UsersPostRequestBody;
-
-            if (!email)
-                logAndSendReply(
-                    log.error,
-                    reply,
-                    HttpStatus.BAD_REQUEST,
-                    "Missing email parameter"
-                );
-
-            try {
-                // ? Redo? not sure why tho but that's a **__t o n y__** problem
-                await prisma.user.upsert({
-                    where: { email: email || "" },
-                    update: {},
-                    create: {
-                        email,
-                        firstName: "",
-                        lastName: ""
-                    }
-                });
-
-                reply.send();
-            } catch (e) {
-                if (e instanceof PrismaClientKnownRequestError) {
-                    log.fatal(e);
-                    reply
-                        .code(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .send("Server error");
-                }
-
-                logAndSendReply(
-                    log.error,
-                    reply,
-                    HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Couldn't create user."
-                );
-            }
-        }
-    );
+    server.register(baseRoute, IndexSchema);
+    server.register(walletsRoute, {
+        prefix: "/:userId/wallets",
+        ...WalletsSchema
+    });
+    server.register(transactionsRoute, {
+        prefix: "/:userId/transactions",
+        ...TransactionsSchema
+    });
 
     done();
 };
 
-export default indexRoute;
+export default users;
