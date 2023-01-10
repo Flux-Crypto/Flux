@@ -2,9 +2,9 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 import { FastifyDone } from "@lib/types/fastifyTypes";
+import HttpStatus from "@lib/types/httpStatus";
 import { UsersBaseSchema } from "@lib/types/jsonObjects";
-import HttpStatus from "@src/lib/types/httpStatus";
-import { UsersPostRequestBody } from "@src/lib/types/routeOptions";
+import { UsersPostRequestBody } from "@lib/types/routeOptions";
 
 const baseRoute = (
     server: FastifyInstance,
@@ -42,7 +42,6 @@ const baseRoute = (
     server.post(
         "/",
         {
-            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey]),
             ...postSchema
         },
         async (request: FastifyRequest, reply: FastifyReply) => {
@@ -55,7 +54,6 @@ const baseRoute = (
             }
 
             try {
-                // ? Redo? not sure why tho but that's a **__t o n y__** problem
                 await prisma.user.upsert({
                     where: { email: email || "" },
                     update: {},
