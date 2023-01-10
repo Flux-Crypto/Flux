@@ -2,6 +2,7 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 import { logAndSendReply } from "@lib/logger";
+import { FastifyDone } from "@lib/types/fastifyTypes";
 import HttpStatus from "@lib/types/httpStatus";
 import { TransactionsBaseSchema } from "@lib/types/jsonObjects";
 import {
@@ -17,7 +18,7 @@ const transactionsRoute = (
         post: postSchema,
         delete: deleteSchema
     }: TransactionsBaseSchema,
-    done: () => void
+    done: FastifyDone
 ) => {
     const { prisma, log } = server;
 

@@ -1,7 +1,7 @@
 import UserSchema from "@aurora/prisma/docs/schemas/user";
 import { FastifyInstance, FastifyServerOptions } from "fastify";
 
-import { FastifyDone } from "@src/lib/types/fastifyTypes";
+import { FastifyDone } from "@lib/types/fastifyTypes";
 
 import baseRoute from "./base";
 

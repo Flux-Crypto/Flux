@@ -9,7 +9,7 @@ import fp from "fastify-plugin";
 
 import { FastifyDone } from "@lib/types/fastifyTypes";
 import HttpStatus from "@lib/types/httpStatus";
-import { APIAuthenticationHeaders } from "@src/lib/types/routeOptions";
+import { APIAuthenticationHeaders } from "@lib/types/routeOptions";
 
 declare module "fastify" {
     interface FastifyInstance {

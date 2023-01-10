@@ -7,10 +7,9 @@ import {
 import _ from "lodash";
 
 import { alchemy } from "@lib/blockchain";
-import { logAndSendReply } from "@lib/logger";
+import { FastifyDone } from "@lib/types/fastifyTypes";
 import HttpStatus from "@lib/types/httpStatus";
-import { FastifyDone } from "@src/lib/types/fastifyTypes";
-import { ExplorerTransactionRequestParams } from "@src/lib/types/routeOptions";
+import { ExplorerTransactionRequestParams } from "@lib/types/routeOptions";
 
 const transaction = (
     server: FastifyInstance,
@@ -28,23 +27,19 @@ const transaction = (
             const { transactionHash } =
                 request.params as ExplorerTransactionRequestParams;
 
-            if (!transactionHash)
-                logAndSendReply(
-                    log.error,
-                    reply,
-                    HttpStatus.BAD_REQUEST,
-                    "Missing transaction hash parameter"
-                );
+            if (!transactionHash) {
+                const message = "Missing transaction hash parameter";
+                log.error(message);
+                reply.code(HttpStatus.BAD_REQUEST).send(message);
+            }
 
             // Validate transaction hash
             const TRANSACTION_HASH_REGEX = /^0x([A-Fa-f0-9]{64})$/;
-            if (!transactionHash.match(TRANSACTION_HASH_REGEX))
-                logAndSendReply(
-                    log.error,
-                    reply,
-                    HttpStatus.BAD_REQUEST,
-                    "Invalid transaction hash"
-                );
+            if (!transactionHash.match(TRANSACTION_HASH_REGEX)) {
+                const message = "Invalid transaction hash";
+                log.error(message);
+                reply.code(HttpStatus.BAD_REQUEST).send(message);
+            }
 
             const transactionInfo = await alchemy.core.getTransaction(
                 transactionHash

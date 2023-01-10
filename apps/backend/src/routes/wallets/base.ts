@@ -2,18 +2,18 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { ethers } from "ethers";
 import { FastifyInstance } from "fastify";
 
+import { FastifyDone, JWT } from "@lib/types/fastifyTypes";
 import HttpStatus from "@lib/types/httpStatus";
 import { WalletsBaseSchema } from "@lib/types/jsonObjects";
-import { JWT } from "@src/lib/types/fastifyTypes";
 import {
     UserWalletsRequestBody,
     UserWalletsRequestParams
-} from "@src/lib/types/routeOptions";
+} from "@lib/types/routeOptions";
 
 const baseRoute = (
     server: FastifyInstance,
     { post: postSchema, delete: deleteSchema }: WalletsBaseSchema,
-    done: () => void
+    done: FastifyDone
 ) => {
     const { prisma, log } = server;
 

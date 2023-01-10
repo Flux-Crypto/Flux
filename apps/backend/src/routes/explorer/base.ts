@@ -1,6 +1,6 @@
 import { FastifyInstance, FastifyServerOptions } from "fastify";
 
-import { FastifyDone } from "@src/lib/types/fastifyTypes";
+import { FastifyDone } from "@lib/types/fastifyTypes";
 
 import transactionRoute from "./transaction";
 import transactionsRoute from "./transactions";

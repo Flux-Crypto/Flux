@@ -2,18 +2,15 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import _ from "lodash";
 
+import { FastifyDone, JWT } from "@lib/types/fastifyTypes";
 import HttpStatus from "@lib/types/httpStatus";
 import { UserBaseSchema } from "@lib/types/jsonObjects";
-import { JWT } from "@src/lib/types/fastifyTypes";
-import {
-    UserRequestQuery,
-    UsersPutRequestBody
-} from "@src/lib/types/routeOptions";
+import { UserRequestQuery, UsersPutRequestBody } from "@lib/types/routeOptions";
 
 const baseRoute = (
     server: FastifyInstance,
     { get: getSchema, put: putSchema }: UserBaseSchema,
-    done: () => void
+    done: FastifyDone
 ) => {
     const { prisma, log } = server;
 

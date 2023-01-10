@@ -12,9 +12,7 @@ import fastify, {
 } from "fastify";
 import { env } from "process";
 
-import apiKeyAuthPlugin from "@plugins/apiKeyAuthPlugin";
-import { prismaPlugin } from "@plugins/index";
-import jwtAuthPlugin from "@plugins/jwtAuthPlugin";
+import { apiKeyAuthPlugin, jwtAuthPlugin, prismaPlugin } from "@plugins/index";
 
 import { envToLogger } from "@lib/logger";
 import { swaggerOptions, swaggerUIOptions } from "@lib/swaggerOptions";

@@ -2,7 +2,7 @@ import TransactionsSchema from "@aurora/prisma/docs/schemas/transactions";
 import IndexSchema from "@aurora/prisma/docs/schemas/users";
 import { FastifyInstance, FastifyServerOptions } from "fastify";
 
-import { FastifyDone } from "@src/lib/types/fastifyTypes";
+import { FastifyDone } from "@lib/types/fastifyTypes";
 
 import baseRoute from "./base";
 import transactionsRoute from "./transactions";
