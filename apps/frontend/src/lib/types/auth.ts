@@ -30,7 +30,7 @@ export interface AuthorizedParams {
 export interface UserSession extends Session {
     user: {
         email: string;
-        userId: string;
+        id: string;
         firstName: string;
         lastName: string;
     };

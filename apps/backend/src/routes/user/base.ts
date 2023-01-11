@@ -29,8 +29,10 @@ const baseRoute = (
                         id
                     }
                 });
-                console.log(user);
-                reply.send(user);
+
+                reply.send({
+                    data: user
+                });
             } catch (e) {
                 if (e instanceof PrismaClientKnownRequestError) {
                     log.fatal(e);
