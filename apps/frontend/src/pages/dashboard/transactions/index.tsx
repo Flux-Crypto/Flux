@@ -11,7 +11,7 @@ import TransactionsTable from "@components/TransactionsTable";
 const Transactions = () => {
     const { data: session, status } = useSession();
 
-    const [isFetching, setFetching] = useState(false);
+    const [isFetching, setFetching] = useState(true);
     const [transactions, setTransactions] = useState([]);
 
     useEffect(() => {
@@ -24,8 +24,6 @@ const Transactions = () => {
 
             const response = await callAPI("/v1/transactions", authToken);
 
-            setFetching(false);
-
             if (!response.ok) {
                 console.log(await response.text());
                 return;
@@ -34,6 +32,7 @@ const Transactions = () => {
             const transactionsData = await response.json();
 
             setTransactions(transactionsData);
+            setFetching(false);
         })();
     }, [session]);
 
@@ -45,7 +44,7 @@ const Transactions = () => {
                     overlayBlur={2}
                 />
 
-                <TransactionsTable data={transactions} />
+                {!isFetching && <TransactionsTable data={transactions} />}
             </Container>
         </DashboardLayout>
     );
