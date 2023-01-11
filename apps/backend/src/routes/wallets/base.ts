@@ -13,7 +13,11 @@ import {
 
 const baseRoute = (
     server: FastifyInstance,
-    { post: postSchema, delete: deleteSchema }: WalletsBaseSchema,
+    {
+        get: getSchema,
+        post: postSchema,
+        delete: deleteSchema
+    }: WalletsBaseSchema,
     done: FastifyDone
 ) => {
     const { prisma, log } = server;
@@ -21,10 +25,12 @@ const baseRoute = (
     server.get(
         "/",
         {
-            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey])
+            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey]),
+            schema: getSchema
         },
         async (request, reply) => {
             const { id } = (request.user as JWT).user;
+
             try {
                 const user = await prisma.user.findUnique({
                     where: {
@@ -86,7 +92,7 @@ const baseRoute = (
                     return;
                 }
 
-                const message = "Couldn't get transactions";
+                const message = "Couldn't get wallets";
                 log.error(message);
                 reply.code(HttpStatus.INTERNAL_SERVER_ERROR).send(message);
             }
@@ -97,7 +103,7 @@ const baseRoute = (
         "/",
         {
             onRequest: server.auth([server.verifyJWT, server.verifyAPIKey]),
-            ...postSchema
+            schema: postSchema
         },
         async (request, reply) => {
             const { id } = (request.user as JWT).user;
@@ -183,7 +189,7 @@ const baseRoute = (
         "/:walletAddress",
         {
             onRequest: server.auth([server.verifyJWT, server.verifyAPIKey]),
-            ...deleteSchema
+            schema: deleteSchema
         },
         async (request, reply) => {
             const { id } = (request.user as JWT).user;
