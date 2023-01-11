@@ -1,19 +1,46 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import jwt from "jsonwebtoken";
+import jwt, { verify } from "jsonwebtoken";
 import _ from "lodash";
 import { NextApiRequest, NextApiResponse } from "next";
 import { NextAuthOptions } from "next-auth";
 import type { AdapterUser } from "next-auth/adapters";
 import NextAuth from "next-auth/next";
+import Credentials from "next-auth/providers/credentials";
 import Email from "next-auth/providers/email";
 
 import prisma from "@lib/db/prismadb";
 import { SessionParams, SignInParams } from "@lib/types/auth";
 
-const ONE_DAY = 86400;
-const SEVEN_DAYS = 604800;
+export const UPDATE_AGE = 86400; // 1 day
+export const MAX_AGE = 604800; // 7 days
+
+const CredentialsProvider = Credentials({
+    id: "refresh-session",
+    name: "refresh-session",
+    credentials: {},
+    async authorize(credentials: any) {
+        const { token, refresh } = credentials;
+        try {
+            const valid = await verify(token, process.env.NEXTAUTH_SECRET);
+            if (!valid) return null;
+            const response = await fetch(`http://localhost:8000/api/v1/user`, {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            const user = (await response.json()).data;
+            return { ...user, refresh };
+        } catch (e) {
+            console.log(e);
+        }
+        return null;
+    }
+});
 
 const EmailProvider = Email({
+    id: "email",
+    name: "email",
     server: {
         host: process.env.EMAIL_HOST,
         port: Number(process.env.EMAIL_PORT),
@@ -39,16 +66,19 @@ const session = async ({ session: sessionObj, token }: SessionParams) => {
 
     return {
         ...sessionObj,
-        user: _.pick(user, ["email", "userId", "firstName", "lastName"]),
+        user: _.pick(user, ["email", "id", "firstName", "lastName"]),
         authToken
     };
 };
 
 const jwtCallback = async ({ token, user }: any) =>
     user ? { ...token, user } : token;
-
-const signIn = async ({ user }: SignInParams) => {
+const signIn = async ({ user, credentials }: SignInParams) => {
     const { email } = user as AdapterUser;
+
+    if (credentials?.refresh) {
+        return true;
+    }
 
     const response = await fetch(`http://localhost:8000/api/v1/users`, {
         method: "POST",
@@ -63,13 +93,13 @@ const signIn = async ({ user }: SignInParams) => {
 
 export const authOptions = (): NextAuthOptions => ({
     adapter: PrismaAdapter(prisma),
-    providers: [EmailProvider],
+    providers: [EmailProvider, CredentialsProvider],
     pages: {
-        signIn: "/authentication"
+        signIn: "/authentication",
         // signOut: "/signout",
         // error: "/auth/error", // error code passed in query string as ?error=
-        // verifyRequest: "/auth/verify-request", // used for check email message
-        // newUser: "/onboard" // new users will be directed here on first sign in (leave the property out if not of interest)
+        verifyRequest: "/verify", // used for check email message
+        newUser: "/onboard" // new users will be directed here on first sign in (leave the property out if not of interest)
     },
     secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
@@ -79,8 +109,8 @@ export const authOptions = (): NextAuthOptions => ({
     },
     session: {
         strategy: "jwt",
-        maxAge: SEVEN_DAYS,
-        updateAge: ONE_DAY
+        maxAge: MAX_AGE,
+        updateAge: UPDATE_AGE
     }
 });
 
