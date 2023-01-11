@@ -1,5 +1,4 @@
 import { MantineProvider } from "@mantine/core";
-import colors from "@theme/index";
 import { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { AppProps } from "next/app";
@@ -17,7 +16,6 @@ const App = ({
             withGlobalStyles
             withNormalizeCSS
             theme={{
-                /** Put your mantine theme override here */
                 colorScheme: "dark",
                 fontFamily: "Inter, sans-serif"
             }}
