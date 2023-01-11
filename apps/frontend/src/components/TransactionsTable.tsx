@@ -17,7 +17,22 @@ import {
     IconSearch,
     IconSelector
 } from "@tabler/icons";
+import _ from "lodash";
 import { ReactNode, useState } from "react";
+
+import { Transaction } from "@lib/types/db";
+
+const headers: (keyof ImportTransaction)[] = [
+    "id",
+    "date",
+    "receivedQuantity",
+    "receivedCurrency",
+    "sentQuantity",
+    "sentCurrency",
+    "feeAmount",
+    "feeCurrency",
+    "tag"
+];
 
 const useStyles = createStyles((theme) => ({
     th: {
@@ -88,8 +103,8 @@ const Td = ({ children }: TdProps) => (
 const filterData = (data: ImportTransaction[], search: string) => {
     const query = search.toLowerCase().trim();
     return data.filter((item) =>
-        keys(data[0]).some((key) =>
-            item[key].toString().toLowerCase().includes(query)
+        headers.some((key) =>
+            item[key]?.toString().toLowerCase().includes(query)
         )
     );
 };
@@ -202,69 +217,15 @@ const TransactionsTable = ({ data }: TableSortProps) => {
             >
                 <thead>
                     <tr>
-                        <Th
-                            sorted={sortBy === "id"}
-                            reversed={reverseSortDirection}
-                            onSort={() => setSorting("id")}
-                        >
-                            Id
-                        </Th>
-                        <Th
-                            sorted={sortBy === "date"}
-                            reversed={reverseSortDirection}
-                            onSort={() => setSorting("date")}
-                        >
-                            Date
-                        </Th>
-                        <Th
-                            sorted={sortBy === "receivedQuantity"}
-                            reversed={reverseSortDirection}
-                            onSort={() => setSorting("receivedQuantity")}
-                        >
-                            Received Quantity
-                        </Th>
-                        <Th
-                            sorted={sortBy === "receivedCurrency"}
-                            reversed={reverseSortDirection}
-                            onSort={() => setSorting("receivedCurrency")}
-                        >
-                            Received Currency
-                        </Th>
-                        <Th
-                            sorted={sortBy === "sentQuantity"}
-                            reversed={reverseSortDirection}
-                            onSort={() => setSorting("sentQuantity")}
-                        >
-                            Sent Quantity
-                        </Th>
-                        <Th
-                            sorted={sortBy === "sentCurrency"}
-                            reversed={reverseSortDirection}
-                            onSort={() => setSorting("sentCurrency")}
-                        >
-                            Sent Currency
-                        </Th>
-                        <Th
-                            sorted={sortBy === "feeAmount"}
-                            reversed={reverseSortDirection}
-                            onSort={() => setSorting("feeAmount")}
-                        >
-                            Fee Amount
-                        </Th>
-                        <Th
-                            sorted={sortBy === "feeCurrency"}
-                            reversed={reverseSortDirection}
-                            onSort={() => setSorting("feeCurrency")}
-                        >
-                            Fee Currency
-                        </Th>
-                        <Th
-                            sorted={sortBy === "tag"}
-                            reversed={reverseSortDirection}
-                            onSort={() => setSorting("tag")}
-                        >
-                            Tag
-                        </Th>
+                        {headers.map((header) => (
+                            <Th
+                                sorted={sortBy === header}
+                                reversed={reverseSortDirection}
+                                onSort={() => setSorting(header)}
+                            >
+                                {_.startCase(header)}
+                            </Th>
+                        ))}
                     </tr>
                 </thead>
                 <tbody>
@@ -272,7 +233,7 @@ const TransactionsTable = ({ data }: TableSortProps) => {
                         rows
                     ) : (
                         <tr>
-                            <td colSpan={Object.keys(data[0]).length}>
+                            <td colSpan={9}>
                                 <Text weight={500} align="center">
                                     Nothing found
                                 </Text>
