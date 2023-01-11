@@ -30,6 +30,7 @@
     "homepage": "https://github.com/tot/aurora#readme",
     "devDependencies": {
         "@prisma/client": "^4.8.1",
-        "prisma": "^4.8.1"
+        "prisma": "^4.8.1",
+        "prisma-docs-generator": "^0.5.0"
     }
 }

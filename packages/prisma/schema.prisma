@@ -2,6 +2,11 @@ generator client {
     provider = "prisma-client-js"
 }
 
+generator docs {
+    provider = "node ../../node_modules/prisma-docs-generator serve"
+    output   = "../../apps/backend/docs"
+}
+
 generator jsonSchema {
     provider              = "prisma-json-schema-generator"
     output                = "./docs/schemas"
@@ -14,17 +19,23 @@ datasource db {
 }
 
 model Wallet {
-    address     String   @id @map("_id")
-    seedPhrase  String   @default("")
-    rdUserIds   String[] @db.ObjectId // read-only
-    rdUsers     User[]   @relation(fields: [rdUserIds], references: [id], name: "readOnly")
-    rdwrUserIds String[] @db.ObjectId // read-write
-    rdwrUsers   User[]   @relation(fields: [rdwrUserIds], references: [id], name: "readWrite")
+    address       String       @id @map("_id")
+    seedPhrase    String       @default("")
+    rdUserIds     String[]     @db.ObjectId // read-only
+    rdUsers       User[]       @relation(fields: [rdUserIds], references: [id], name: "readOnly")
+    rdwrUserIds   String[]     @db.ObjectId // read-write
+    rdwrUsers     User[]       @relation(fields: [rdwrUserIds], references: [id], name: "readWrite")
+    walletNameIds String[]     @db.ObjectId
+    walletNames   WalletName[]
 }
 
-type WalletName {
-    address String
-    name    String
+model WalletName {
+    id            String @id @default(auto()) @map("_id") @db.ObjectId
+    userId        String @db.ObjectId
+    user          User   @relation(fields: [userId], references: [id])
+    walletAddress String
+    wallets       Wallet @relation(fields: [walletAddress], references: [address])
+    name          String
 }
 
 type ImportTransaction {
@@ -57,13 +68,14 @@ model User {
     rdWallets           Wallet[]            @relation(fields: [rdWalletAddresses], references: [address], name: "readOnly")
     rdwrWalletAddresses String[] // read-write
     rdwrWallets         Wallet[]            @relation(fields: [rdwrWalletAddresses], references: [address], name: "readWrite")
+    walletNameIds       String[]            @db.ObjectId
     walletNames         WalletName[]
     importTransactions  ImportTransaction[]
     chainTransactions   ChainTransaction[]
     createdAt           DateTime            @default(now()) @map(name: "created_at")
     updatedAt           DateTime            @default(now()) @map(name: "updated_at")
 
-    @@index([walletNames.address, importTransactions.id, chainTransactions.hash])
+    @@index([importTransactions.id, chainTransactions.hash])
 }
 
 model Session {
