@@ -1,6 +1,7 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { ethers } from "ethers";
 import { FastifyInstance } from "fastify";
+import _ from "lodash";
 
 import { FastifyDone, JWT } from "@lib/types/fastifyTypes";
 import HttpStatus from "@lib/types/httpStatus";
@@ -16,6 +17,81 @@ const baseRoute = (
     done: FastifyDone
 ) => {
     const { prisma, log } = server;
+
+    server.get(
+        "/",
+        {
+            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey])
+        },
+        async (request, reply) => {
+            const { id } = (request.user as JWT).user;
+            try {
+                const user = await prisma.user.findUnique({
+                    where: {
+                        id
+                    },
+                    select: {
+                        rdWallets: {
+                            select: {
+                                address: true
+                            }
+                        },
+                        rdwrWallets: {
+                            select: {
+                                address: true,
+                                seedPhrase: true
+                            }
+                        },
+                        walletNames: true
+                    }
+                });
+
+                if (!user) {
+                    const message = "Couldn't find user!";
+                    log.error(message);
+                    reply.code(HttpStatus.NOT_FOUND).send(message);
+                    return;
+                }
+
+                const { walletNames } = user;
+                const flatWalletNames: { [address: string]: string } = _.reduce(
+                    walletNames,
+                    (newWalletNames, { address, name }) => ({
+                        ...newWalletNames,
+                        [address]: name
+                    }),
+                    {}
+                );
+
+                let { rdWallets, rdwrWallets } = user;
+                rdWallets = _.map(rdWallets, (wallet) => ({
+                    ...wallet,
+                    name: flatWalletNames[wallet.address]
+                }));
+                rdwrWallets = _.map(rdwrWallets, (wallet) => ({
+                    ...wallet,
+                    name: flatWalletNames[wallet.address]
+                }));
+
+                reply.send({
+                    rdWallets,
+                    rdwrWallets
+                });
+            } catch (e) {
+                if (e instanceof PrismaClientKnownRequestError) {
+                    log.fatal(e);
+                    reply
+                        .code(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .send("Server error");
+                    return;
+                }
+
+                const message = "Couldn't get transactions";
+                log.error(message);
+                reply.code(HttpStatus.INTERNAL_SERVER_ERROR).send(message);
+            }
+        }
+    );
 
     server.post(
         "/",
@@ -63,6 +139,7 @@ const baseRoute = (
                     const wallet = await prisma.wallet.create({
                         data: {
                             address: walletAddress,
+                            seedPhrase,
                             [seedPhrase ? "rdwrUsers" : "rdUsers"]: {
                                 connect: { id }
                             }
@@ -78,6 +155,7 @@ const baseRoute = (
                         address: walletAddress
                     },
                     data: {
+                        seedPhrase,
                         [seedPhrase ? "rdwrUsers" : "rdUsers"]: {
                             connect: { id }
                         }

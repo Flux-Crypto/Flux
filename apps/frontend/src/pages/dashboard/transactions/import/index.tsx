@@ -60,7 +60,7 @@ const Import = () => {
     };
 
     return (
-        <DashboardLayout pageTitle="Import">
+        <DashboardLayout pageTitle="Import Transactions">
             <Center mt="xl">
                 <Stack spacing="xl">
                     <LoadingOverlay
