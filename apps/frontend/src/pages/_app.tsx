@@ -8,7 +8,11 @@ const App = ({
     Component,
     pageProps: { session, ...pageProps }
 }: AppProps<{ session: Session }>) => (
-    <SessionProvider session={session}>
+    <SessionProvider
+        session={session}
+        refetchInterval={7200}
+        refetchOnWindowFocus
+    >
         <MantineProvider
             withGlobalStyles
             withNormalizeCSS
