@@ -57,7 +57,7 @@ const useStyles = createStyles((theme) => ({
 
 const Landing = () => {
     const { classes } = useStyles();
-    const { data: session, updateUser } = useSession();
+    const { data: session } = useSession();
     const [error, setError] = useState("");
     const router = useRouter();
 
@@ -82,32 +82,28 @@ const Landing = () => {
     });
 
     const submitHandler = async (values: typeof form.values) => {
-        signIn("refresh-session", {
-            redirect: false,
-            token: session.authToken,
-            refresh: true
-        });
-        // if (session && session.user) {
-        //     const { authToken } = session as UserSession;
+        if (session) {
+            const { authToken, user } = session as UserSession;
 
-        //     const response = await callAPI(
-        //         `http://localhost:8000/api/v1/user`,
-        //         authToken,
-        //         {
-        //             method: "PUT",
-        //             body: JSON.stringify(values)
-        //         }
-        //     );
+            const response = await callAPI(
+                `http://localhost:8000/api/v1/user`,
+                authToken,
+                {
+                    method: "PUT",
+                    body: JSON.stringify(values)
+                }
+            );
 
-        //     if (response.ok) {
-        //         signIn("refresh-session", {
-        //             redirect: false,
-        //             id: session.user.id,
-        //             token: session.authToken
-        //         });
-        //         // router.push("/dashboard");
-        //     } else setError(response.statusText);
-        // }
+            if (response.ok) {
+                signIn("refresh-session", {
+                    redirect: false,
+                    id: user?.id,
+                    token: authToken,
+                    refresh: true
+                });
+                router.push("/dashboard");
+            } else setError(response.statusText);
+        }
     };
 
     return (
@@ -138,9 +134,6 @@ const Landing = () => {
                             >
                                 To get started, tell us about yourself.
                             </Text>
-                            <button onClick={() => console.log(session)}>
-                                session
-                            </button>
                             {error && (
                                 <Alert
                                     icon={<IconAlertCircle size={16} />}
@@ -181,27 +174,28 @@ const Landing = () => {
     );
 };
 
-// export async function getServerSideProps({ req }: GetServerSidePropsContext) {
-//     const session = await getSession({ req });
+export async function getServerSideProps({ req }: GetServerSidePropsContext) {
+    const session = await getSession({ req });
+    const { user } = session as UserSession;
 
-//     if (!session) {
-//         return {
-//             redirect: {
-//                 destination: "/authentication"
-//             }
-//         };
-//     }
-//     if (session && session?.user?.firstName) {
-//         return {
-//             redirect: {
-//                 destination: "/dashboard"
-//             }
-//         };
-//     }
+    if (!session) {
+        return {
+            redirect: {
+                destination: "/authentication"
+            }
+        };
+    }
+    if (user?.firstName) {
+        return {
+            redirect: {
+                destination: "/dashboard"
+            }
+        };
+    }
 
-//     return {
-//         props: {}
-//     };
-// }
+    return {
+        props: {}
+    };
+}
 
 export default Landing;

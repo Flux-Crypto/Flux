@@ -23,7 +23,14 @@ const CredentialsProvider = Credentials({
         try {
             const valid = await verify(token, process.env.NEXTAUTH_SECRET);
             if (!valid) return null;
-            return { refresh, token };
+            const response = await fetch(`http://localhost:8000/api/v1/user`, {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            const user = (await response.json()).data;
+            return { ...user, refresh };
         } catch (e) {
             console.log(e);
         }
@@ -57,8 +64,6 @@ const session = async ({ session: sessionObj, token }: SessionParams) => {
     const { user } = token;
     const authToken = jwt.sign(token, process.env.NEXTAUTH_SECRET);
 
-    console.log("sessino user", user);
-
     return {
         ...sessionObj,
         user: _.pick(user, ["email", "id", "firstName", "lastName"]),
@@ -66,28 +71,15 @@ const session = async ({ session: sessionObj, token }: SessionParams) => {
     };
 };
 
-const jwtCallback = async ({ token, user }: any) => {
-    console.log(token);
-    return user ? { ...token, user } : token;
-};
+const jwtCallback = async ({ token, user }: any) =>
+    user ? { ...token, user } : token;
 const signIn = async ({ user, credentials }: SignInParams) => {
     const { email } = user as AdapterUser;
-    const { refresh, token } = credentials;
-    // console.log(credentials);
-    console.log("running sign in");
 
-    // if (refresh) {
-    //     const response = await fetch(`http://localhost:8000/api/v1/user`, {
-    //         method: "GET",
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //             Authorization: `Bearer ${token}`
-    //         }
-    //     });
-    //     console.log("ddd");
-    //     return response.ok;
-    // }
-    // console.log("dasdsa");
+    if (credentials?.refresh) {
+        return true;
+    }
+
     const response = await fetch(`http://localhost:8000/api/v1/users`, {
         method: "POST",
         body: JSON.stringify({ email, firstName: "", lastName: "" }),
