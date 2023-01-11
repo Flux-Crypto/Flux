@@ -28,6 +28,7 @@ import DashboardLayout from "@layouts/DashboardLayout";
 const Import = () => {
     const { data: session, status } = useSession();
 
+    // TODO: implement selection from ImportTable
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [isFetching, setFetching] = useState(false);
 
@@ -41,14 +42,10 @@ const Import = () => {
 
         const { authToken } = session as UserSession;
 
-        const response = await callAPI(
-            `http://localhost:8000/api/v1/transactions`,
-            authToken,
-            {
-                method: "POST",
-                body: JSON.stringify({ transactions })
-            }
-        );
+        const response = await callAPI(`/v1/transactions`, authToken, {
+            method: "POST",
+            body: JSON.stringify({ transactions })
+        });
 
         setFetching(false);
         toggleNotificationVisible(true);

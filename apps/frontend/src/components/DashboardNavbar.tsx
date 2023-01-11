@@ -37,7 +37,7 @@ const mockdata = [
         label: "Transactions",
         icon: IconReceipt,
         links: [
-            { label: "Overview", link: "/" },
+            { label: "Overview", link: "/transactions" },
             { label: "Import", link: "/transactions/import" }
         ]
     },
