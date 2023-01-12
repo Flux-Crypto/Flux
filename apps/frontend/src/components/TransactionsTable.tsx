@@ -1,3 +1,11 @@
+import type { GridColumn } from "@glideapps/glide-data-grid";
+import {
+    DataEditor,
+    GridCell,
+    GridCellKind,
+    Item
+} from "@glideapps/glide-data-grid";
+import "@glideapps/glide-data-grid/dist/index.css";
 import {
     Badge,
     Center,
@@ -9,16 +17,9 @@ import {
     UnstyledButton,
     createStyles
 } from "@mantine/core";
-import { keys } from "@mantine/utils";
 import { ImportTransaction } from "@prisma/client";
-import {
-    IconChevronDown,
-    IconChevronUp,
-    IconSearch,
-    IconSelector
-} from "@tabler/icons";
 import _ from "lodash";
-import { ReactNode, useState } from "react";
+import { ReactNode, useCallback, useState } from "react";
 
 import { Transaction } from "@lib/types/db";
 
@@ -33,6 +34,11 @@ const headers: (keyof ImportTransaction)[] = [
     "feeCurrency",
     "tag"
 ];
+
+const columns: GridColumn[] = headers.map((header) => ({
+    title: _.startCase(header),
+    id: header
+}));
 
 const useStyles = createStyles((theme) => ({
     th: {
@@ -60,189 +66,35 @@ const useStyles = createStyles((theme) => ({
     }
 }));
 
-interface ThProps {
-    children: ReactNode;
-    reversed: boolean;
-    sorted: boolean;
-    onSort(): void;
-}
-
-const Th = ({ children, reversed, sorted, onSort }: ThProps) => {
-    const { classes } = useStyles();
-
-    let Icon;
-    if (!sorted) Icon = IconSelector;
-    else Icon = reversed ? IconChevronUp : IconChevronDown;
-
-    return (
-        <th className={classes.th}>
-            <UnstyledButton onClick={onSort} className={classes.control}>
-                <Stack align="center">
-                    <Text weight={500} size="sm">
-                        {children}
-                    </Text>
-                    <Center className={classes.icon}>
-                        <Icon size={14} stroke={1.5} />
-                    </Center>
-                </Stack>
-            </UnstyledButton>
-        </th>
-    );
-};
-
-interface TdProps {
-    children: ReactNode;
-}
-
-const Td = ({ children }: TdProps) => (
-    <td>
-        <Center>{children}</Center>
-    </td>
-);
-
-const filterData = (data: ImportTransaction[], search: string) => {
-    const query = search.toLowerCase().trim();
-    return data.filter((item) =>
-        headers.some((key) =>
-            item[key]?.toString().toLowerCase().includes(query)
-        )
-    );
-};
-
-const sortData = (
-    data: ImportTransaction[],
-    payload: {
-        sortBy: keyof ImportTransaction | null;
-        reversed: boolean;
-        search: string;
-    }
-) => {
-    const { sortBy } = payload;
-
-    if (!sortBy) {
-        return filterData(data, payload.search);
-    }
-
-    return filterData(
-        [...data].sort((a, b) => {
-            const aVal = a[sortBy];
-            const bVal = b[sortBy];
-
-            const multiple = payload.reversed ? 1 : -1;
-
-            if (typeof bVal === "number" && typeof aVal === "number")
-                return multiple * (bVal - aVal);
-            if (bVal instanceof Date && aVal instanceof Date)
-                return multiple * (bVal.valueOf() - aVal.valueOf());
-            return multiple * (bVal as string).localeCompare(aVal as string);
-        }),
-        payload.search
-    );
-};
-
 interface TableSortProps {
     data: ImportTransaction[];
+    rows: number;
 }
 
-const TransactionsTable = ({ data }: TableSortProps) => {
-    const [search, setSearch] = useState("");
-    const [sortedData, setSortedData] = useState(data);
-    const [sortBy, setSortBy] = useState<keyof ImportTransaction | null>(null);
-    const [reverseSortDirection, setReverseSortDirection] = useState(false);
-
-    const setSorting = (field: keyof ImportTransaction) => {
-        const reversed = field === sortBy ? !reverseSortDirection : false;
-        setReverseSortDirection(reversed);
-        setSortBy(field);
-        setSortedData(sortData(data, { sortBy: field, reversed, search }));
-    };
-
-    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { value } = event.currentTarget;
-        setSearch(value);
-        setSortedData(
-            sortData(data, {
-                sortBy,
-                reversed: reverseSortDirection,
-                search: value
-            })
-        );
-    };
-
-    const rows = sortedData.map(
-        ({
-            id,
-            date,
-            receivedQuantity,
-            receivedCurrency,
-            sentQuantity,
-            sentCurrency,
-            feeAmount,
-            feeCurrency,
-            tag
-        }) => (
-            <tr key={id}>
-                <Td>{id}</Td>
-                <Td>{new Date(date).toLocaleString()}</Td>
-                <Td>{receivedQuantity}</Td>
-                <Td>{receivedCurrency}</Td>
-                <Td>{sentQuantity}</Td>
-                <Td>{sentCurrency}</Td>
-                <Td>{feeAmount}</Td>
-                <Td>{feeCurrency}</Td>
-                <Td>
-                    {tag && (
-                        <Badge color="grape" size="lg">
-                            {tag}
-                        </Badge>
-                    )}
-                </Td>
-            </tr>
-        )
+const TransactionsTable = ({ data, rows }: TableSortProps) => {
+    const getContent = useCallback(
+        (cell: Item): GridCell => {
+            const [col, row] = cell;
+            const dataRow = data[row];
+            // dumb but simple way to do this
+            const d = dataRow[headers[col]];
+            return {
+                kind: GridCellKind.Text,
+                allowOverlay: false,
+                displayData: d.toString(),
+                data: d.toString()
+            };
+        },
+        [data]
     );
-
     return (
-        <ScrollArea>
-            <TextInput
-                placeholder="Search by any field"
-                mb="md"
-                icon={<IconSearch size={14} stroke={1.5} />}
-                value={search}
-                onChange={handleSearchChange}
-            />
-            <Table
-                horizontalSpacing="md"
-                verticalSpacing="xs"
-                sx={{ tableLayout: "fixed", minWidth: 700 }}
-            >
-                <thead>
-                    <tr>
-                        {headers.map((header) => (
-                            <Th
-                                sorted={sortBy === header}
-                                reversed={reverseSortDirection}
-                                onSort={() => setSorting(header)}
-                            >
-                                {_.startCase(header)}
-                            </Th>
-                        ))}
-                    </tr>
-                </thead>
-                <tbody>
-                    {rows.length > 0 ? (
-                        rows
-                    ) : (
-                        <tr>
-                            <td colSpan={9}>
-                                <Text weight={500} align="center">
-                                    Nothing found
-                                </Text>
-                            </td>
-                        </tr>
-                    )}
-                </tbody>
-            </Table>
-        </ScrollArea>
+        <DataEditor
+            getCellContent={getContent}
+            columns={columns}
+            rows={rows}
+            smoothScrollX
+            smoothScrollY
+        />
     );
 };
 

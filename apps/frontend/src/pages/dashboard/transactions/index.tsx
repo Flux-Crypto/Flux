@@ -1,4 +1,4 @@
-import { Container, LoadingOverlay } from "@mantine/core";
+import { Container, Flex, LoadingOverlay, createStyles } from "@mantine/core";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
@@ -8,11 +8,20 @@ import DashboardLayout from "@src/layouts/DashboardLayout";
 
 import TransactionsTable from "@components/TransactionsTable";
 
+const useStyles = createStyles((theme) => ({
+    container: {
+        display: "flex",
+        flexGrow: 1,
+        height: "100%"
+    }
+}));
+
 const Transactions = () => {
     const { data: session, status } = useSession();
 
     const [isFetching, setFetching] = useState(true);
     const [transactions, setTransactions] = useState([]);
+    const { classes } = useStyles();
 
     useEffect(() => {
         if (!session) return;
@@ -38,14 +47,19 @@ const Transactions = () => {
 
     return (
         <DashboardLayout pageTitle="Transactions">
-            <Container>
+            <Flex className={classes.container}>
                 <LoadingOverlay
                     visible={status === "loading" || isFetching}
                     overlayBlur={2}
                 />
 
-                {!isFetching && <TransactionsTable data={transactions} />}
-            </Container>
+                {!isFetching && (
+                    <TransactionsTable
+                        data={transactions}
+                        rows={transactions.length}
+                    />
+                )}
+            </Flex>
         </DashboardLayout>
     );
 };
