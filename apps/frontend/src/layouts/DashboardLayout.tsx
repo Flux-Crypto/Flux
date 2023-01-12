@@ -36,9 +36,13 @@ const DashboardLayout = ({ pageTitle, children }: DashboardLayoutProps) => {
         <MainLayout {...{ pageTitle }}>
             <DashboardNavbar />
             <Box className={classes.parent}>
-                <Header pageTitle={pageTitle} />
+                <Header />
                 <Flex className={classes.children}>{children}</Flex>
             </Box>
+            <div
+                id="portal"
+                style={{ position: "fixed", left: 0, top: 0, zIndex: 9999 }}
+            />
         </MainLayout>
     );
 };

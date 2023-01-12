@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 
 import callAPI from "@lib/callAPI";
 import { UserSession } from "@lib/types/auth";
-import DashboardLayout from "@src/layouts/DashboardLayout";
 
-import TransactionsTable from "@components/TransactionsTable";
+import TransactionsTable from "@components/Table/TransactionsTable";
+import DashboardLayout from "@layouts/DashboardLayout";
 
 const useStyles = createStyles((theme) => ({
     container: {
@@ -26,24 +26,24 @@ const Transactions = () => {
     useEffect(() => {
         if (!session) return;
 
-        setFetching(true);
+        if (isFetching) {
+            (async () => {
+                const { authToken } = session as UserSession;
 
-        (async () => {
-            const { authToken } = session as UserSession;
+                const response = await callAPI("/v1/transactions", authToken);
 
-            const response = await callAPI("/v1/transactions", authToken);
+                if (!response.ok) {
+                    console.log(await response.text());
+                    return;
+                }
 
-            if (!response.ok) {
-                console.log(await response.text());
-                return;
-            }
+                const transactionsData = await response.json();
 
-            const transactionsData = await response.json();
-
-            setTransactions(transactionsData);
-            setFetching(false);
-        })();
-    }, [session]);
+                setTransactions(transactionsData);
+                setFetching(false);
+            })();
+        }
+    }, [isFetching, session]);
 
     return (
         <DashboardLayout pageTitle="Transactions">
