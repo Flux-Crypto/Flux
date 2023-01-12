@@ -17,7 +17,7 @@ const baseRoute = (
         "/",
         {
             onRequest: server.auth([server.verifyJWT, server.verifyAPIKey]),
-            ...getSchema
+            schema: getSchema
         },
         async (_request: FastifyRequest, reply: FastifyReply) => {
             try {
@@ -43,7 +43,7 @@ const baseRoute = (
     server.post(
         "/",
         {
-            ...postSchema
+            schema: postSchema
         },
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { email } = request.body as UsersPostRequestBody;

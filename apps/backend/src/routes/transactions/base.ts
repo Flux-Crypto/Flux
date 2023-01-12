@@ -24,13 +24,13 @@ const baseRoute = (
         "/",
         {
             onRequest: server.auth([server.verifyJWT, server.verifyAPIKey]),
-            ...getSchema
+            schema: getSchema
         },
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { id } = (request.user as JWT).user;
 
             try {
-                const transactions = await prisma.user.findMany({
+                const user = await prisma.user.findUnique({
                     where: {
                         id
                     },
@@ -39,7 +39,14 @@ const baseRoute = (
                     }
                 });
 
-                reply.send(transactions);
+                if (!user) {
+                    const message = "Couldn't find user!";
+                    log.error(message);
+                    reply.code(HttpStatus.NOT_FOUND).send(message);
+                    return;
+                }
+
+                reply.send(user.importTransactions);
             } catch (e) {
                 if (e instanceof PrismaClientKnownRequestError) {
                     log.fatal(e);
@@ -75,7 +82,7 @@ const baseRoute = (
             }
 
             try {
-                const transactions = await prisma.user.update({
+                const { importTransactions } = await prisma.user.update({
                     where: {
                         id
                     },
@@ -86,7 +93,7 @@ const baseRoute = (
                     }
                 });
 
-                reply.code(201).send(transactions);
+                reply.code(201).send(importTransactions);
             } catch (e) {
                 if (e instanceof PrismaClientKnownRequestError) {
                     log.fatal(e);

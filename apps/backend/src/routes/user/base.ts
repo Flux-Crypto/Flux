@@ -18,7 +18,7 @@ const baseRoute = (
         "/",
         {
             onRequest: server.auth([server.verifyJWT, server.verifyAPIKey]),
-            ...getSchema
+            schema: getSchema
         },
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { id } = (request.user as JWT).user;
@@ -53,7 +53,7 @@ const baseRoute = (
         "/",
         {
             onRequest: server.auth([server.verifyJWT, server.verifyAPIKey]),
-            ...putSchema
+            schema: putSchema
         },
         async (request: FastifyRequest, reply: FastifyReply) => {
             const { id } = (request.user as JWT).user;

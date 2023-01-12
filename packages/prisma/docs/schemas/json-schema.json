@@ -22,12 +22,47 @@
           "items": {
             "$ref": "#/definitions/User"
           }
+        },
+        "walletNameIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "walletNames": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WalletName"
+          }
         }
       },
       "required": [
         "address",
         "rdUserIds",
-        "rdwrUserIds"
+        "rdwrUserIds",
+        "walletNameIds"
+      ]
+    },
+    "WalletName": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "user": {
+          "$ref": "#/definitions/User"
+        },
+        "wallet": {
+          "$ref": "#/definitions/Wallet"
+        },
+        "name": {
+          "type": "string",
+          "default": ""
+        }
+      },
+      "required": [
+        "userId",
+        "walletAddress"
       ]
     },
     "User": {
@@ -79,6 +114,12 @@
             "$ref": "#/definitions/Wallet"
           }
         },
+        "walletNameIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "walletNames": {
           "type": "array",
           "items": {
@@ -111,7 +152,8 @@
         "processorAPIKeys",
         "exchangeAPIKeys",
         "rdWalletAddresses",
-        "rdwrWalletAddresses"
+        "rdwrWalletAddresses",
+        "walletNameIds"
       ]
     },
     "Session": {
@@ -203,21 +245,6 @@
         "expires"
       ]
     },
-    "WalletName": {
-      "type": "object",
-      "properties": {
-        "address": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "address",
-        "name"
-      ]
-    },
     "ImportTransaction": {
       "type": "object",
       "properties": {
@@ -279,6 +306,9 @@
   "properties": {
     "wallet": {
       "$ref": "#/definitions/Wallet"
+    },
+    "walletName": {
+      "$ref": "#/definitions/WalletName"
     },
     "user": {
       "$ref": "#/definitions/User"

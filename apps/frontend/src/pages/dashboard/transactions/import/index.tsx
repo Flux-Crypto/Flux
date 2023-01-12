@@ -19,7 +19,7 @@ import { useState } from "react";
 
 import callAPI from "@lib/callAPI";
 import { UserSession } from "@lib/types/auth";
-import { Transaction } from "@lib/types/db";
+import { Transaction } from "@src/lib/types/api";
 
 import CSVImport from "@components/CSVImport";
 import ImportTable from "@components/ImportTable";
@@ -28,6 +28,7 @@ import DashboardLayout from "@layouts/DashboardLayout";
 const Import = () => {
     const { data: session, status } = useSession();
 
+    // TODO: implement selection from ImportTable
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [isFetching, setFetching] = useState(false);
 
@@ -41,14 +42,10 @@ const Import = () => {
 
         const { authToken } = session as UserSession;
 
-        const response = await callAPI(
-            `http://localhost:8000/api/v1/transactions`,
-            authToken,
-            {
-                method: "POST",
-                body: JSON.stringify({ transactions })
-            }
-        );
+        const response = await callAPI(`/v1/transactions`, authToken, {
+            method: "POST",
+            body: JSON.stringify({ transactions })
+        });
 
         setFetching(false);
         toggleNotificationVisible(true);
@@ -63,7 +60,7 @@ const Import = () => {
     };
 
     return (
-        <DashboardLayout pageTitle="Import">
+        <DashboardLayout pageTitle="Import Transactions">
             <Center mt="xl">
                 <Stack spacing="xl">
                     <LoadingOverlay
