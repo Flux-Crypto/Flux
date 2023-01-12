@@ -1,7 +1,7 @@
 import { AppShell } from "@mantine/core";
 import { ReactNode } from "react";
 
-import NextHead from "@src/components/Head";
+import NextHead from "@src/components/global/Head/Head";
 
 interface MainLayoutProps {
     pageTitle: string;

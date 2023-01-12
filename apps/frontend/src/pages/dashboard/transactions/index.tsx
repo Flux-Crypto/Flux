@@ -4,9 +4,8 @@ import { useEffect, useState } from "react";
 
 import callAPI from "@lib/callAPI";
 import { UserSession } from "@lib/types/auth";
+import TransactionsTable from "@src/components/transactions/TransactionsTable/TransactionsTable";
 import DashboardLayout from "@src/layouts/DashboardLayout";
-
-import TransactionsTable from "@components/TransactionsTable";
 
 const Transactions = () => {
     const { data: session, status } = useSession();

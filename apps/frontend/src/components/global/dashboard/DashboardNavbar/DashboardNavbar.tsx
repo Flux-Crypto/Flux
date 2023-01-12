@@ -20,8 +20,8 @@ import {
 } from "@tabler/icons";
 import { signOut, useSession } from "next-auth/react";
 
-import LinksGroup from "./LinksGroup";
-import UserButton from "./UserButton";
+import LinksGroup from "../../LinksGroup/LinksGroup";
+import UserButton from "../UserButton/UserButton";
 
 const mockdata = [
     { label: "Dashboard", icon: IconDashboard },

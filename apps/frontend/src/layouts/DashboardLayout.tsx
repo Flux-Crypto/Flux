@@ -1,7 +1,7 @@
 import { Flex } from "@mantine/core";
 import { ReactNode } from "react";
 
-import DashboardNavbar from "@src/components/DashboardNavbar";
+import DashboardNavbar from "@src/components/global/dashboard/DashboardNavbar/DashboardNavbar";
 
 import MainLayout from "./MainLayout";
 

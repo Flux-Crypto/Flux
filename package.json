@@ -1,37 +1,50 @@
 {
-    "name": "aurora",
-    "version": "1.0.0",
-    "description": "crypto finances made accessible for businesses.",
-    "main": "index.js",
-    "workspaces": [
-        "apps/*",
-        "packages/*"
-    ],
-    "scripts": {
-        "format:frontend": "npm run format --workspace=frontend",
-        "format:backend": "npm run format --workspace=backend",
-        "lint:frontend": "npm run lint --workspace=frontend",
-        "lint:backend": "npm run lint --workspace=backend",
-        "lint": "npm run lint:backend && npm run lint:frontend",
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "dev:frontend": "npm run dev --workspace=frontend",
-        "dev:backend": "npm run dev --workspace=backend",
-        "reset": "npm run reset --workspace=@aurora/prisma",
-        "studio": "npm run studio --workspace=@aurora/prisma"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/tot/aurora.git"
-    },
-    "author": "",
-    "license": "ISC",
-    "bugs": {
-        "url": "https://github.com/tot/aurora/issues"
-    },
-    "homepage": "https://github.com/tot/aurora#readme",
-    "devDependencies": {
-        "@prisma/client": "^4.8.1",
-        "prisma": "^4.8.1",
-        "prisma-docs-generator": "^0.5.0"
-    }
+  "name": "aurora",
+  "version": "1.0.0",
+  "description": "crypto finances made accessible for businesses.",
+  "main": "index.js",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "format:frontend": "npm run format --workspace=frontend",
+    "format:backend": "npm run format --workspace=backend",
+    "lint:frontend": "npm run lint --workspace=frontend",
+    "lint:backend": "npm run lint --workspace=backend",
+    "lint": "npm run lint:backend && npm run lint:frontend",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "dev:backend": "npm run dev --workspace=backend",
+    "reset": "npm run reset --workspace=@aurora/prisma",
+    "studio": "npm run studio --workspace=@aurora/prisma",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tot/aurora.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tot/aurora/issues"
+  },
+  "homepage": "https://github.com/tot/aurora#readme",
+  "devDependencies": {
+    "@babel/core": "^7.20.12",
+    "@prisma/client": "^4.8.1",
+    "@storybook/addon-actions": "^6.5.15",
+    "@storybook/addon-essentials": "^6.5.15",
+    "@storybook/addon-interactions": "^6.5.15",
+    "@storybook/addon-links": "^6.5.15",
+    "@storybook/builder-webpack5": "^6.5.15",
+    "@storybook/manager-webpack5": "^6.5.15",
+    "@storybook/react": "^6.5.15",
+    "@storybook/testing-library": "^0.0.13",
+    "babel-loader": "^8.3.0",
+    "prisma": "^4.8.1",
+    "prisma-docs-generator": "^0.5.0"
+  },
+  "dependencies": {}
 }

@@ -19,10 +19,10 @@ import { useState } from "react";
 
 import callAPI from "@lib/callAPI";
 import { UserSession } from "@lib/types/auth";
+import ImportTable from "@src/components/transactions/import/ImportTable/ImportTable";
 import { Transaction } from "@src/lib/types/api";
 
-import CSVImport from "@components/CSVImport";
-import ImportTable from "@components/ImportTable";
+import CSVImport from "@components/transactions/import/CSVImport/CSVImport";
 import DashboardLayout from "@layouts/DashboardLayout";
 
 const Import = () => {

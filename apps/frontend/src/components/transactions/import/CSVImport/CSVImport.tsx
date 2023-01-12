@@ -55,7 +55,7 @@ const parseCSV = (csvData: string) => {
     return txns;
 };
 
-interface CSVImportProps {
+export interface CSVImportProps {
     updateData: Dispatch<SetStateAction<Transaction[]>>;
 }
 
