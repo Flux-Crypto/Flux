@@ -13,14 +13,6 @@ const Dashboard = () => {
                 <Button onClick={() => console.log(session)} type="button">
                     Log session
                 </Button>
-                <Button
-                    type="button"
-                    onClick={() => signOut()}
-                    fullWidth
-                    mt="xl"
-                >
-                    Logout
-                </Button>
             </Box>
         </DashboardLayout>
     );

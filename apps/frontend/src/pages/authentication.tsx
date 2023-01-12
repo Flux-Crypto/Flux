@@ -33,7 +33,10 @@ const useStyles = createStyles((theme) => ({
     },
 
     subtext: {
-        color: theme.colorScheme === "dark" ? theme.white : theme.black,
+        color:
+            theme.colorScheme === "dark"
+                ? theme.colors.slate_black[4]
+                : theme.black,
         fontFamily: `Greycliff CF, ${theme.fontFamily}`,
         fontSize: "1rem"
     },
@@ -86,23 +89,24 @@ const Authentication = () => {
                 opened={opened}
                 onClose={() => setOpened(false)}
                 size="auto"
-                title="Welcome!"
+                title="Check your inbox!"
             >
-                <Text>Check your email for a magic link to sign in.</Text>
+                <Text size="sm">
+                    Click the magic link in your email to sign in to Aurora.
+                </Text>
             </Modal>
             <Container size={420} mt="8rem">
                 <Paper withBorder className={classes.form} radius="md" p={30}>
-                    <Title className={classes.title} align="center" mt="md">
-                        Alpha Access
+                    <Title className={classes.title} align="center">
+                        Welcome to Aurora
                     </Title>
                     <Text
                         className={classes.subtext}
-                        color="gray"
                         align="center"
                         mt="0.25rem"
                         mb={20}
                     >
-                        Welcome to Aurora
+                        Beta user access
                     </Text>
                     {error && (
                         <Alert

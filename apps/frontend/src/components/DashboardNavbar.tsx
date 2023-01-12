@@ -57,8 +57,9 @@ const mockdata = [
 const useStyles = createStyles((theme) => ({
     navbar: {
         backgroundColor:
-            theme.colorScheme === "dark" ? theme.colors.dark[6] : theme.white,
-        paddingBottom: 0
+            theme.colorScheme === "dark"
+                ? theme.colors.cod_gray[9]
+                : theme.white
     },
 
     header: {
@@ -66,12 +67,12 @@ const useStyles = createStyles((theme) => ({
         paddingTop: 0,
         marginLeft: -theme.spacing.md,
         marginRight: -theme.spacing.md,
-        color: theme.colorScheme === "dark" ? theme.white : theme.black,
-        borderBottom: `1px solid ${
-            theme.colorScheme === "dark"
-                ? theme.colors.dark[4]
-                : theme.colors.gray[3]
-        }`
+        color: theme.colorScheme === "dark" ? theme.white : theme.black
+        // borderBottom: `1px solid ${
+        //     theme.colorScheme === "dark"
+        //         ? theme.colors.dark[5]
+        //         : theme.colors.gray[3]
+        // }`
     },
 
     links: {
@@ -87,7 +88,7 @@ const useStyles = createStyles((theme) => ({
     logoutIcon: {
         color:
             theme.colorScheme === "dark"
-                ? theme.colors.dark[2]
+                ? theme.colors.tonal_gray[2]
                 : theme.colors.gray[6],
         marginRight: theme.spacing.sm
     },
@@ -97,7 +98,7 @@ const useStyles = createStyles((theme) => ({
         marginRight: -theme.spacing.md,
         borderTop: `1px solid ${
             theme.colorScheme === "dark"
-                ? theme.colors.dark[4]
+                ? theme.colors.dark[5]
                 : theme.colors.gray[3]
         }`
     }
@@ -113,7 +114,7 @@ const DashboardNavbar = () => {
     ));
 
     return (
-        <Navbar width={{ sm: 250 }} p="md" className={classes.navbar}>
+        <Navbar width={{ sm: 250 }} px="md" pt="md" className={classes.navbar}>
             <Navbar.Section className={classes.header}>
                 <Group position="apart">
                     <Avatar alt="Aurora Logo" />
@@ -134,27 +135,12 @@ const DashboardNavbar = () => {
             <Navbar.Section className={classes.footer}>
                 <UserButton
                     image="https://images.unsplash.com/photo-1589254065909-b7086229d08c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3087&q=80"
-                    name={session?.user?.name || ""}
+                    name={
+                        `${session?.user?.firstName} ${session?.user?.lastName}` ||
+                        ""
+                    }
                     email={session?.user?.email || ""}
                 />
-
-                <Flex justify="center">
-                    <Button
-                        fullWidth
-                        color="gray"
-                        onClick={() => signOut()}
-                        leftIcon={
-                            <IconLogout
-                                className={classes.logoutIcon}
-                                stroke={1.5}
-                            />
-                        }
-                        ml="md"
-                        mr="md"
-                    >
-                        Logout
-                    </Button>
-                </Flex>
             </Navbar.Section>
         </Navbar>
     );
