@@ -52,17 +52,17 @@
         "user": {
           "$ref": "#/definitions/User"
         },
-        "wallets": {
+        "wallet": {
           "$ref": "#/definitions/Wallet"
         },
         "name": {
-          "type": "string"
+          "type": "string",
+          "default": ""
         }
       },
       "required": [
         "userId",
-        "walletAddress",
-        "name"
+        "walletAddress"
       ]
     },
     "User": {

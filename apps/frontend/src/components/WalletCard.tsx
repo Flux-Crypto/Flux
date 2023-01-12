@@ -1,28 +1,83 @@
-import { Button, Card, Collapse, Stack, Text, Title } from "@mantine/core";
 import {
+    ActionIcon,
+    Button,
+    Card,
+    Code,
+    Collapse,
+    Flex,
+    Group,
+    Stack,
+    Text,
+    Title
+} from "@mantine/core";
+import {
+    IconEdit,
+    IconShieldCheck,
     IconSquareRoundedChevronDown,
-    IconSquareRoundedChevronUp
+    IconSquareRoundedChevronUp,
+    IconTrash
 } from "@tabler/icons";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
-import { UserWallet } from "@lib/types/db";
+import { ManageContext, ModalModes } from "@src/contexts/manageContext";
+import { UserWallet } from "@src/lib/types/api";
 
-interface WalletCardProps extends UserWallet {}
+interface WalletCardProps extends UserWallet {
+    walletAccess: "read-only" | "read-write";
+}
 
-const WalletCard = ({ address, seedPhrase = "", name }: WalletCardProps) => {
+const WalletCard = ({
+    address,
+    seedPhrase = "",
+    name,
+    walletAccess
+}: WalletCardProps) => {
+    const { setModalData } = useContext(ManageContext);
+
     const [showSeedPhrase, toggleSeedPhrase] = useState(false);
 
     const ButtonIcon = showSeedPhrase
         ? IconSquareRoundedChevronUp
         : IconSquareRoundedChevronDown;
 
+    const showModal = (mode: ModalModes) =>
+        setModalData({ mode, address, name, walletAccess });
+
     return (
         <Card withBorder radius="md">
             <Stack>
-                <Title order={4}>{name || "Unnamed Wallet"}</Title>
-                <Text fz="sm" fw={500}>
-                    {address}
-                </Text>
+                <Flex justify="space-between">
+                    <Title order={4}>{name || "Unnamed Wallet"}</Title>
+                    <Group>
+                        {!seedPhrase ? (
+                            <ActionIcon
+                                color="teal"
+                                variant="light"
+                                onClick={() => showModal("verify")}
+                                p={4}
+                            >
+                                <IconShieldCheck />
+                            </ActionIcon>
+                        ) : null}
+                        <ActionIcon
+                            color="blue"
+                            variant="light"
+                            onClick={() => showModal("edit")}
+                            p={4}
+                        >
+                            <IconEdit />
+                        </ActionIcon>
+                        <ActionIcon
+                            color="red"
+                            variant="light"
+                            onClick={() => showModal("delete")}
+                            p={4}
+                        >
+                            <IconTrash />
+                        </ActionIcon>
+                    </Group>
+                </Flex>
+                <Code>{address}</Code>
                 {seedPhrase ? (
                     <>
                         <Collapse in={showSeedPhrase}>
@@ -43,10 +98,6 @@ const WalletCard = ({ address, seedPhrase = "", name }: WalletCardProps) => {
             </Stack>
         </Card>
     );
-};
-
-WalletCard.defaultProps = {
-    seedPhrase: ""
 };
 
 export default WalletCard;
