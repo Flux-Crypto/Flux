@@ -7,8 +7,9 @@ import { FastifyDone, JWT } from "@lib/types/fastifyTypes";
 import HttpStatus from "@lib/types/httpStatus";
 import { WalletsBaseSchema } from "@lib/types/jsonObjects";
 import {
-    WalletsRequestBody,
-    WalletsRequestParams
+    WalletsRequestParams,
+    WalletsRequestPostBody,
+    WalletsRequestPutBody
 } from "@lib/types/routeOptions";
 
 const baseRoute = (
@@ -39,16 +40,31 @@ const baseRoute = (
                     select: {
                         rdWallets: {
                             select: {
-                                address: true
+                                address: true,
+                                walletNames: {
+                                    where: {
+                                        userId: id
+                                    },
+                                    select: {
+                                        name: true
+                                    }
+                                }
                             }
                         },
                         rdwrWallets: {
                             select: {
                                 address: true,
-                                seedPhrase: true
+                                seedPhrase: true,
+                                walletNames: {
+                                    where: {
+                                        userId: id
+                                    },
+                                    select: {
+                                        name: true
+                                    }
+                                }
                             }
-                        },
-                        walletNames: true
+                        }
                     }
                 });
 
@@ -59,29 +75,31 @@ const baseRoute = (
                     return;
                 }
 
-                const { walletNames } = user;
-                const flatWalletNames: { [address: string]: string } = _.reduce(
-                    walletNames,
-                    (newWalletNames, { address, name }) => ({
-                        ...newWalletNames,
-                        [address]: name
-                    }),
-                    {}
-                );
-
-                let { rdWallets, rdwrWallets } = user;
-                rdWallets = _.map(rdWallets, (wallet) => ({
-                    ...wallet,
-                    name: flatWalletNames[wallet.address]
-                }));
-                rdwrWallets = _.map(rdwrWallets, (wallet) => ({
-                    ...wallet,
-                    name: flatWalletNames[wallet.address]
-                }));
+                const { rdWallets, rdwrWallets } = user;
+                const flattenWallets = (
+                    wallets: {
+                        address: string;
+                        seedPhrase?: string;
+                        walletNames: {
+                            name: string;
+                        }[];
+                    }[]
+                ) =>
+                    _.map(wallets, (wallet) =>
+                        _.omit(
+                            {
+                                ...wallet,
+                                name:
+                                    wallet.walletNames[0] &&
+                                    wallet.walletNames[0].name
+                            },
+                            "walletNames"
+                        )
+                    );
 
                 reply.send({
-                    rdWallets,
-                    rdwrWallets
+                    rdWallets: flattenWallets(rdWallets),
+                    rdwrWallets: flattenWallets(rdwrWallets)
                 });
             } catch (e) {
                 if (e instanceof PrismaClientKnownRequestError) {
@@ -92,9 +110,10 @@ const baseRoute = (
                     return;
                 }
 
-                const message = "Couldn't get wallets";
-                log.error(message);
-                reply.code(HttpStatus.INTERNAL_SERVER_ERROR).send(message);
+                log.error(e);
+                reply
+                    .code(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .send("Couldn't get wallets");
             }
         }
     );
@@ -109,7 +128,7 @@ const baseRoute = (
             const { id } = (request.user as JWT).user;
 
             const { walletAddress, seedPhrase } =
-                request.body as WalletsRequestBody;
+                request.body as WalletsRequestPostBody;
             if (!walletAddress) {
                 const message = "Missing wallet address parameter";
                 log.error(message);
@@ -178,9 +197,163 @@ const baseRoute = (
                     return;
                 }
 
-                const message = "Couldn't create wallet";
+                log.error(e);
+                reply
+                    .code(HttpStatus.BAD_REQUEST)
+                    .send("Couldn't create wallet");
+            }
+        }
+    );
+
+    server.put(
+        "/:walletAddress",
+        {
+            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey])
+        },
+        async (request, reply) => {
+            const { id } = (request.user as JWT).user;
+
+            const { walletAddress } = request.params as WalletsRequestParams;
+            const { seedPhrase, walletName } =
+                request.body as WalletsRequestPutBody;
+            if (!walletAddress) {
+                const message = "Missing wallet address parameter";
                 log.error(message);
                 reply.code(HttpStatus.BAD_REQUEST).send(message);
+                return;
+            }
+            if (!ethers.utils.isAddress(walletAddress)) {
+                const message = "Invalid wallet address";
+                log.error(message);
+                reply.code(HttpStatus.BAD_REQUEST).send(message);
+                return;
+            }
+
+            try {
+                const wallet = await prisma.wallet.findUnique({
+                    where: {
+                        address: walletAddress
+                    },
+                    select: {
+                        rdUserIds: true,
+                        rdwrUserIds: true,
+                        walletNames: {
+                            where: {
+                                userId: id,
+                                walletAddress
+                            },
+                            select: {
+                                id: true
+                            }
+                        }
+                    }
+                });
+
+                if (!wallet) {
+                    const message = "Wallet hasn't been initialized!";
+                    log.error(message);
+                    reply.code(HttpStatus.NOT_FOUND).send(message);
+                    return;
+                }
+
+                const { rdUserIds, rdwrUserIds, walletNames } = wallet;
+                if (!(rdUserIds.includes(id) || rdwrUserIds.includes(id))) {
+                    const message = "Wallet hasn't been linked to user";
+                    log.error(message);
+                    reply.code(HttpStatus.BAD_REQUEST).send(message);
+                    return;
+                }
+
+                if (!seedPhrase && !walletName) {
+                    const message = "Missing field(s) to update";
+                    log.error(message);
+                    reply.code(HttpStatus.BAD_REQUEST).send(message);
+                    return;
+                }
+
+                const existingName = walletNames[0];
+                let updateData = {
+                    walletNames: !existingName
+                        ? {
+                              create: {
+                                  userId: id,
+                                  name: walletName
+                              }
+                          }
+                        : {
+                              update: {
+                                  where: {
+                                      id: existingName.id
+                                  },
+                                  data: {
+                                      name: walletName
+                                  }
+                              }
+                          }
+                };
+
+                if (seedPhrase) {
+                    if (!ethers.utils.isValidMnemonic(seedPhrase)) {
+                        const message = "Invalid seed phrase mnemonic";
+                        log.error(message);
+                        reply.code(HttpStatus.BAD_REQUEST).send(message);
+                        return;
+                    }
+
+                    // check for authentication
+
+                    updateData = _.merge(updateData, {
+                        seedPhrase,
+                        rdUsers: {
+                            disconnect: { id }
+                        },
+                        rdwrUsers: {
+                            connect: { id }
+                        }
+                    });
+                }
+
+                const newWallet = await prisma.wallet.update({
+                    where: {
+                        address: walletAddress
+                    },
+                    data: updateData,
+                    select: {
+                        address: true,
+                        seedPhrase: rdwrUserIds.includes(id) || !!seedPhrase,
+                        walletNames: {
+                            where: {
+                                userId: id,
+                                walletAddress
+                            }
+                        }
+                    }
+                });
+
+                reply.send(
+                    _.omit(
+                        {
+                            ...newWallet,
+                            name:
+                                newWallet.walletNames[0] &&
+                                newWallet.walletNames[0].name
+                        },
+                        "walletNames"
+                    )
+                );
+            } catch (e) {
+                if (e instanceof PrismaClientKnownRequestError) {
+                    log.fatal(e);
+                    reply
+                        .code(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .send("Server error");
+                    return;
+                }
+
+                log.error(e);
+                reply
+                    .code(HttpStatus.BAD_REQUEST)
+                    .send("Couldn't create wallet");
             }
         }
     );
@@ -213,6 +386,12 @@ const baseRoute = (
                         },
                         rdwrUsers: {
                             disconnect: [{ id }]
+                        },
+                        walletNames: {
+                            deleteMany: {
+                                userId: id,
+                                walletAddress
+                            }
                         }
                     },
                     select: {
@@ -239,9 +418,10 @@ const baseRoute = (
                     return;
                 }
 
-                const message = "Couldn't delete wallet";
-                log.error(message);
-                reply.code(HttpStatus.BAD_REQUEST).send(message);
+                log.error(e);
+                reply
+                    .code(HttpStatus.BAD_REQUEST)
+                    .send("Couldn't delete wallet");
             }
         }
     );

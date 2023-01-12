@@ -1,6 +1,6 @@
 import {
-    Grid,
     Group,
+    SimpleGrid,
     Stack,
     Text,
     ThemeIcon,
@@ -10,11 +10,13 @@ import {
 } from "@mantine/core";
 import { IconEyeglass, IconPencil, TablerIcon } from "@tabler/icons";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { UserSession } from "@lib/types/auth";
-import { UserWallet, UserWallets } from "@lib/types/db";
+import WalletModal from "@src/components/WalletModal";
+import { ManageContext, ModalData } from "@src/contexts/manageContext";
 import callAPI from "@src/lib/callAPI";
+import { UserWallet, UserWallets } from "@src/lib/types/api";
 
 import WalletCard from "@components/WalletCard";
 import DashboardLayout from "@layouts/DashboardLayout";
@@ -50,13 +52,17 @@ const WalletGrid = ({
             </Title>
         </Group>
 
-        <Grid columns={2} gutter="xl">
+        <SimpleGrid cols={2} spacing="xl">
             {wallets.map((wallet) => (
-                <Grid.Col span={1}>
-                    <WalletCard key={wallet.address} {...{ ...wallet }} />
-                </Grid.Col>
+                <WalletCard
+                    key={wallet.address}
+                    walletAccess={
+                        accessTitle.toLowerCase() as "read-only" | "read-write"
+                    }
+                    {...{ ...wallet }}
+                />
             ))}
-        </Grid>
+        </SimpleGrid>
     </Stack>
 );
 
@@ -67,6 +73,13 @@ const Manage = () => {
     const [wallets, setWallets] = useState<UserWallets>({
         rdWallets: [],
         rdwrWallets: []
+    });
+
+    const [modalData, setModalData] = useState<ModalData>({
+        mode: "closed",
+        address: "",
+        name: "",
+        walletAccess: "read-only"
     });
 
     useEffect(() => {
@@ -80,6 +93,7 @@ const Manage = () => {
 
                 setFetching(false);
 
+                // TODO: add better error handling
                 if (!response.ok) {
                     console.log(response.statusText);
                     return;
@@ -91,41 +105,49 @@ const Manage = () => {
         }
     }, [isFetching, session, wallets]);
 
+    const contextValues = useMemo(
+        () => ({ session, setModalData, setWallets }),
+        [session, setModalData, setWallets]
+    );
+
     const { rdWallets, rdwrWallets } = wallets;
 
     return (
-        <DashboardLayout pageTitle="Manage Wallets">
-            <Stack spacing={56}>
-                {rdWallets.length ? (
-                    <WalletGrid
-                        accessTitle="Read-only"
-                        tooltipLabel="Wallets that you can view and track."
-                        TitleIcon={IconEyeglass}
-                        iconProps={{
-                            variant: "light",
-                            color: "indigo"
-                        }}
-                        wallets={rdWallets}
-                    />
-                ) : null}
+        <ManageContext.Provider value={contextValues}>
+            <WalletModal {...{ ...modalData }} />
+            <DashboardLayout pageTitle="Manage Wallets">
+                <Stack spacing={56}>
+                    {rdWallets.length ? (
+                        <WalletGrid
+                            accessTitle="Read-only"
+                            tooltipLabel="Wallets that you can view and track."
+                            TitleIcon={IconEyeglass}
+                            iconProps={{
+                                variant: "light",
+                                color: "indigo"
+                            }}
+                            wallets={rdWallets}
+                        />
+                    ) : null}
 
-                {rdwrWallets.length ? (
-                    <WalletGrid
-                        accessTitle="Read-write"
-                        tooltipLabel="Wallets that you can access and use to transact."
-                        TitleIcon={IconPencil}
-                        iconProps={{
-                            color: "pink"
-                        }}
-                        wallets={rdwrWallets}
-                    />
-                ) : null}
+                    {rdwrWallets.length ? (
+                        <WalletGrid
+                            accessTitle="Read-write"
+                            tooltipLabel="Wallets that you can access and use to transact."
+                            TitleIcon={IconPencil}
+                            iconProps={{
+                                color: "pink"
+                            }}
+                            wallets={rdwrWallets}
+                        />
+                    ) : null}
 
-                {!rdWallets.length && !rdwrWallets.length && (
-                    <Text>You have no wallets!</Text>
-                )}
-            </Stack>
-        </DashboardLayout>
+                    {!rdWallets.length && !rdwrWallets.length && (
+                        <Text>You have no wallets!</Text>
+                    )}
+                </Stack>
+            </DashboardLayout>
+        </ManageContext.Provider>
     );
 };
 

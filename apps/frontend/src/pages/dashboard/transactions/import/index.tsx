@@ -19,7 +19,7 @@ import { useState } from "react";
 
 import callAPI from "@lib/callAPI";
 import { UserSession } from "@lib/types/auth";
-import { Transaction } from "@lib/types/db";
+import { Transaction } from "@src/lib/types/api";
 
 import CSVImport from "@components/CSVImport";
 import ImportTable from "@components/ImportTable";
