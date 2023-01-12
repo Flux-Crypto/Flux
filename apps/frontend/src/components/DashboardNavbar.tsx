@@ -29,7 +29,7 @@ const mockdata = [
         label: "Wallets",
         icon: IconWallet,
         links: [
-            { label: "Manage", link: "/" },
+            { label: "Manage", link: "/wallets/manage" },
             { label: "Link", link: "/wallets/link" }
         ]
     },

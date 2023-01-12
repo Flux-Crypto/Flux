@@ -42,9 +42,9 @@ export interface TransactionsRequestParams {
 /**
  *  /wallets
  */
-export interface WalletsRequestBody {
+export interface WalletsRequestPostBody {
     walletAddress: string;
-    seedPhrase: string;
+    seedPhrase?: string;
 }
 
 /**
@@ -52,6 +52,11 @@ export interface WalletsRequestBody {
  */
 export interface WalletsRequestParams {
     walletAddress: string;
+}
+
+export interface WalletsRequestPutBody {
+    seedPhrase?: string;
+    walletName?: string;
 }
 
 /**
