@@ -1,6 +1,11 @@
-import { Button, Center, Code, Modal, Text, TextInput } from "@mantine/core";
-import { useForm } from "@mantine/form";
-import { IconEdit, IconShieldCheck, IconTrash } from "@tabler/icons";
+import { Button, Code, Flex, Modal, Text, TextInput } from "@mantine/core";
+import { notEmpty, useForm } from "@mantine/form";
+import {
+    IconEdit,
+    IconEraser,
+    IconShieldCheck,
+    IconTrash
+} from "@tabler/icons";
 import { ethers } from "ethers";
 import _ from "lodash";
 import { useContext, useState } from "react";
@@ -78,7 +83,7 @@ const WalletModal = ({
         },
 
         validate: {
-            walletName: (value) => value && value !== name && null,
+            walletName: notEmpty("Invalid name"),
             seedPhrase: (value) =>
                 !value || ethers.utils.isValidMnemonic(value)
                     ? null
@@ -104,10 +109,10 @@ const WalletModal = ({
             ({ address: walletAddress }) => walletAddress !== address
         );
 
-    const submitHandler = async ({
-        walletName,
-        seedPhrase
-    }: typeof form.values) => {
+    const submitHandler = async (
+        { walletName, seedPhrase }: typeof form.values,
+        clear: boolean = false
+    ) => {
         setFetching(true);
 
         const { authToken } = session as UserSession;
@@ -119,16 +124,15 @@ const WalletModal = ({
                 {
                     method: "PUT",
                     body: JSON.stringify({
-                        walletName
+                        walletName: clear ? "" : walletName.trim()
                     })
                 }
             );
 
-            setFetching(false);
-
             // TODO: add better error handling
             if (!response.ok) {
                 console.log(await response.text());
+                setFetching(false);
                 return;
             }
 
@@ -159,6 +163,7 @@ const WalletModal = ({
             // TODO: add better error handling
             if (!response.ok) {
                 console.log(await response.text());
+                setFetching(false);
                 return;
             }
 
@@ -181,11 +186,10 @@ const WalletModal = ({
                 }
             );
 
-            setFetching(false);
-
             // TODO: add better error handling
             if (!response.ok) {
                 console.log(await response.text());
+                setFetching(false);
                 return;
             }
 
@@ -208,6 +212,7 @@ const WalletModal = ({
         }
 
         form.resetDirty();
+        setFetching(false);
         if (mode === "verify" || mode === "delete") closeModal();
     };
 
@@ -215,7 +220,8 @@ const WalletModal = ({
         let fieldName = "walletName";
         if (mode === "verify") fieldName = "seedPhrase";
         else if (mode === "delete") fieldName = "walletAddress";
-        return form.isDirty(fieldName) && form.isValid(fieldName);
+        const check = form.isDirty(fieldName) && form.isValid(fieldName);
+        return check && (mode !== "edit" || form.values.walletName !== name);
     };
 
     const { title, inputProps, buttonProps } = getProps(mode);
@@ -237,18 +243,35 @@ const WalletModal = ({
             onClose={() => closeModal()}
             title={title}
         >
-            <Text mb="lg">Current Name: {name}</Text>
+            <Text mb="lg">Current Name: {name || "Unnamed Wallet"}</Text>
             <Text mb="lg">
                 Address: <Code>{address}</Code>
             </Text>
 
-            <form>
+            <form onSubmit={(e) => e.preventDefault()}>
                 <TextInput
                     label={inputLabel}
                     placeholder={inputPlaceholder}
                     {...form.getInputProps(fieldName)}
                 />
-                <Center mt="lg">
+                <Flex mt="lg" justify="space-evenly">
+                    {mode === "edit" && (
+                        <Button
+                            type="button"
+                            size="sm"
+                            color="pink"
+                            variant="outline"
+                            leftIcon={<IconEraser size={16} />}
+                            loading={isFetching}
+                            onClick={() => {
+                                form.clearErrors();
+                                form.values.walletName = "";
+                                submitHandler(form.values, true);
+                            }}
+                        >
+                            Clear
+                        </Button>
+                    )}
                     <Button
                         type="button"
                         size="sm"
@@ -261,7 +284,7 @@ const WalletModal = ({
                     >
                         {buttonText}
                     </Button>
-                </Center>
+                </Flex>
             </form>
         </Modal>
     );

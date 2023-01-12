@@ -264,33 +264,37 @@ const baseRoute = (
                     return;
                 }
 
-                if (!seedPhrase && !walletName) {
+                if (!seedPhrase && walletName === undefined) {
                     const message = "Missing field(s) to update";
                     log.error(message);
                     reply.code(HttpStatus.BAD_REQUEST).send(message);
                     return;
                 }
 
+                const formattedWalletName = walletName?.trim();
                 const existingName = walletNames[0];
-                let updateData = {
-                    walletNames: !existingName
-                        ? {
-                              create: {
-                                  userId: id,
-                                  name: walletName
-                              }
-                          }
-                        : {
-                              update: {
-                                  where: {
-                                      id: existingName.id
-                                  },
-                                  data: {
+                let updateData;
+                if (formattedWalletName !== undefined) {
+                    updateData = {
+                        walletNames: !existingName
+                            ? {
+                                  create: {
+                                      userId: id,
                                       name: walletName
                                   }
                               }
-                          }
-                };
+                            : {
+                                  update: {
+                                      where: {
+                                          id: existingName.id
+                                      },
+                                      data: {
+                                          name: walletName
+                                      }
+                                  }
+                              }
+                    };
+                }
 
                 if (seedPhrase) {
                     if (!ethers.utils.isValidMnemonic(seedPhrase)) {
@@ -311,6 +315,11 @@ const baseRoute = (
                             connect: { id }
                         }
                     });
+                }
+
+                if (!updateData) {
+                    log.error("Something went wrong!");
+                    throw new Error();
                 }
 
                 const newWallet = await prisma.wallet.update({
