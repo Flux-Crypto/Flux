@@ -1,5 +1,6 @@
-import { Box, Button } from "@mantine/core";
-import { signOut, useSession } from "next-auth/react";
+import { AppShell, Box, Button, Flex } from "@mantine/core";
+import { GetServerSidePropsContext } from "next";
+import { getSession, signOut, useSession } from "next-auth/react";
 
 import DashboardLayout from "@src/layouts/DashboardLayout";
 
@@ -24,5 +25,21 @@ const Dashboard = () => {
         </DashboardLayout>
     );
 };
+
+export async function getServerSideProps({ req }: GetServerSidePropsContext) {
+    const session = await getSession({ req });
+
+    if (session && !session?.user?.firstName) {
+        return {
+            redirect: {
+                destination: "/onboard"
+            }
+        };
+    }
+
+    return {
+        props: {}
+    };
+}
 
 export default Dashboard;

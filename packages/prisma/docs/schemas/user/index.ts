@@ -16,11 +16,11 @@ export default {
             "200": {
                 description: "OK",
                 type: "object",
-                properties: UserSchema,
-                example: UserExample
+                properties: { data: UserSchema },
+                example: { data: UserExample }
             },
             "400": {
-                description: "Bad request. Missing id or email parameter.",
+                description: "Bad request. Missing user id parameter.",
                 type: "null"
             },
             "5XX": {

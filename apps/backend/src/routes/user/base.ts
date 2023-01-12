@@ -21,20 +21,18 @@ const baseRoute = (
             schema: getSchema
         },
         async (request: FastifyRequest, reply: FastifyReply) => {
-            const { id, email } = request.query as UserRequestQuery;
-            if (!id && !email) {
-                const message = "Missing id or email parameter";
-                log.error(message);
-                reply.code(HttpStatus.BAD_REQUEST).send(message);
-                return;
-            }
+            const { id } = (request.user as JWT).user;
 
             try {
                 const user = await prisma.user.findUnique({
-                    where: id ? { id } : { email }
+                    where: {
+                        id
+                    }
                 });
 
-                reply.send(user);
+                reply.send({
+                    data: user
+                });
             } catch (e) {
                 if (e instanceof PrismaClientKnownRequestError) {
                     log.fatal(e);

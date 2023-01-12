@@ -7,12 +7,15 @@ const App = ({
     Component,
     pageProps: { session, ...pageProps }
 }: AppProps<{ session: Session }>) => (
-    <SessionProvider session={session}>
+    <SessionProvider
+        session={session}
+        refetchInterval={7200}
+        refetchOnWindowFocus
+    >
         <MantineProvider
             withGlobalStyles
             withNormalizeCSS
             theme={{
-                /** Put your mantine theme override here */
                 colorScheme: "dark",
                 fontFamily: "Inter, sans-serif"
             }}

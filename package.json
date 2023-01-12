@@ -12,6 +12,7 @@
         "format:backend": "npm run format --workspace=backend",
         "lint:frontend": "npm run lint --workspace=frontend",
         "lint:backend": "npm run lint --workspace=backend",
+        "lint": "npm run lint:backend && npm run lint:frontend",
         "test": "echo \"Error: no test specified\" && exit 1",
         "dev:frontend": "npm run dev --workspace=frontend",
         "dev:backend": "npm run dev --workspace=backend",
