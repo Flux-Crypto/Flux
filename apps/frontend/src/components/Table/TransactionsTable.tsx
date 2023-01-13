@@ -1,192 +1,103 @@
-import styled from "@emotion/styled";
-import {
-    Badge,
-    Box,
-    Center,
-    Text,
-    TextInput,
-    UnstyledButton,
-    createStyles
-} from "@mantine/core";
+import { Box, createStyles } from "@mantine/core";
 import { ImportTransaction } from "@prisma/client";
-import {
-    ColumnDef,
-    ColumnResizeMode,
-    flexRender,
-    getCoreRowModel,
-    useReactTable
-} from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table";
 import _ from "lodash";
-import { ReactNode, useCallback, useMemo, useReducer, useState } from "react";
 
-import { Transaction } from "@lib/types/db";
+import { Transaction } from "@lib/types/api";
 
+import DateCell from "@components/Table/Cells/DateCell";
 import IdCell from "@components/Table/Cells/IdCell";
 import QuantityCell from "@components/Table/Cells/QuantityCell";
 
-const headers: (keyof ImportTransaction)[] = [
-    "id",
-    "date",
-    "receivedQuantity",
-    "receivedCurrency",
-    "sentQuantity",
-    "sentCurrency",
-    "feeAmount",
-    "feeCurrency",
-    "tag"
-];
-
-const useStyles = createStyles((theme) => ({
-    sizer: {
-        flexGrow: 1,
-        overflowX: "auto"
-    },
-    tableContainer: {
-        display: "block",
-        maxWidth: "100%"
-    }
-}));
+import Table from "./Table";
 
 interface TransactionsTableProps {
     data: ImportTransaction[];
 }
 
-const Table = ({ columns, data }: any) => {
-    const { classes } = useStyles();
+const IdCellWrapper = (props: any) => {
+    const { cell } = props;
+    return <IdCell id={cell.getValue()} />;
+};
 
-    const rerender = useReducer(() => ({}), {})[1];
-
-    const table = useReactTable({
-        data,
-        columns,
-        getCoreRowModel: getCoreRowModel(),
-        debugTable: true,
-        debugHeaders: true,
-        debugColumns: true
-    });
-
-    const Styles = styled.div`
-        table {
-            border: 1px solid red;
-            width: 100%;
-            flex: 1;
-            min-width: 48rem;
-            text-align: left;
-            box-sizing: border-box;
-            border-collapse: collapse;
-        }
-
-        tbody {
-            border-bottom: 1px solid red;
-        }
-
-        tr {
-            // border: 1px solid blue;
-        }
-
-        th {
-            border-bottom: 1px solid red;
-            border-right: 1px solid red;
-            padding: 0.5rem;
-        }
-        td {
-            border-right: 1px solid red;
-        }
-    `;
-
+const ReceivedQuantityCellWrapper = (props: any) => {
+    const { cell } = props;
     return (
-        <Box className={classes.tableContainer}>
-            <Styles>
-                <div className="block max-w-full overflow-x-scroll overflow-y-hidden">
-                    <table className="w-full">
-                        <thead>
-                            {table.getHeaderGroups().map((headerGroup) => (
-                                <tr key={headerGroup.id}>
-                                    {headerGroup.headers.map((header) => (
-                                        <th
-                                            key={header.id}
-                                            colSpan={header.colSpan}
-                                            className=""
-                                        >
-                                            {header.isPlaceholder ? null : (
-                                                <div>
-                                                    {flexRender(
-                                                        header.column.columnDef
-                                                            .header,
-                                                        header.getContext()
-                                                    )}
-                                                </div>
-                                            )}
-                                        </th>
-                                    ))}
-                                </tr>
-                            ))}
-                        </thead>
-                        <tbody>
-                            {table.getRowModel().rows.map((row) => (
-                                <tr key={row.id}>
-                                    {row.getVisibleCells().map((cell) => (
-                                        <td key={cell.id}>
-                                            {flexRender(
-                                                cell.column.columnDef.cell,
-                                                cell.getContext()
-                                            )}
-                                        </td>
-                                    ))}
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            </Styles>
-        </Box>
+        <QuantityCell
+            value={cell.getValue()}
+            currency={cell.row.original.receivedCurrency}
+        />
     );
 };
 
-const IdCellWrapper = (props: any) => <IdCell id={props.cell.getValue()} />;
+const SentQuantityCellWrapper = (props: any) => {
+    const { cell } = props;
+    return (
+        <QuantityCell
+            value={cell.getValue()}
+            currency={cell.row.original.sentCurrency}
+        />
+    );
+};
 
-const QuantityCellWrapper = (props: any) => (
-    <QuantityCell
-        value={props.cell.getValue()}
-        currency={props.cell.row.original.feeCurrency}
-    />
-);
+const DateCellWrapper = (props: any) => {
+    const { cell } = props;
+    const date = new Date(cell.getValue()).valueOf();
+    return <DateCell date={date} />;
+};
+
+const FeeAmountCellWrapper = (props: any) => {
+    const { cell } = props;
+    return (
+        <QuantityCell
+            value={cell.getValue()}
+            currency={cell.row.original.feeCurrency}
+        />
+    );
+};
+
+const useStyles = createStyles((_theme) => ({
+    sizer: {
+        flexGrow: 1,
+        overflowX: "auto"
+    }
+}));
+
 const TransactionsTable = ({ data }: TransactionsTableProps) => {
     const { classes } = useStyles();
     const columns: ColumnDef<Transaction>[] = [
         {
-            header: "Id",
+            header: "Id/Transaction Hash",
             id: "id",
             accessorKey: "id",
             minSize: 0,
             size: 10,
             cell: IdCellWrapper
+            // TODO: Add Block # underneath Id
         },
         {
             header: "Date",
             id: "date",
-            accessorKey: "date"
+            accessorKey: "date",
+            cell: DateCellWrapper
         },
         {
-            header: "Received Quantity",
+            header: "Received Amount",
             id: "receivedQuantity",
             accessorKey: "receivedQuantity",
-            cell: QuantityCellWrapper
+            cell: ReceivedQuantityCellWrapper
         },
         {
-            header: "Sent Quantity",
+            header: "Sent Amount",
             id: "sentQuantity",
-            accessorKey: "sentQuantity"
+            accessorKey: "sentQuantity",
+            cell: SentQuantityCellWrapper
         },
         {
-            header: "Fee Amount",
+            header: "Fee",
             id: "feeAmount",
-            accessorKey: "feeAmount"
-        },
-        {
-            header: "Fee Currency",
-            id: "feeCurrency",
-            accessorKey: "feeCurrency"
+            accessorKey: "feeAmount",
+            cell: FeeAmountCellWrapper
         },
         {
             header: "Tag",

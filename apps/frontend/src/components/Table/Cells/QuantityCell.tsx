@@ -5,8 +5,7 @@ interface QuantityCellProps {
 
 const QuantityCell = ({ value, currency }: QuantityCellProps) => (
     <div>
-        {value}
-        {currency}
+        {value} {currency}
     </div>
 );
 
