@@ -29,14 +29,14 @@ export interface UserButtonProps extends UnstyledButtonProps {
     image: string;
     name: string;
     email: string;
-    Icon?: TablerIcon;
+    icon?: TablerIcon;
 }
 
 const UserButton = ({
     image,
     name,
     email,
-    Icon = IconChevronRight,
+    icon: Icon = IconChevronRight,
     ...others
 }: UserButtonProps) => {
     const { classes } = useStyles();
@@ -63,7 +63,7 @@ const UserButton = ({
 };
 
 UserButton.defaultProps = {
-    Icon: IconChevronRight
+    icon: IconChevronRight
 };
 
 export default UserButton;

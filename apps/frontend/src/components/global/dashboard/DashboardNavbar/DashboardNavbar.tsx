@@ -18,12 +18,12 @@ import {
     IconWallet,
     IconZoomCode
 } from "@tabler/icons";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 
 import LinksGroup from "../../LinksGroup/LinksGroup";
 import UserButton from "../UserButton/UserButton";
 
-const mockdata = [
+const navbarLinks = [
     { label: "Dashboard", icon: IconDashboard },
     {
         label: "Wallets",
@@ -103,12 +103,16 @@ const useStyles = createStyles((theme) => ({
     }
 }));
 
-const DashboardNavbar = () => {
+export interface DashboardNavbarProps {
+    name: string;
+    email: string;
+    status: "loading" | "authenticated" | "unauthenticated";
+}
+
+const DashboardNavbar = ({ name, email, status }: DashboardNavbarProps) => {
     const { classes } = useStyles();
 
-    const { data: session, status } = useSession();
-
-    const links = mockdata.map((item) => (
+    const links = navbarLinks.map((item) => (
         <LinksGroup {...item} key={item.label} />
     ));
 
@@ -134,8 +138,8 @@ const DashboardNavbar = () => {
             <Navbar.Section className={classes.footer}>
                 <UserButton
                     image="https://images.unsplash.com/photo-1589254065909-b7086229d08c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3087&q=80"
-                    name={session?.user?.name || ""}
-                    email={session?.user?.email || ""}
+                    name={name || ""}
+                    email={email || ""}
                 />
 
                 <Flex justify="center">
