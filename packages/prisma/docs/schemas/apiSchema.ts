@@ -150,7 +150,8 @@ export const UserSchema = {
         type: "string"
     },
     emailVerified: {
-        type: "date"
+        type: "string",
+        format: "date-time"
     },
     firstName: {
         type: "string"
@@ -209,10 +210,12 @@ export const UserSchema = {
         }
     },
     createdAt: {
-        type: "date"
+        type: "string",
+        format: "date-time"
     },
     updatedAt: {
-        type: "date"
+        type: "string",
+        format: "date-time"
     }
 };
 

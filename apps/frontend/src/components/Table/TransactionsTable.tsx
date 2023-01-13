@@ -17,7 +17,7 @@ import {
     useReactTable
 } from "@tanstack/react-table";
 import _ from "lodash";
-import { ReactNode, useCallback, useMemo, useState } from "react";
+import { ReactNode, useCallback, useMemo, useReducer, useState } from "react";
 
 import { Transaction } from "@lib/types/db";
 
@@ -47,116 +47,94 @@ const useStyles = createStyles((theme) => ({
     }
 }));
 
-const Styles = styled.div`
-    /* This is required to make the table full-width */
-    display: block;
-    max-width: 100%;
-
-    /* This will make the table scrollable when it gets too small */
-    .tableWrap {
-        display: block;
-        max-width: 100%;
-        overflow-x: scroll;
-        overflow-y: hidden;
-        border-bottom: 1px solid black;
-    }
-
-    table {
-        /* Make sure the inner table is always as wide as needed */
-        width: 100%;
-        border-spacing: 0;
-
-        tr {
-            :last-child {
-                td {
-                    border-bottom: 0;
-                }
-            }
-        }
-
-        th,
-        td {
-            margin: 0;
-            padding: 0.5rem;
-            border-bottom: 1px solid black;
-            text-align: left;
-            border-right: 1px solid black;
-
-            /* The secret sauce */
-            /* Each cell should grow equally */
-            width: 1%;
-            /* But "collapsed" cells should be as small as possible */
-            &.collapse {
-                width: 0.0000000001%;
-            }
-
-            :last-child {
-                border-right: 0;
-            }
-        }
-    }
-
-    .pagination {
-        padding: 0.5rem;
-    }
-`;
-
 interface TransactionsTableProps {
     data: ImportTransaction[];
 }
 
 const Table = ({ columns, data }: any) => {
     const { classes } = useStyles();
-    // Use the state and functions returned from useTable to build your UI
-    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-        useTable({ columns, data });
+
+    const rerender = useReducer(() => ({}), {})[1];
+
+    const table = useReactTable({
+        data,
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+        debugTable: true,
+        debugHeaders: true,
+        debugColumns: true
+    });
+
+    const Styles = styled.div`
+        table {
+            border: 1px solid red;
+            width: 100%;
+            flex: 1;
+            min-width: 48rem;
+            text-align: left;
+            box-sizing: border-box;
+            border-collapse: collapse;
+        }
+
+        tbody {
+            border-bottom: 1px solid red;
+        }
+
+        tr {
+            // border: 1px solid blue;
+        }
+
+        th {
+            border-bottom: 1px solid red;
+            border-right: 1px solid red;
+            padding: 0.5rem;
+        }
+        td {
+            border-right: 1px solid red;
+        }
+    `;
 
     return (
         <Box className={classes.tableContainer}>
             <Styles>
-                <div className="tableWrap">
-                    <table
-                        {...getTableProps()}
-                        style={{ border: "solid 1px blue" }}
-                    >
+                <div className="block max-w-full overflow-x-scroll overflow-y-hidden">
+                    <table className="w-full">
                         <thead>
-                            {headerGroups.map((headerGroup) => (
-                                <tr {...headerGroup.getHeaderGroupProps()}>
-                                    {headerGroup.headers.map((column) => (
+                            {table.getHeaderGroups().map((headerGroup) => (
+                                <tr key={headerGroup.id}>
+                                    {headerGroup.headers.map((header) => (
                                         <th
-                                            {...column.getHeaderProps()}
-                                            style={{
-                                                borderBottom: "solid 1px red",
-                                                background: "aliceblue",
-                                                color: "black",
-                                                fontWeight: "bold"
-                                            }}
+                                            key={header.id}
+                                            colSpan={header.colSpan}
+                                            className=""
                                         >
-                                            {column.render("Header")}
+                                            {header.isPlaceholder ? null : (
+                                                <div>
+                                                    {flexRender(
+                                                        header.column.columnDef
+                                                            .header,
+                                                        header.getContext()
+                                                    )}
+                                                </div>
+                                            )}
                                         </th>
                                     ))}
                                 </tr>
                             ))}
                         </thead>
-                        <tbody {...getTableBodyProps()}>
-                            {rows.map((row) => {
-                                prepareRow(row);
-                                return (
-                                    <tr {...row.getRowProps()}>
-                                        {row.cells.map((cell) => (
-                                            <td
-                                                {...cell.getCellProps()}
-                                                style={{
-                                                    padding: "10px",
-                                                    background: "papayawhip"
-                                                }}
-                                            >
-                                                {cell.render("Cell")}
-                                            </td>
-                                        ))}
-                                    </tr>
-                                );
-                            })}
+                        <tbody>
+                            {table.getRowModel().rows.map((row) => (
+                                <tr key={row.id}>
+                                    {row.getVisibleCells().map((cell) => (
+                                        <td key={cell.id}>
+                                            {flexRender(
+                                                cell.column.columnDef.cell,
+                                                cell.getContext()
+                                            )}
+                                        </td>
+                                    ))}
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
                 </div>
@@ -165,70 +143,57 @@ const Table = ({ columns, data }: any) => {
     );
 };
 
-// TODO: Add proper typing to props
-const IncomingQuantityCellWrapper = (props: any) => {
-    const { data, value, cell } = props;
-    return (
-        <QuantityCell
-            value={value}
-            currency={data[cell.row.index].receivedCurrency}
-        />
-    );
-};
+const IdCellWrapper = (props: any) => <IdCell id={props.cell.getValue()} />;
 
-const OutgoingQuantityCellWrapper = (props: any) => {
-    const { data, value, cell } = props;
-    return (
-        <QuantityCell
-            value={value}
-            currency={data[cell.row.index].sentCurrency}
-        />
-    );
-};
-
-const IdCellWrapper = (props: any) => {
-    const { value } = props;
-    return <IdCell id={value} />;
-};
-
+const QuantityCellWrapper = (props: any) => (
+    <QuantityCell
+        value={props.cell.getValue()}
+        currency={props.cell.row.original.feeCurrency}
+    />
+);
 const TransactionsTable = ({ data }: TransactionsTableProps) => {
     const { classes } = useStyles();
-    const columns = useMemo(
-        () => [
-            {
-                Header: "Id",
-                accessor: "id",
-                Cell: IdCellWrapper
-            },
-            {
-                Header: "Date",
-                accessor: "date"
-            },
-            {
-                Header: "Received Quantity",
-                accessor: "receivedQuantity",
-                Cell: IncomingQuantityCellWrapper
-            },
-            {
-                Header: "Sent Quantity",
-                accessor: "sentQuantity",
-                Cell: OutgoingQuantityCellWrapper
-            },
-            {
-                Header: "Fee Amount",
-                accessor: "feeAmount"
-            },
-            {
-                Header: "Fee Currency",
-                accessor: "feeCurrency"
-            },
-            {
-                Header: "Tag",
-                accessor: "tag"
-            }
-        ],
-        []
-    );
+    const columns: ColumnDef<Transaction>[] = [
+        {
+            header: "Id",
+            id: "id",
+            accessorKey: "id",
+            minSize: 0,
+            size: 10,
+            cell: IdCellWrapper
+        },
+        {
+            header: "Date",
+            id: "date",
+            accessorKey: "date"
+        },
+        {
+            header: "Received Quantity",
+            id: "receivedQuantity",
+            accessorKey: "receivedQuantity",
+            cell: QuantityCellWrapper
+        },
+        {
+            header: "Sent Quantity",
+            id: "sentQuantity",
+            accessorKey: "sentQuantity"
+        },
+        {
+            header: "Fee Amount",
+            id: "feeAmount",
+            accessorKey: "feeAmount"
+        },
+        {
+            header: "Fee Currency",
+            id: "feeCurrency",
+            accessorKey: "feeCurrency"
+        },
+        {
+            header: "Tag",
+            id: "tag",
+            accessorKey: "tag"
+        }
+    ];
 
     return (
         <Box className={classes.sizer}>
