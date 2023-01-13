@@ -21,6 +21,12 @@ export const WalletSchema = {
         items: {
             type: "string"
         }
+    },
+    walletNameIds: {
+        type: "array",
+        items: {
+            type: "string"
+        }
     }
 };
 
@@ -29,14 +35,21 @@ export const WalletExample = {
     seedPhrase:
         "inquiry blame advance neglect foster time debris uncover hen ten indicate dinosaur",
     rdUserIds: ["507f1f77bcf86cd799439011"],
-    rdwrUserIds: ["63b3b68e4e23a9f08b4630e2"]
+    rdwrUserIds: ["63b3b68e4e23a9f08b4630e2"],
+    walletNameIds: ["63c0d7c2f0b8f6c57d011cec"]
 };
 
 /**
  * WalletName
  */
 export const WalletNameSchema = {
-    address: {
+    id: {
+        type: "string"
+    },
+    userId: {
+        type: "string"
+    },
+    walletAddress: {
         type: "string"
     },
     name: {
@@ -45,7 +58,9 @@ export const WalletNameSchema = {
 };
 
 export const WalletNameExample = {
-    address: "0x95222290dd7278aa3ddd389cc1e1d165cc4bafe5",
+    id: "63c0d7c2f0b8f6c57d011cec",
+    userId: "507f1f77bcf86cd799439011",
+    walletAddress: "0x95222290dd7278aa3ddd389cc1e1d165cc4bafe5",
     name: "My Personal Wallet"
 };
 
@@ -85,7 +100,10 @@ export const ImportTransactionSchema = {
         default: ""
     },
     tag: {
-        type: "string"
+        type: "array",
+        items: {
+            type: "string"
+        }
     }
 };
 
@@ -98,7 +116,7 @@ export const ImportTransactionExample = {
     sentCurrency: "USD",
     feeAmount: 0.00001,
     feeCurrency: "BTC",
-    tag: "PAYMENT"
+    tag: ["PAYMENT"]
 };
 
 /**
@@ -109,13 +127,16 @@ export const ChainTransactionSchema = {
         type: "string"
     },
     tag: {
-        type: "string"
+        type: "array",
+        items: {
+            type: "string"
+        }
     }
 };
 
 export const ChainTransactionExample = {
     hash: "0x839b28928a32459391db977632d7be2ce1cf93505ba2e19cdcf63bfe312ba062",
-    tag: "AIRDROP"
+    tag: ["AIRDROP"]
 };
 
 /**
@@ -128,7 +149,16 @@ export const UserSchema = {
     email: {
         type: "string"
     },
-    name: {
+    emailVerified: {
+        type: "date"
+    },
+    firstName: {
+        type: "string"
+    },
+    lastName: {
+        type: "string"
+    },
+    apiKey: {
         type: "string"
     },
     processorAPIKeys: {
@@ -143,14 +173,14 @@ export const UserSchema = {
             type: "string"
         }
     },
-    rdWallets: {
+    rdWalletAddresses: {
         type: "array",
         items: {
             type: "object",
             properties: WalletSchema
         }
     },
-    rdwrWallets: {
+    rdwrWalletAddresses: {
         type: "array",
         items: {
             type: "object",
@@ -177,17 +207,26 @@ export const UserSchema = {
             type: "object",
             properties: ChainTransactionSchema
         }
+    },
+    createdAt: {
+        type: "date"
+    },
+    updatedAt: {
+        type: "date"
     }
 };
 
 export const UserExample = {
     id: "507f1f77bcf86cd799439011",
     email: "johndoe@email.com",
-    name: "John Doe",
+    emailVerified: "2023-01-13T03:56:54.377Z",
+    firstName: "John",
+    lastName: "Doe",
+    apiKey: "abcdef12345",
     processorAPIKeys: ["abcdef12345"],
     exchangeAPIKeys: ["uvwxyz67890"],
-    rdWallets: ["0x95222290dd7278aa3ddd389cc1e1d165cc4bafe5"],
-    rdwrWallets: ["0xd0451f62be92c2e45dbafbf0a9aa5fd42f1798ea"],
+    rdWalletAddresses: ["0x95222290dd7278aa3ddd389cc1e1d165cc4bafe5"],
+    rdwrWalletAddresses: ["0xd0451f62be92c2e45dbafbf0a9aa5fd42f1798ea"],
     walletNames: [
         {
             address: "0xd0451f62be92c2e45dbafbf0a9aa5fd42f1798ea",
@@ -197,5 +236,7 @@ export const UserExample = {
     importTransactions: ["63b27824cc5b18dda70b8442"],
     chainTransactions: [
         "0x839b28928a32459391db977632d7be2ce1cf93505ba2e19cdcf63bfe312ba062"
-    ]
+    ],
+    createdAt: "2023-01-13T03:56:54.377Z",
+    updatedAt: "2023-01-13T03:56:54.377Z"
 };

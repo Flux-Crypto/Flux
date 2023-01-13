@@ -280,8 +280,10 @@
           "default": ""
         },
         "tag": {
-          "type": "string",
-          "default": ""
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       },
       "required": []
@@ -293,8 +295,10 @@
           "type": "string"
         },
         "tag": {
-          "type": "string",
-          "default": ""
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       },
       "required": [

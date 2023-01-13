@@ -17,6 +17,7 @@ const baseRoute = (
     {
         get: getSchema,
         post: postSchema,
+        put: putSchema,
         delete: deleteSchema
     }: WalletsBaseSchema,
     done: FastifyDone
@@ -208,7 +209,8 @@ const baseRoute = (
     server.put(
         "/:walletAddress",
         {
-            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey])
+            onRequest: server.auth([server.verifyJWT, server.verifyAPIKey]),
+            schema: putSchema
         },
         async (request, reply) => {
             const { id } = (request.user as JWT).user;

@@ -32,7 +32,7 @@ export default {
                     }
                 },
                 example: {
-                    rdWallets: [WalletExample]
+                    rdWallets: [{ ...WalletExample, name: "My Wallet" }]
                 }
             },
             "400": {
@@ -53,8 +53,10 @@ export default {
         body: {
             type: "object",
             properties: {
-                walletAddress: { type: "string" }
-            }
+                walletAddress: { type: "string" },
+                seedPhrase: { type: "string" }
+            },
+            required: ["walletAddress"]
         },
         response: {
             "201": {
@@ -65,6 +67,47 @@ export default {
             },
             "400": {
                 description: "Bad request. Missing wallet address parameter.",
+                type: "null"
+            },
+            "5XX": {
+                description: "Unexpected error.",
+                type: "null"
+            }
+        }
+    },
+    put: {
+        description:
+            "Updates a wallet based on supplied wallet address for provided fields (seed phrase and/or wallet name).",
+        tags: ["wallets"],
+        summary: "Updates user wallet.",
+        params: {
+            type: "object",
+            properties: {
+                walletAddress: {
+                    type: "string",
+                    description: "address of wallet"
+                }
+            }
+        },
+        body: {
+            type: "object",
+            properties: {
+                seedPhrase: { type: "string" },
+                walletName: { type: "string" }
+            }
+        },
+        response: {
+            "201": {
+                description: "Successful creation and linking.",
+                type: "object",
+                properties: {
+                    ...WalletSchema,
+                    name: { type: "string" }
+                },
+                example: { ...WalletExample, name: "My Wallet" }
+            },
+            "400": {
+                description: "Bad request.",
                 type: "null"
             },
             "5XX": {
