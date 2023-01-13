@@ -1,57 +1,28 @@
-import type { GridColumn } from "@glideapps/glide-data-grid";
-import {
-    DataEditor,
-    GridCell,
-    GridCellKind,
-    Item
-} from "@glideapps/glide-data-grid";
-import { useExtraCells } from "@glideapps/glide-data-grid-cells";
-import "@glideapps/glide-data-grid-cells/dist/index.css";
-import type { TagsCell } from "@glideapps/glide-data-grid-cells/dist/ts/cells/tags-cell";
-import "@glideapps/glide-data-grid/dist/index.css";
+import styled from "@emotion/styled";
 import {
     Badge,
     Box,
     Center,
-    Table,
     Text,
     TextInput,
     UnstyledButton,
     createStyles
 } from "@mantine/core";
 import { ImportTransaction } from "@prisma/client";
-import "@toast-ui/editor/dist/toastui-editor.css";
-import _, { uniq } from "lodash";
-import { ReactNode, useCallback, useState } from "react";
+import {
+    ColumnDef,
+    ColumnResizeMode,
+    flexRender,
+    getCoreRowModel,
+    useReactTable
+} from "@tanstack/react-table";
+import _ from "lodash";
+import { ReactNode, useCallback, useMemo, useState } from "react";
 
 import { Transaction } from "@lib/types/db";
 
-const possibleTags = [
-    {
-        tag: "PAYMENT",
-        color: "#ff4d4d"
-    },
-    {
-        tag: "BTC",
-        color: "#35f8ff"
-    },
-    {
-        tag: "Enhancement",
-        color: "#48ff57"
-    },
-    {
-        tag: "First Issue",
-        color: "#436fff"
-    },
-    {
-        tag: "PR",
-        color: "#e0ff32"
-    },
-    {
-        tag: "Assigned",
-        color: "#ff1eec"
-    }
-];
+import IdCell from "@components/Table/Cells/IdCell";
+import QuantityCell from "@components/Table/Cells/QuantityCell";
 
 const headers: (keyof ImportTransaction)[] = [
     "id",
@@ -65,91 +36,203 @@ const headers: (keyof ImportTransaction)[] = [
     "tag"
 ];
 
-const columns: GridColumn[] = headers.map((header) => ({
-    title: _.startCase(header),
-    id: header
-}));
-
 const useStyles = createStyles((theme) => ({
     sizer: {
         flexGrow: 1,
-        borderRadius: "4px",
-        boxShadow:
-            "rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px"
+        overflowX: "auto"
     },
-    sizerClip: {
-        borderRadius: "4px",
-        overflow: "hidden",
-        transform: "translateZ(0)",
-        height: "100%",
-        border: `1px solid ${theme.colors.cod_gray[6]}`
+    tableContainer: {
+        display: "block",
+        maxWidth: "100%"
     }
 }));
 
-interface TableSortProps {
+const Styles = styled.div`
+    /* This is required to make the table full-width */
+    display: block;
+    max-width: 100%;
+
+    /* This will make the table scrollable when it gets too small */
+    .tableWrap {
+        display: block;
+        max-width: 100%;
+        overflow-x: scroll;
+        overflow-y: hidden;
+        border-bottom: 1px solid black;
+    }
+
+    table {
+        /* Make sure the inner table is always as wide as needed */
+        width: 100%;
+        border-spacing: 0;
+
+        tr {
+            :last-child {
+                td {
+                    border-bottom: 0;
+                }
+            }
+        }
+
+        th,
+        td {
+            margin: 0;
+            padding: 0.5rem;
+            border-bottom: 1px solid black;
+            text-align: left;
+            border-right: 1px solid black;
+
+            /* The secret sauce */
+            /* Each cell should grow equally */
+            width: 1%;
+            /* But "collapsed" cells should be as small as possible */
+            &.collapse {
+                width: 0.0000000001%;
+            }
+
+            :last-child {
+                border-right: 0;
+            }
+        }
+    }
+
+    .pagination {
+        padding: 0.5rem;
+    }
+`;
+
+interface TransactionsTableProps {
     data: ImportTransaction[];
-    rows: number;
 }
 
-const TransactionsTable = ({ data, rows }: TableSortProps) => {
+const Table = ({ columns, data }: any) => {
     const { classes } = useStyles();
-    const cellProps = useExtraCells();
+    // Use the state and functions returned from useTable to build your UI
+    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+        useTable({ columns, data });
 
-    const getContent = useCallback(
-        (cell: Item): GridCell => {
-            const [col, row] = cell;
-            const dataRow = data[row];
-            // dumb but simple way to do this
-            const d = dataRow[headers[col]];
-            if (col === 8) {
-                return {
-                    kind: GridCellKind.Custom,
-                    allowOverlay: true,
-                    copyData: "4",
-                    data: {
-                        kind: "tags-cell",
-                        readonly: false,
-                        possibleTags,
-                        tags: [possibleTags[0].tag]
-                    }
-                } as TagsCell;
-            }
-            return {
-                kind: GridCellKind.Text,
-                allowOverlay: false,
-                displayData: d.toString(),
-                data: d.toString()
-            };
-        },
-        [data]
+    return (
+        <Box className={classes.tableContainer}>
+            <Styles>
+                <div className="tableWrap">
+                    <table
+                        {...getTableProps()}
+                        style={{ border: "solid 1px blue" }}
+                    >
+                        <thead>
+                            {headerGroups.map((headerGroup) => (
+                                <tr {...headerGroup.getHeaderGroupProps()}>
+                                    {headerGroup.headers.map((column) => (
+                                        <th
+                                            {...column.getHeaderProps()}
+                                            style={{
+                                                borderBottom: "solid 1px red",
+                                                background: "aliceblue",
+                                                color: "black",
+                                                fontWeight: "bold"
+                                            }}
+                                        >
+                                            {column.render("Header")}
+                                        </th>
+                                    ))}
+                                </tr>
+                            ))}
+                        </thead>
+                        <tbody {...getTableBodyProps()}>
+                            {rows.map((row) => {
+                                prepareRow(row);
+                                return (
+                                    <tr {...row.getRowProps()}>
+                                        {row.cells.map((cell) => (
+                                            <td
+                                                {...cell.getCellProps()}
+                                                style={{
+                                                    padding: "10px",
+                                                    background: "papayawhip"
+                                                }}
+                                            >
+                                                {cell.render("Cell")}
+                                            </td>
+                                        ))}
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+            </Styles>
+        </Box>
     );
+};
+
+// TODO: Add proper typing to props
+const IncomingQuantityCellWrapper = (props: any) => {
+    const { data, value, cell } = props;
+    return (
+        <QuantityCell
+            value={value}
+            currency={data[cell.row.index].receivedCurrency}
+        />
+    );
+};
+
+const OutgoingQuantityCellWrapper = (props: any) => {
+    const { data, value, cell } = props;
+    return (
+        <QuantityCell
+            value={value}
+            currency={data[cell.row.index].sentCurrency}
+        />
+    );
+};
+
+const IdCellWrapper = (props: any) => {
+    const { value } = props;
+    return <IdCell id={value} />;
+};
+
+const TransactionsTable = ({ data }: TransactionsTableProps) => {
+    const { classes } = useStyles();
+    const columns = useMemo(
+        () => [
+            {
+                Header: "Id",
+                accessor: "id",
+                Cell: IdCellWrapper
+            },
+            {
+                Header: "Date",
+                accessor: "date"
+            },
+            {
+                Header: "Received Quantity",
+                accessor: "receivedQuantity",
+                Cell: IncomingQuantityCellWrapper
+            },
+            {
+                Header: "Sent Quantity",
+                accessor: "sentQuantity",
+                Cell: OutgoingQuantityCellWrapper
+            },
+            {
+                Header: "Fee Amount",
+                accessor: "feeAmount"
+            },
+            {
+                Header: "Fee Currency",
+                accessor: "feeCurrency"
+            },
+            {
+                Header: "Tag",
+                accessor: "tag"
+            }
+        ],
+        []
+    );
+
     return (
         <Box className={classes.sizer}>
-            <Box className={classes.sizerClip}>
-                <DataEditor
-                    {...cellProps}
-                    getCellContent={getContent}
-                    columns={columns}
-                    rows={rows}
-                    smoothScrollX
-                    smoothScrollY
-                    width="100%"
-                    height="100%"
-                    theme={{
-                        bgCell: "#0A0A0A", // cell background
-                        borderColor: "#4A4A4A", // cell border color
-                        bgHeader: "#262626",
-                        bgHeaderHasFocus: "#3B3B3B", // focused column
-                        accentColor: "blue", // selected cell border and header bg
-                        accentFg: "blue",
-                        accentLight: "#4682f166", // selected cell bg
-                        textHeader: "#C4C4C4", // header color
-                        textDark: "white", // text color dark mode
-                        textLight: "white", // text color light mode
-                        bgHeaderHovered: "red"
-                    }}
-                />
-            </Box>
+            <Table columns={columns} data={data} />
         </Box>
     );
 };
