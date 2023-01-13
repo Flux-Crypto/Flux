@@ -42,7 +42,7 @@ const useStyles = createStyles((theme) => ({
     logoutIcon: {
         color:
             theme.colorScheme === "dark"
-                ? theme.colors.tonal_gray[2]
+                ? theme.colors.cod_gray[2]
                 : theme.colors.gray[6],
         marginRight: theme.spacing.sm
     },
