@@ -279,7 +279,7 @@
           "type": "string",
           "default": ""
         },
-        "tag": {
+        "tags": {
           "type": "array",
           "items": {
             "type": "string"
@@ -294,7 +294,7 @@
         "hash": {
           "type": "string"
         },
-        "tag": {
+        "tags": {
           "type": "array",
           "items": {
             "type": "string"

@@ -55,6 +55,7 @@ module.exports = {
         "import/newline-after-import": "warn",
         "import/no-duplicates": "error",
         "@typescript-eslint/no-shadow": "warn",
+        "no-unused-vars": "off",
         "@typescript-eslint/no-unused-vars": [
             "warn",
             {

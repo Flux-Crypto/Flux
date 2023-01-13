@@ -99,7 +99,7 @@ export const ImportTransactionSchema = {
         type: "string",
         default: ""
     },
-    tag: {
+    tags: {
         type: "array",
         items: {
             type: "string"
@@ -116,7 +116,7 @@ export const ImportTransactionExample = {
     sentCurrency: "USD",
     feeAmount: 0.00001,
     feeCurrency: "BTC",
-    tag: ["PAYMENT"]
+    tags: ["PAYMENT"]
 };
 
 /**

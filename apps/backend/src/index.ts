@@ -32,7 +32,7 @@ const runServer = async () => {
     });
 
     await fastifyServer.register(cors, {
-        origin: NODE_ENV === "dev" ? "*" : process.env.HOSTNAME
+        origin: NODE_ENV === "dev" ? "*" : process.env.CLIENT_HOSTNAME
     });
     await fastifyServer.register(prismaPlugin);
     await fastifyServer.register(jwtAuthPlugin);
