@@ -27,9 +27,9 @@ const Transactions = () => {
         if (!session) return;
 
         if (isFetching) {
-            (async () => {
-                const { authToken } = session as UserSession;
-
+            const { authToken } = session as UserSession;
+            const fetchImportedTransactions = async () => {
+                // get imported txns
                 const response = await callAPI("/v1/transactions", authToken);
 
                 if (!response.ok) {
@@ -40,8 +40,23 @@ const Transactions = () => {
                 const transactionsData = await response.json();
 
                 setTransactions(transactionsData);
-                setFetching(false);
-            })();
+            };
+            const fetchBlockchainTransactions = async () => {
+                const response = await callAPI("/v1/user", authToken);
+                // get imported txns
+                const response = await callAPI("/v1/wallets", authToken);
+
+                if (!response.ok) {
+                    console.log(await response.text());
+                    return;
+                }
+
+                const transactionsData = await response.json();
+
+                setTransactions(transactionsData);
+            };
+
+            Promise.all([fetchImportedTransactions, fetchWallets])
         }
     }, [isFetching, session]);
 
@@ -53,12 +68,7 @@ const Transactions = () => {
                     overlayBlur={2}
                 />
 
-                {!isFetching && (
-                    <TransactionsTable
-                        data={transactions}
-                        rows={transactions.length}
-                    />
-                )}
+                {!isFetching && <TransactionsTable data={transactions} />}
             </Flex>
         </DashboardLayout>
     );

@@ -1,6 +1,14 @@
-import { Box, createStyles } from "@mantine/core";
+import {
+    Box,
+    Container,
+    Stack,
+    Text,
+    Title,
+    createStyles
+} from "@mantine/core";
 import { ImportTransaction } from "@prisma/client";
-import { ColumnDef } from "@tanstack/react-table";
+import { compareItems } from "@tanstack/match-sorter-utils";
+import { ColumnDef, SortingFn, sortingFns } from "@tanstack/react-table";
 import _ from "lodash";
 
 import { Transaction } from "@lib/types/api";
@@ -56,6 +64,21 @@ const FeeAmountCellWrapper = (props: any) => {
     );
 };
 
+const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
+    let dir = 0;
+
+    // Only sort by rank if the column has ranking information
+    if (rowA.columnFiltersMeta[columnId]) {
+        dir = compareItems(
+            rowA.columnFiltersMeta[columnId]?.itemRank!,
+            rowB.columnFiltersMeta[columnId]?.itemRank!
+        );
+    }
+
+    // Provide an alphanumeric fallback for when the item ranks are equal
+    return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir;
+};
+
 const useStyles = createStyles((_theme) => ({
     sizer: {
         flexGrow: 1,
@@ -67,7 +90,7 @@ const TransactionsTable = ({ data }: TransactionsTableProps) => {
     const { classes } = useStyles();
     const columns: ColumnDef<Transaction>[] = [
         {
-            header: "Id/Transaction Hash",
+            header: "ID / Transaction Hash",
             id: "id",
             accessorKey: "id",
             minSize: 0,
@@ -79,36 +102,65 @@ const TransactionsTable = ({ data }: TransactionsTableProps) => {
             header: "Date",
             id: "date",
             accessorKey: "date",
+            filterFn: "fuzzy",
             cell: DateCellWrapper
         },
         {
             header: "Received Amount",
             id: "receivedQuantity",
             accessorKey: "receivedQuantity",
+            accessorFn: (row) =>
+                `${row.receivedQuantity} ${row.receivedCurrency}`,
+            filterFn: "fuzzy",
+            sortingFn: fuzzySort,
             cell: ReceivedQuantityCellWrapper
         },
         {
             header: "Sent Amount",
             id: "sentQuantity",
             accessorKey: "sentQuantity",
+            accessorFn: (row) => `${row.sentQuantity} ${row.sentCurrency}`,
+            filterFn: "fuzzy",
+            sortingFn: fuzzySort,
             cell: SentQuantityCellWrapper
         },
         {
             header: "Fee",
             id: "feeAmount",
             accessorKey: "feeAmount",
+            accessorFn: (row) => `${row.feeAmount} ${row.feeCurrency}`,
+            filterFn: "fuzzy",
+            sortingFn: fuzzySort,
             cell: FeeAmountCellWrapper
         },
         {
             header: "Tag",
             id: "tag",
-            accessorKey: "tag"
+            accessorKey: "tag",
+            filterFn: "fuzzy",
+            accessorFn: (row) => `${row.tags[0]}`
         }
     ];
 
     return (
         <Box className={classes.sizer}>
-            <Table columns={columns} data={data} />
+            <Stack spacing="md">
+                <Box className="space-y-1">
+                    <Title order={3} m={0} color="gray.1">
+                        Transactions
+                    </Title>
+                    <Text fz="md" color="gray.5">
+                        View all account transactions
+                    </Text>
+                </Box>
+                <Table
+                    {...{
+                        columns,
+                        data,
+                        searchPlaceholder: "Search transactions..."
+                    }}
+                />
+            </Stack>
         </Box>
     );
 };

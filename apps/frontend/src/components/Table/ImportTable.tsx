@@ -1,15 +1,7 @@
-import { Box, Checkbox, Flex, createStyles } from "@mantine/core";
-import { ImportTransaction } from "@prisma/client";
+import { Box, Checkbox, Stack, createStyles } from "@mantine/core";
 import { ColumnDef } from "@tanstack/react-table";
 import _ from "lodash";
-import {
-    HTMLProps,
-    useContext,
-    useEffect,
-    useMemo,
-    useRef,
-    useState
-} from "react";
+import { useContext, useMemo } from "react";
 
 import { Transaction } from "@lib/types/api";
 import { ImportContext } from "@src/contexts/importContext";
@@ -94,7 +86,7 @@ const ImportTable = ({ data }: ImportTableProps) => {
                 // eslint-disable-next-line react/no-unstable-nested-components
                 header: ({ table }) => (
                     <Checkbox
-                        className="flex items-center"
+                        className="flex items-center !cursor-pointer"
                         checked={table.getIsAllRowsSelected()}
                         indeterminate={table.getIsSomeRowsSelected()}
                         onChange={table.getToggleAllRowsSelectedHandler()}
@@ -103,7 +95,7 @@ const ImportTable = ({ data }: ImportTableProps) => {
                 // eslint-disable-next-line react/no-unstable-nested-components
                 cell: ({ row }) => (
                     <Checkbox
-                        className="flex items-center"
+                        className="flex items-center !cursor-pointer"
                         checked={row.getIsSelected()}
                         indeterminate={row.getIsSomeSelected()}
                         onChange={row.getToggleSelectedHandler()}
@@ -145,7 +137,17 @@ const ImportTable = ({ data }: ImportTableProps) => {
 
     return (
         <Box className={classes.sizer}>
-            <Table {...{ rowSelection, setRowSelection, columns, data }} />
+            <Stack spacing="md">
+                <Table
+                    {...{
+                        rowSelection,
+                        setRowSelection,
+                        columns,
+                        data,
+                        searchPlaceholder: "Search transactions..."
+                    }}
+                />
+            </Stack>
         </Box>
     );
 };
