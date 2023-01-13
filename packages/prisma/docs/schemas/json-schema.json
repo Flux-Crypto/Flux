@@ -279,9 +279,11 @@
           "type": "string",
           "default": ""
         },
-        "tag": {
-          "type": "string",
-          "default": ""
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       },
       "required": []
@@ -292,9 +294,11 @@
         "hash": {
           "type": "string"
         },
-        "tag": {
-          "type": "string",
-          "default": ""
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       },
       "required": [

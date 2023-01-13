@@ -78,7 +78,6 @@ const Wallets = () => {
 
         const { authToken } = session as UserSession;
 
-        // TODO: replace HOSTNAME with env var
         const response = await callAPI(`/v1/wallets`, authToken, {
             method: "POST",
             body: JSON.stringify(values)

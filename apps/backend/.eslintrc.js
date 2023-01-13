@@ -6,6 +6,14 @@ module.exports = {
         project: ["./tsconfig.json"]
     },
     rules: {
-        "import/prefer-default-export": "warn"
+        "import/prefer-default-export": "warn",
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": [
+            "warn",
+            {
+                argsIgnorePattern: "^_",
+                caughtErrorsIgnorePattern: "^_"
+            }
+        ]
     }
 };

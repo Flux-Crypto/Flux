@@ -2,7 +2,8 @@ import {
     ChainTransactionExample,
     ImportTransactionExample,
     UserExample,
-    WalletExample
+    WalletExample,
+    WalletNameExample
 } from "@aurora/prisma/docs/schemas/apiSchema";
 import jsonSchema from "@aurora/prisma/docs/schemas/json-schema.json";
 
@@ -12,7 +13,7 @@ export const swaggerOptions = {
         info: {
             title: "Aurora API Docs",
             description: "API Documentation for Aurora",
-            version: "0.1.0"
+            version: "1.0.0"
         },
         servers: [
             {
@@ -41,6 +42,10 @@ export const swaggerOptions = {
                 Wallet: {
                     ...jsonSchema.definitions.Wallet,
                     example: WalletExample
+                },
+                WalletName: {
+                    ...jsonSchema.definitions.WalletName,
+                    example: WalletNameExample
                 },
                 ImportTransaction: {
                     ...jsonSchema.definitions.ImportTransaction,

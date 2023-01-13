@@ -47,12 +47,12 @@ type ImportTransaction {
     sentCurrency     String   @default("")
     feeAmount        Float    @default(0)
     feeCurrency      String   @default("")
-    tag              String   @default("")
+    tags             String[] @default([])
 }
 
 type ChainTransaction {
     hash String
-    tag  String @default("")
+    tags String[] @default([])
 }
 
 model User {
