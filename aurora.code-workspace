@@ -1,0 +1,16 @@
+{
+    "folders": [
+        {
+            "path": "."
+        },
+        {
+            "path": "./apps/backend"
+        },
+        {
+            "path": "./apps/frontend"
+        },
+        {
+            "path": "./packages/prisma"
+        }
+    ]
+}
