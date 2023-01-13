@@ -6,7 +6,7 @@ export interface Transaction {
     sentCurrency: string;
     feeAmount: number;
     feeCurrency: string;
-    tag: string;
+    tags: string[];
 }
 
 export interface UserWallet {

@@ -126,7 +126,7 @@ export const ChainTransactionSchema = {
     hash: {
         type: "string"
     },
-    tag: {
+    tags: {
         type: "array",
         items: {
             type: "string"
@@ -136,7 +136,7 @@ export const ChainTransactionSchema = {
 
 export const ChainTransactionExample = {
     hash: "0x839b28928a32459391db977632d7be2ce1cf93505ba2e19cdcf63bfe312ba062",
-    tag: ["AIRDROP"]
+    tags: ["AIRDROP"]
 };
 
 /**
