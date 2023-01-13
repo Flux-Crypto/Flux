@@ -2,5 +2,5 @@
     "watch": ["src", "docs", "../../packages/prisma/docs/schemas"],
     "ext": ".ts,.js,.json",
     "ignore": [],
-    "exec": "npx ts-node ./src/index.ts"
+    "exec": "npx ts-node ./src/server.ts"
 }
