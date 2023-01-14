@@ -10,7 +10,7 @@ interface MainLayoutProps {
 
 const MainLayout = ({ pageTitle, children }: MainLayoutProps) => (
     <>
-        <NextHead title={`Aurora | ${pageTitle}`} />
+        <NextHead title={`flux | ${pageTitle}`} />
         <AppShell padding="md">{children}</AppShell>
     </>
 );

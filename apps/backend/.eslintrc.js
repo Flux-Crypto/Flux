@@ -1,5 +1,5 @@
 module.exports = {
-    ...require("@aurora/eslint-config-custom/server"),
+    ...require("@flux/eslint-config-custom/server"),
     parserOptions: {
         root: true,
         tsconfigRootDir: __dirname,

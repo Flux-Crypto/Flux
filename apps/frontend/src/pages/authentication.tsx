@@ -102,7 +102,7 @@ const Authentication = () => {
                         mt="0.25rem"
                         mb={20}
                     >
-                        Welcome to Aurora
+                        Welcome to flux
                     </Text>
                     {error && (
                         <Alert
