@@ -1,12 +1,12 @@
 {
     "name": "frontend",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "scripts": {
         "dev": "doppler run next dev",
         "build": "doppler run next build",
         "start": "doppler run next start",
         "format": "npx prettier -w src/**/*.{ts,tsx}",
-        "lint": "npm run format && next lint --fix",
+        "lint": "next lint --fix",
         "storybook": "start-storybook -p 6006",
         "build-storybook": "build-storybook",
         "test-storybook": "test-storybook"

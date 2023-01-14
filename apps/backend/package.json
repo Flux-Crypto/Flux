@@ -1,19 +1,19 @@
 {
     "name": "backend",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "description": "",
     "main": "server.js",
     "scripts": {
         "format": "npx prettier -w src/**/*.ts",
-        "lint": "npm run format && npx eslint --ext .ts,.json --fix",
-        "local-test": "doppler run -- jest --watch -i",
+        "lint": "npx eslint --ext .ts,.json --fix",
+        "test:local": "doppler run -- jest --watch -i",
         "test": "jest -i --coverage",
         "build": "rimraf ./build && tsc",
         "start": "doppler run npm run build && node build/index.js",
         "open-docs": "run-script-os",
-        "open-docs:windows": "start http://localhost:8000/docs && start ./docs/index.html",
-        "open-docs:macos": "open http://localhost:8000/docs && open ./docs/index.html",
-        "dev": "npm run open-docs && doppler run npx nodemon"
+        "open-docs:windows": "start http://localhost:8000/docs & start ./docs/index.html",
+        "open-docs:macos": "open http://localhost:8000/docs & open ./docs/index.html",
+        "dev": "npm run open-docs & doppler run npx nodemon"
     },
     "repository": {
         "type": "git",
@@ -30,7 +30,7 @@
         "@fastify/cookie": "^8.3.0",
         "@fastify/cors": "^8.2.0",
         "@fastify/jwt": "^6.5.0",
-        "@flux/prisma": "^0.1.0",
+        "@flux/prisma": "*",
         "@prisma/client": "^4.8.0",
         "alchemy-sdk": "^2.2.5",
         "bcrypt": "^5.1.0",
