@@ -55,8 +55,16 @@ const baseRoute = (
                 return;
             }
 
+            const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+            if (!email.match(emailRegex)) {
+                const message = "Not a valid email";
+                log.error(message);
+                reply.code(HttpStatus.BAD_REQUEST).send(message);
+                return;
+            }
+
             try {
-                await prisma.user.upsert({
+                const user = await prisma.user.upsert({
                     where: { email },
                     update: {},
                     create: {
@@ -66,7 +74,7 @@ const baseRoute = (
                     }
                 });
 
-                reply.send();
+                reply.code(HttpStatus.CREATED).send(user);
             } catch (e) {
                 if (e instanceof PrismaClientKnownRequestError) {
                     log.fatal(e);

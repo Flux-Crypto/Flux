@@ -2,16 +2,17 @@
     "name": "backend",
     "version": "0.1.0",
     "description": "",
-    "main": "index.js",
+    "main": "server.js",
     "scripts": {
         "format": "npx prettier -w src/**/*.ts",
         "lint": "npm run format && npx eslint --ext .ts,.json --fix",
-        "test": "echo \"Error: no test specified\" && exit 1",
+        "local-test": "doppler run -- jest --watch -i",
+        "test": "doppler run -- jest -i",
+        "build": "rimraf ./build && tsc",
         "start": "doppler run npm run build && node build/index.js",
         "open_docs_win": "start http://localhost:8000/docs && start ./docs/index.html",
         "open_docs_mac": "open http://localhost:8000/docs && open ./docs/index.html",
-        "dev": "doppler run npx nodemon",
-        "build": "rimraf ./build && tsc"
+        "dev": "doppler run npx nodemon"
     },
     "repository": {
         "type": "git",
@@ -53,6 +54,8 @@
         "@fastify/swagger-ui": "^1.3.0",
         "@types/lodash": "^4.14.191",
         "@types/node": "^18.11.18",
+        "jest-mock-extended": "^3.0.1",
+        "jsonwebtoken": "^9.0.0",
         "prisma": "^4.8.0",
         "prisma-docs-generator": "^0.5.0",
         "prisma-json-schema-generator": "^3.1.1",

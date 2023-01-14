@@ -14,7 +14,7 @@ import { env } from "process";
 
 import { apiKeyAuthPlugin, jwtAuthPlugin, prismaPlugin } from "@plugins/index";
 
-import { envToLogger } from "@lib/logger";
+import envToLogger from "@lib/logger";
 import { swaggerOptions, swaggerUIOptions } from "@lib/swaggerOptions";
 import { FastifyDone } from "@lib/types/fastifyTypes";
 import explorer from "@routes/explorer";
@@ -23,25 +23,25 @@ import user from "@routes/user";
 import users from "@routes/users";
 import wallets from "@routes/wallets";
 
-const runServer = async () => {
+const app = () => {
     // TODO: fix `Type 'undefined' cannot be used as an index type`
-    const NODE_ENV = env.DOPPLER_ENVIRONMENT as "dev" | "stg" | "prd";
+    const NODE_ENV = env.DOPPLER_ENVIRONMENT as "dev" | "test" | "stg" | "prd";
 
     const fastifyServer = fastify({
         logger: envToLogger[NODE_ENV] ?? true
     });
 
-    await fastifyServer.register(cors, {
+    fastifyServer.register(cors, {
         origin: NODE_ENV === "dev" ? "*" : process.env.CLIENT_HOSTNAME
     });
-    await fastifyServer.register(prismaPlugin);
-    await fastifyServer.register(jwtAuthPlugin);
-    await fastifyServer.register(apiKeyAuthPlugin);
-    await fastifyServer.register(authPlugin);
+    fastifyServer.register(prismaPlugin);
+    fastifyServer.register(jwtAuthPlugin);
+    fastifyServer.register(apiKeyAuthPlugin);
+    fastifyServer.register(authPlugin);
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore:next-line
-    await fastifyServer.register(swagger, swaggerOptions);
-    await fastifyServer.register(swaggerUI, swaggerUIOptions);
+    fastifyServer.register(swagger, swaggerOptions);
+    fastifyServer.register(swaggerUI, swaggerUIOptions);
 
     fastifyServer.register(
         (
@@ -65,14 +65,7 @@ const runServer = async () => {
         async (_request: FastifyRequest, _reply: FastifyReply) => "pong\n"
     );
 
-    await fastifyServer.ready();
-    fastifyServer.listen({ port: 8000 }, (err, address) => {
-        if (err) {
-            fastifyServer.log.fatal(err);
-            process.exit(1);
-        }
-        fastifyServer.log.debug(`Server err at ${address}`);
-    });
+    return fastifyServer;
 };
 
-runServer();
+export default app;
