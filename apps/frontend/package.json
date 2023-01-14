@@ -79,12 +79,12 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/tot/flux.git"
+        "url": "git+https://github.com/flux-crypto/flux/.git"
     },
     "author": "",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/tot/flux/issues"
+        "url": "https://github.com/flux-crypto/flux/issues"
     },
-    "homepage": "https://github.com/tot/flux#readme"
+    "homepage": "https://github.com/flux-crypto/flux/#readme"
 }

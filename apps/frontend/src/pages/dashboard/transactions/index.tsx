@@ -42,7 +42,7 @@ const Transactions = () => {
                 setTransactions(transactionsData);
             };
             const fetchBlockchainTransactions = async () => {
-                const response = await callAPI("/v1/user", authToken);
+                // const response = await callAPI("/v1/user", authToken);
                 // get imported txns
                 const response = await callAPI("/v1/wallets", authToken);
 
@@ -56,7 +56,7 @@ const Transactions = () => {
                 setTransactions(transactionsData);
             };
 
-            Promise.all([fetchImportedTransactions, fetchWallets])
+            Promise.all([fetchImportedTransactions, fetchWallets]);
         }
     }, [isFetching, session]);
 

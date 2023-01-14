@@ -1,6 +1,6 @@
-# flux
+# Flux
 
-Making crypto finances accessible for businesses.
+Supercharging crypto financial management for businesses
 
 ## Services and Technologies
 
