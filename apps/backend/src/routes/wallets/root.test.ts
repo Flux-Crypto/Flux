@@ -3,9 +3,9 @@ import { stubUser } from "@test/modelStubs";
 
 import HttpStatus from "@lib/types/httpStatus";
 
-const route = "/v1/user";
+const route = "/v1/wallets";
 
-describe(`GET ${route}`, () => {
+describe.only(`GET ${route}`, () => {
     test("returns Bad Request for unauthorized request", async () => {
         const res = await callAPI(app, route, { auth: false });
 
@@ -20,15 +20,25 @@ describe(`GET ${route}`, () => {
         expect(res.statusMessage).toBe("OK");
     });
 
-    test("returns the associated user", async () => {
+    test("returns wallets associated with user", async () => {
+        const { prisma } = app;
+        await prisma.wallet.create({
+            data: {
+                address: "0x95222290dd7278aa3ddd389cc1e1d165cc4bafe5",
+                rdUsers: {
+                    connect: { id: testUser.data.id }
+                }
+            }
+        });
+
         const res = await callAPI(app, route);
-        const { data } = await res.json();
+        const data = await res.json();
 
         expect(data).toBeInstanceOf(Object);
-        expect(data).toMatchObject(testUser.data);
-        expect(data.apiKey).toBeFalsy();
-        expect(data.exchangeAPIKeys).toHaveLength(0);
-        expect(data.processorAPIKeys).toHaveLength(0);
+        expect(data).toHaveProperty("rdWallets");
+        expect(data.rdWallets).toHaveLength(1);
+        expect(data).toHaveProperty("rdwrWallets");
+        expect(data.rdwrWallets).toHaveLength(0);
     });
 });
 

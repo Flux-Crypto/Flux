@@ -24,11 +24,11 @@ To develop the API, here are a few steps to get started:
 
     Update the `types/jsonObjects.ts` file to include the new route.
 
-> Optional: If you want to see the API live, make sure the backend server is running with the following command (from the root directory):
+    > Optional: If you want to see the API live, make sure the backend server is running with the following command (from the root directory):
 
-```sh
-    npm run dev:backend
-```
+    ```sh
+        npm run dev:backend
+    ```
 
 Before starting the server, make sure the above script uses the appropriate `open_docs` script. For Windows, use `open_docs_win`, and for MacOS, use `open_docs_mac`.
 
@@ -44,33 +44,36 @@ To work on the database, here's how to get started:
 
 1. Update the `prisma/schema.prisma` file, modifying whatever you need to.
 
-> Optional: Run the following command (from the project root directory) to open Prisma Studio and view the live database:
+    > Optional: Run the following command (from the project root directory) to open Prisma Studio and view the live database:
 
-```sh
-    npm run studio
-```
+    ```sh
+        npm run studio
+    ```
 
 2. Run the following command (from the project root directory) to commit your changes to the Prisma schema:
 
-```sh
-    npm run reset
-```
+    ```sh
+        npm run reset
+    ```
 
 3. Update the Swagger schema in `docs/schemas/apiSchema.ts` to reflect the model changes. If it's a new model, then create a new schema and corresponding example.
 
 4. If it's a new model, create a new file for it under the respective route name where it's used. Be sure to add it to `docs/options.ts` within the following object:
 
-```js
-    export const swaggerOptions = {
-        openapi: {
-            ...
-            components: {
-                schemas: {
-                    // TODO: new model here
+    ```js
+        export const swaggerOptions = {
+            openapi: {
+                ...
+                components: {
+                    schemas: {
+                        // TODO: new model here
+                    }
                 }
-            }
-        },
-        hideUntagged: true
-    };
-```
+            },
+            hideUntagged: true
+        };
+    ```
 
+### Resources
+
+- [Fastify/Jest Testing](https://dev.to/thenodemann/setup-a-fastify-app-with-jest-tests-the-right-way-43ih)

@@ -12,6 +12,25 @@ import {
     WalletsRequestPutBody
 } from "@lib/types/routeOptions";
 
+const flattenWallets = (
+    wallets: {
+        address: string;
+        seedPhrase?: string;
+        walletNames: {
+            name: string;
+        }[];
+    }[]
+) =>
+    _.map(wallets, (wallet) =>
+        _.omit(
+            {
+                ...wallet,
+                name: wallet.walletNames[0] && wallet.walletNames[0].name
+            },
+            "walletNames"
+        )
+    );
+
 const baseRoute = (
     server: FastifyInstance,
     {
@@ -69,34 +88,8 @@ const baseRoute = (
                     }
                 });
 
-                if (!user) {
-                    const message = "Couldn't find user!";
-                    log.error(message);
-                    reply.code(HttpStatus.NOT_FOUND).send(message);
-                    return;
-                }
-
-                const { rdWallets, rdwrWallets } = user;
-                const flattenWallets = (
-                    wallets: {
-                        address: string;
-                        seedPhrase?: string;
-                        walletNames: {
-                            name: string;
-                        }[];
-                    }[]
-                ) =>
-                    _.map(wallets, (wallet) =>
-                        _.omit(
-                            {
-                                ...wallet,
-                                name:
-                                    wallet.walletNames[0] &&
-                                    wallet.walletNames[0].name
-                            },
-                            "walletNames"
-                        )
-                    );
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                const { rdWallets, rdwrWallets } = user!;
 
                 reply.send({
                     rdWallets: flattenWallets(rdWallets),

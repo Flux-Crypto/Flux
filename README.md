@@ -31,7 +31,7 @@ To add new dependencies, run the following command based on the desired workspac
 npm install <package> -w <workspace>
 ```
 
-### Doppler 
+### Doppler
 
 Doppler is the secrets manager for this application. Make sure you get invited to the Doppler team to have access to the secrets. Log in with Doppler as follows:
 

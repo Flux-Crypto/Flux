@@ -25,10 +25,12 @@ type HTTPMethods =
 
 export const testUser = {
     data: {
-        email: "test@aurora.crypto",
-        apiKey: "abcdef12345"
+        id: "63c24e670b17d5516e0cb49c",
+        email: "test@aurora.crypto"
     }
 };
+
+// TODO: add an option for testUser with apiKey?
 
 let token: string;
 
@@ -67,8 +69,6 @@ export const callAPI = (
 };
 
 const setupDB = async (prisma: PrismaClient) => {
-    await reset(prisma);
-
     /* simulate an active session with a test user and fake JWT */
     const { id } = await prisma.user.create(testUser);
 
@@ -88,10 +88,15 @@ const build = () => {
         await fastifyApp.listen();
 
         const { prisma } = fastifyApp;
+        await reset(prisma);
         await setupDB(prisma);
     });
 
-    afterAll(() => fastifyApp.close());
+    afterAll(async () => {
+        const { prisma } = fastifyApp;
+        await reset(prisma);
+        fastifyApp.close();
+    });
 
     return fastifyApp;
 };

@@ -18,6 +18,9 @@ jobs:
             matrix:
                 node_version: ["16"]
                 os: [ubuntu-latest, windows-latest, macos-latest]
+        # * replace with env vars and secrets, continue to update going forward
+        # env/with:
+        #   DB_URL: ${{ secrets.DB_URL }}
         environment: test
         steps:
             - name: Clone Repository
