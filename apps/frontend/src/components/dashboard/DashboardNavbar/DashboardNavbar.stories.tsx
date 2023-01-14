@@ -14,14 +14,12 @@ export const Loading = Template.bind({});
 
 Loading.args = {
     name: "",
-    email: "",
-    status: "loading"
+    email: ""
 };
 
 export const Authenticated = Template.bind({});
 
 Authenticated.args = {
     name: "John Doe",
-    email: "johndoe@email.com",
-    status: "authenticated"
+    email: "johndoe@email.com"
 };

@@ -1,5 +1,5 @@
 import { Button, Code, Flex, Modal, Text, TextInput } from "@mantine/core";
-import { notEmpty, useForm } from "@mantine/form";
+import { isNotEmpty, useForm } from "@mantine/form";
 import {
     IconEdit,
     IconEraser,
@@ -83,7 +83,7 @@ const WalletModal = ({
         },
 
         validate: {
-            walletName: notEmpty("Invalid name"),
+            walletName: isNotEmpty("Invalid name"),
             seedPhrase: (value) =>
                 !value || ethers.utils.isValidMnemonic(value)
                     ? null

@@ -58,7 +58,7 @@ const useStyles = createStyles((theme) => ({
     }
 }));
 
-interface UserButtonProps extends UnstyledButtonProps {
+export interface UserButtonProps extends UnstyledButtonProps {
     image: string;
     name: string;
     email: string;
@@ -90,13 +90,13 @@ const UserButton = ({ image, name, email, ...others }: UserButtonProps) => {
             </Menu.Target>
             <Menu.Dropdown className={classes.dropdown}>
                 <Menu.Label>Navigation</Menu.Label>
-                {NavigationLinks.map((navigation) => (
+                {NavigationLinks.map(({ href, text, icon: Icon }) => (
                     <Menu.Item
-                        icon={<navigation.icon size={14} />}
-                        onClick={() => router.push(navigation.href)}
-                        key={navigation.text}
+                        icon={<Icon size={14} />}
+                        onClick={() => router.push(href)}
+                        key={text}
                     >
-                        {navigation.text}
+                        {text}
                     </Menu.Item>
                 ))}
                 <Menu.Divider className={classes.dropdown} />

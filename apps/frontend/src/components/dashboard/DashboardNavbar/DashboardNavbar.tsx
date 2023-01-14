@@ -1,10 +1,7 @@
 import {
     Avatar,
-    Button,
     Code,
-    Flex,
     Group,
-    LoadingOverlay,
     Navbar,
     ScrollArea,
     createStyles
@@ -13,17 +10,15 @@ import {
     IconAdjustments,
     IconDashboard,
     IconLock,
-    IconLogout,
     IconReceipt,
     IconWallet,
     IconZoomCode
 } from "@tabler/icons";
-import { signOut, useSession } from "next-auth/react";
 
-import LinksGroup from "./LinksGroup";
-import UserButton from "./UserButton";
+import LinksGroup from "../../global/LinksGroup/LinksGroup";
+import UserButton from "../UserButton/UserButton";
 
-const mockdata = [
+const navbarLinks = [
     { label: "Dashboard", icon: IconDashboard },
     {
         label: "Wallets",
@@ -104,12 +99,15 @@ const useStyles = createStyles((theme) => ({
     }
 }));
 
-const DashboardNavbar = () => {
+export interface DashboardNavbarProps {
+    name: string;
+    email: string;
+}
+
+const DashboardNavbar = ({ name, email }: DashboardNavbarProps) => {
     const { classes } = useStyles();
 
-    const { data: session, status } = useSession();
-
-    const links = mockdata.map((item) => (
+    const links = navbarLinks.map((item) => (
         <LinksGroup {...item} key={item.label} />
     ));
 
@@ -122,8 +120,6 @@ const DashboardNavbar = () => {
                 </Group>
             </Navbar.Section>
 
-            <LoadingOverlay visible={status === "loading"} overlayBlur={2} />
-
             <Navbar.Section
                 grow
                 className={classes.links}
@@ -135,11 +131,7 @@ const DashboardNavbar = () => {
             <Navbar.Section className={classes.footer}>
                 <UserButton
                     image="https://images.unsplash.com/photo-1589254065909-b7086229d08c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3087&q=80"
-                    name={
-                        `${session?.user?.firstName} ${session?.user?.lastName}` ||
-                        ""
-                    }
-                    email={session?.user?.email || ""}
+                    {...{ name, email }}
                 />
             </Navbar.Section>
         </Navbar>

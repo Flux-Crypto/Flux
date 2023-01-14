@@ -1,6 +1,6 @@
 import { Flex, createStyles } from "@mantine/core";
 
-import Breadcrumbs from "./Breadcrumbs";
+import Breadcrumbs from "../Breadcrumbs/Breadcrumbs";
 
 const useStyles = createStyles((theme) => ({
     header: {
