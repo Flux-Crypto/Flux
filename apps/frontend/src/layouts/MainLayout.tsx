@@ -23,7 +23,7 @@ const MainLayout = ({ pageTitle, children }: MainLayoutProps) => {
     const { classes } = useStyles();
     return (
         <>
-            <NextHead title={`Aurora | ${pageTitle}`} />
+            <NextHead title={`Flux | ${pageTitle}`} />
             <Box bg="cod_gray.8" className={classes.body}>
                 <AppShell padding={0} className={classes.shell}>
                     {children}

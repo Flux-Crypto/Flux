@@ -4,15 +4,15 @@ import {
     UserExample,
     WalletExample,
     WalletNameExample
-} from "@aurora/prisma/docs/schemas/apiSchema";
-import jsonSchema from "@aurora/prisma/docs/schemas/json-schema.json";
+} from "@flux/prisma/docs/schemas/apiSchema";
+import jsonSchema from "@flux/prisma/docs/schemas/json-schema.json";
 
 export const swaggerOptions = {
     openapi: {
         openapi: "3.0.3",
         info: {
-            title: "Aurora API Docs",
-            description: "API Documentation for Aurora",
+            title: "flux API Docs",
+            description: "API Documentation for flux",
             version: "1.0.0"
         },
         servers: [

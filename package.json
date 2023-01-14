@@ -1,7 +1,7 @@
 {
-    "name": "aurora",
+    "name": "flux",
     "version": "1.0.0",
-    "description": "crypto finances made accessible for businesses.",
+    "description": "supercharged crypto finances for businesses.",
     "main": "index.js",
     "workspaces": [
         "apps/*",
@@ -16,19 +16,19 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "dev:frontend": "npm run dev --workspace=frontend",
         "dev:backend": "npm run dev --workspace=backend",
-        "reset": "npm run reset --workspace=@aurora/prisma",
-        "studio": "npm run studio --workspace=@aurora/prisma"
+        "reset": "npm run reset --workspace=@flux/prisma",
+        "studio": "npm run studio --workspace=@flux/prisma"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/tot/aurora.git"
+        "url": "git+https://github.com/tot/flux.git"
     },
     "author": "",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/tot/aurora/issues"
+        "url": "https://github.com/tot/flux/issues"
     },
-    "homepage": "https://github.com/tot/aurora#readme",
+    "homepage": "https://github.com/tot/flux#readme",
     "devDependencies": {
         "@prisma/client": "^4.8.1",
         "prisma": "^4.8.1",

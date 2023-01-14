@@ -1,4 +1,4 @@
-# Aurora
+# flux
 
 Making crypto finances accessible for businesses.
 

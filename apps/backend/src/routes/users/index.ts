@@ -1,4 +1,4 @@
-import IndexSchema from "@aurora/prisma/docs/schemas/users";
+import IndexSchema from "@flux/prisma/docs/schemas/users";
 import { FastifyInstance, FastifyServerOptions } from "fastify";
 
 import { FastifyDone } from "@lib/types/fastifyTypes";

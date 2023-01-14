@@ -1,4 +1,4 @@
-import TransactionsSchema from "@aurora/prisma/docs/schemas/transactions";
+import TransactionsSchema from "@flux/prisma/docs/schemas/transactions";
 import { FastifyInstance, FastifyServerOptions } from "fastify";
 
 import { FastifyDone } from "@lib/types/fastifyTypes";

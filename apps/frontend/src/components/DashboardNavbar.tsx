@@ -117,7 +117,7 @@ const DashboardNavbar = () => {
         <Navbar width={{ sm: 250 }} px="md" pt="md" className={classes.navbar}>
             <Navbar.Section className={classes.header}>
                 <Group position="apart">
-                    <Avatar alt="Aurora Logo" />
+                    <Avatar alt="flux Logo" />
                     <Code sx={{ fontWeight: 700 }}>v1.0.0</Code>
                 </Group>
             </Navbar.Section>

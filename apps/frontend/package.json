@@ -11,7 +11,7 @@
         "build-storybook": "build-storybook"
     },
     "dependencies": {
-        "@aurora/prisma": "*",
+        "@flux/prisma": "*",
         "@emotion/react": "^11.10.5",
         "@emotion/server": "^11.10.0",
         "@emotion/styled": "^11.10.5",
@@ -58,8 +58,8 @@
         "wallet-address-validator": "^0.2.4"
     },
     "devDependencies": {
-        "@aurora/eslint-config-custom": "*",
-        "@aurora/prettier-config-custom": "*",
+        "@flux/eslint-config-custom": "*",
+        "@flux/prettier-config-custom": "*",
         "@babel/core": "^7.20.7",
         "@storybook/addon-actions": "^6.5.15",
         "@storybook/addon-essentials": "^6.5.15",
@@ -79,12 +79,12 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/tot/aurora.git"
+        "url": "git+https://github.com/tot/flux.git"
     },
     "author": "",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/tot/aurora/issues"
+        "url": "https://github.com/tot/flux/issues"
     },
-    "homepage": "https://github.com/tot/aurora#readme"
+    "homepage": "https://github.com/tot/flux#readme"
 }

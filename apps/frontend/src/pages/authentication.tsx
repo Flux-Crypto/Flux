@@ -98,7 +98,7 @@ const Authentication = () => {
             <Container size={420} mt="8rem">
                 <Paper withBorder className={classes.form} radius="md" p={30}>
                     <Title className={classes.title} align="center">
-                        Welcome to Aurora
+                        Welcome to Flux
                     </Title>
                     <Text
                         className={classes.subtext}
