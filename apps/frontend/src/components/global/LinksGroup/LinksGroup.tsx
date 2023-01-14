@@ -63,7 +63,7 @@ const useStyles = createStyles((theme) => ({
     }
 }));
 
-interface LinksGroupProps {
+export interface LinksGroupProps {
     icon: TablerIcon;
     label: string;
     initiallyOpened?: boolean;
@@ -78,8 +78,10 @@ const LinksGroup = ({
 }: LinksGroupProps) => {
     const { classes, theme } = useStyles();
     const [opened, setOpened] = useState(initiallyOpened);
+
     const ChevronIcon =
         theme.dir === "ltr" ? IconChevronRight : IconChevronLeft;
+
     const items = links.map((link) => (
         <Anchor<typeof Link>
             component={Link}

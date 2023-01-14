@@ -18,7 +18,9 @@
         "dev:backend": "npm run dev --workspace=backend",
         "generate": "npm run generate --workspace=@flux/prisma",
         "reset": "npm run reset --workspace=@flux/prisma",
-        "studio": "npm run studio --workspace=@flux/prisma"
+        "studio": "npm run studio --workspace=@flux/prisma",
+        "storybook": "start-storybook -p 6006",
+        "build-storybook": "build-storybook"
     },
     "repository": {
         "type": "git",
@@ -33,6 +35,16 @@
     "devDependencies": {
         "@prisma/client": "^4.8.1",
         "prisma": "^4.8.1",
-        "prisma-docs-generator": "^0.5.0"
+        "prisma-docs-generator": "^0.5.0",
+        "@babel/core": "^7.20.12",
+        "@storybook/addon-actions": "^6.5.15",
+        "@storybook/addon-essentials": "^6.5.15",
+        "@storybook/addon-interactions": "^6.5.15",
+        "@storybook/addon-links": "^6.5.15",
+        "@storybook/builder-webpack5": "^6.5.15",
+        "@storybook/manager-webpack5": "^6.5.15",
+        "@storybook/react": "^6.5.15",
+        "@storybook/testing-library": "^0.0.13",
+        "babel-loader": "^8.3.0"
     }
 }

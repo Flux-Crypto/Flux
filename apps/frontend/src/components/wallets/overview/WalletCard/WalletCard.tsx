@@ -22,7 +22,7 @@ import { useContext, useState } from "react";
 import { ManageContext, ModalModes } from "@src/contexts/manageContext";
 import { UserWallet } from "@src/lib/types/api";
 
-interface WalletCardProps extends UserWallet {
+export interface WalletCardProps extends UserWallet {
     walletAccess: "read-only" | "read-write";
 }
 
