@@ -25,14 +25,6 @@ export interface UsersPutRequestBody {
 }
 
 /**
- *  /users?id=<userId>&email=<email>
- */
-export interface UserRequestQuery {
-    id?: string;
-    email?: string;
-}
-
-/**
  * /transactions/:transactionId
  */
 export interface TransactionsRequestParams {

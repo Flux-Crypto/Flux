@@ -14,7 +14,7 @@ import { env } from "process";
 
 import { apiKeyAuthPlugin, jwtAuthPlugin, prismaPlugin } from "@plugins/index";
 
-import { envToLogger } from "@lib/logger";
+import envToLogger from "@lib/logger";
 import { swaggerOptions, swaggerUIOptions } from "@lib/swaggerOptions";
 import { FastifyDone } from "@lib/types/fastifyTypes";
 import explorer from "@routes/explorer";
@@ -25,7 +25,7 @@ import wallets from "@routes/wallets";
 
 const app = () => {
     // TODO: fix `Type 'undefined' cannot be used as an index type`
-    const NODE_ENV = env.DOPPLER_ENVIRONMENT as "dev" | "stg" | "prd";
+    const NODE_ENV = env.DOPPLER_ENVIRONMENT as "dev" | "test" | "stg" | "prd";
 
     const fastifyServer = fastify({
         logger: envToLogger[NODE_ENV] ?? true

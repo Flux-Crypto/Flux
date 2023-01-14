@@ -5,7 +5,7 @@ import _ from "lodash";
 import { FastifyDone, JWT } from "@lib/types/fastifyTypes";
 import HttpStatus from "@lib/types/httpStatus";
 import { UserBaseSchema } from "@lib/types/jsonObjects";
-import { UserRequestQuery, UsersPutRequestBody } from "@lib/types/routeOptions";
+import { UsersPutRequestBody } from "@lib/types/routeOptions";
 
 const baseRoute = (
     server: FastifyInstance,

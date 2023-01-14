@@ -12,5 +12,13 @@
         {
             "path": "./packages/prisma"
         }
-    ]
+    ],
+    "settings": {
+        "jest.disabledWorkspaceFolders": [
+            "prisma",
+            "frontend",
+            "backend",
+            "aurora"
+        ]
+    }
 }
