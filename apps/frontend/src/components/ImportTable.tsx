@@ -48,7 +48,7 @@ const ImportTable = ({ data }: TableSelectionProps) => {
             sentCurrency,
             feeAmount,
             feeCurrency,
-            tag
+            tags
         }) => {
             const selected = selection.includes(idx);
             return (

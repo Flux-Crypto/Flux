@@ -1,52 +1,75 @@
-import { Container, LoadingOverlay } from "@mantine/core";
+import { Container, Flex, LoadingOverlay, createStyles } from "@mantine/core";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 import callAPI from "@lib/callAPI";
 import { UserSession } from "@lib/types/auth";
-import DashboardLayout from "@src/layouts/DashboardLayout";
 
-import TransactionsTable from "@components/TransactionsTable";
+import TransactionsTable from "@components/Table/TransactionsTable";
+import DashboardLayout from "@layouts/DashboardLayout";
+
+const useStyles = createStyles((theme) => ({
+    container: {
+        display: "flex",
+        flexGrow: 1,
+        height: "100%"
+    }
+}));
 
 const Transactions = () => {
     const { data: session, status } = useSession();
 
-    const [isFetching, setFetching] = useState(false);
+    const [isFetching, setFetching] = useState(true);
     const [transactions, setTransactions] = useState([]);
+    const { classes } = useStyles();
 
     useEffect(() => {
         if (!session) return;
 
-        setFetching(true);
-
-        (async () => {
+        if (isFetching) {
             const { authToken } = session as UserSession;
+            const fetchImportedTransactions = async () => {
+                // get imported txns
+                const response = await callAPI("/v1/transactions", authToken);
 
-            const response = await callAPI("/v1/transactions", authToken);
+                if (!response.ok) {
+                    console.log(await response.text());
+                    return;
+                }
 
-            setFetching(false);
+                const transactionsData = await response.json();
 
-            if (!response.ok) {
-                console.log(await response.text());
-                return;
-            }
+                setTransactions(transactionsData);
+            };
+            const fetchBlockchainTransactions = async () => {
+                // const response = await callAPI("/v1/user", authToken);
+                // get imported txns
+                const response = await callAPI("/v1/wallets", authToken);
 
-            const transactionsData = await response.json();
+                if (!response.ok) {
+                    console.log(await response.text());
+                    return;
+                }
 
-            setTransactions(transactionsData);
-        })();
-    }, [session]);
+                const transactionsData = await response.json();
+
+                setTransactions(transactionsData);
+            };
+
+            Promise.all([fetchImportedTransactions, fetchWallets]);
+        }
+    }, [isFetching, session]);
 
     return (
         <DashboardLayout pageTitle="Transactions">
-            <Container>
+            <Flex className={classes.container}>
                 <LoadingOverlay
                     visible={status === "loading" || isFetching}
                     overlayBlur={2}
                 />
 
-                <TransactionsTable data={transactions} />
-            </Container>
+                {!isFetching && <TransactionsTable data={transactions} />}
+            </Flex>
         </DashboardLayout>
     );
 };

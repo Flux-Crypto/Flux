@@ -1,13 +1,28 @@
 import {
     Avatar,
     Group,
+    Menu,
     Text,
     UnstyledButton,
     UnstyledButtonProps,
     createStyles
 } from "@mantine/core";
-import { IconChevronRight } from "@tabler/icons";
-import { ReactNode } from "react";
+import { IconLogout, IconSettings, IconUsers } from "@tabler/icons";
+import { signOut } from "next-auth/react";
+import { useRouter } from "next/router";
+
+const NavigationLinks = [
+    {
+        icon: IconUsers,
+        text: "Organizations",
+        href: "/dashboard/organizations"
+    },
+    {
+        icon: IconSettings,
+        text: "Settings",
+        href: "/dashboard/settings"
+    }
+];
 
 const useStyles = createStyles((theme) => ({
     user: {
@@ -20,9 +35,26 @@ const useStyles = createStyles((theme) => ({
         "&:hover": {
             backgroundColor:
                 theme.colorScheme === "dark"
-                    ? theme.colors.dark[8]
+                    ? theme.colors.cod_gray[8]
                     : theme.colors.gray[0]
         }
+    },
+    logoutIcon: {
+        color:
+            theme.colorScheme === "dark"
+                ? theme.colors.cod_gray[2]
+                : theme.colors.gray[6],
+        marginRight: theme.spacing.sm
+    },
+    dropdown: {
+        backgroundColor:
+            theme.colorScheme === "dark"
+                ? theme.colors.cod_gray[8]
+                : theme.colors.gray[6],
+        borderColor:
+            theme.colorScheme === "dark"
+                ? theme.colors.cod_gray[6]
+                : theme.colors.gray[6]
     }
 }));
 
@@ -30,41 +62,54 @@ interface UserButtonProps extends UnstyledButtonProps {
     image: string;
     name: string;
     email: string;
-    icon?: ReactNode;
 }
 
-const UserButton = ({
-    image,
-    name,
-    email,
-    icon,
-    ...others
-}: UserButtonProps) => {
+const UserButton = ({ image, name, email, ...others }: UserButtonProps) => {
     const { classes } = useStyles();
+    const router = useRouter();
 
     return (
-        <UnstyledButton className={classes.user} {...others}>
-            <Group>
-                <Avatar src={image} radius="xl" />
+        <Menu shadow="md" width={200} position="top" withArrow>
+            <Menu.Target>
+                <UnstyledButton className={classes.user} {...others}>
+                    <Group>
+                        <Avatar src={image} radius="xl" />
 
-                <div style={{ flex: 1 }}>
-                    <Text size="sm" weight={500}>
-                        {name}
-                    </Text>
+                        <div style={{ flex: 1 }}>
+                            <Text size="sm" weight={500}>
+                                {name}
+                            </Text>
 
-                    <Text color="dimmed" size="xs">
-                        {email}
-                    </Text>
-                </div>
-
-                {icon || <IconChevronRight size={14} stroke={1.5} />}
-            </Group>
-        </UnstyledButton>
+                            <Text color="dimmed" size="xs">
+                                {email}
+                            </Text>
+                        </div>
+                        {/* TODO: Add badge for user role */}
+                    </Group>
+                </UnstyledButton>
+            </Menu.Target>
+            <Menu.Dropdown className={classes.dropdown}>
+                <Menu.Label>Navigation</Menu.Label>
+                {NavigationLinks.map((navigation) => (
+                    <Menu.Item
+                        icon={<navigation.icon size={14} />}
+                        onClick={() => router.push(navigation.href)}
+                        key={navigation.text}
+                    >
+                        {navigation.text}
+                    </Menu.Item>
+                ))}
+                <Menu.Divider className={classes.dropdown} />
+                <Menu.Item
+                    color="red"
+                    icon={<IconLogout size={14} />}
+                    onClick={() => signOut()}
+                >
+                    Log out
+                </Menu.Item>
+            </Menu.Dropdown>
+        </Menu>
     );
-};
-
-UserButton.defaultProps = {
-    icon: null
 };
 
 export default UserButton;

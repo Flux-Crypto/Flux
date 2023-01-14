@@ -46,7 +46,7 @@ const parseCSV = (csvData: string) => {
             sentCurrency: rawTxn[4] || "",
             feeAmount: parseFloat(rawTxn[5]) || 0,
             feeCurrency: rawTxn[6] || "",
-            tag: (rawTxn[7] || "").toUpperCase()
+            tags: [(rawTxn[7] || "").toUpperCase()]
         };
 
         txns.push(txn);

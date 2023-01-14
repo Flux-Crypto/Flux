@@ -11,8 +11,8 @@ export const swaggerOptions = {
     openapi: {
         openapi: "3.0.3",
         info: {
-            title: "flux API Docs",
-            description: "API Documentation for flux",
+            title: "Flux API Docs",
+            description: "API Documentation for Flux",
             version: "1.0.0"
         },
         servers: [

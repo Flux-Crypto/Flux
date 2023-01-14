@@ -1,7 +1,9 @@
-import { Flex } from "@mantine/core";
+import { Box, Container, Flex, Title, createStyles } from "@mantine/core";
 import { ReactNode } from "react";
 
 import DashboardNavbar from "@src/components/DashboardNavbar";
+
+import Header from "@components/Header";
 
 import MainLayout from "./MainLayout";
 
@@ -10,13 +12,39 @@ interface DashboardLayoutProps {
     children: ReactNode;
 }
 
-const DashboardLayout = ({ pageTitle, children }: DashboardLayoutProps) => (
-    <MainLayout {...{ pageTitle }}>
-        <DashboardNavbar />
-        <Flex h="100%" justify="center" align="center">
-            {children}
-        </Flex>
-    </MainLayout>
-);
+const useStyles = createStyles((theme) => ({
+    parent: {
+        flexGrow: 1,
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        width: "100%"
+    },
+    children: {
+        flexGrow: 1,
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        width: "100%",
+        padding: theme.spacing.md
+    }
+}));
+
+const DashboardLayout = ({ pageTitle, children }: DashboardLayoutProps) => {
+    const { classes } = useStyles();
+    return (
+        <MainLayout {...{ pageTitle }}>
+            <DashboardNavbar />
+            <Box className={classes.parent}>
+                <Header />
+                <Flex className={classes.children}>{children}</Flex>
+            </Box>
+            <div
+                id="portal"
+                style={{ position: "fixed", left: 0, top: 0, zIndex: 9999 }}
+            />
+        </MainLayout>
+    );
+};
 
 export default DashboardLayout;
