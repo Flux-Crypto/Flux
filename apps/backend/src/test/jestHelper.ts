@@ -1,4 +1,4 @@
-import { reset } from "@aurora/prisma/src/helpers";
+import { reset } from "@flux/prisma/src/helpers";
 import { PrismaClient } from "@prisma/client";
 import { FastifyInstance } from "fastify";
 // eslint-disable-next-line import/no-extraneous-dependencies

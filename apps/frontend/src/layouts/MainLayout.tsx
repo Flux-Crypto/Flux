@@ -1,18 +1,36 @@
-import { AppShell } from "@mantine/core";
+import { AppShell, Box, createStyles } from "@mantine/core";
 import { ReactNode } from "react";
 
-import NextHead from "@src/components/Head";
+import NextHead from "@src/components/global/Head/Head";
 
 interface MainLayoutProps {
     pageTitle: string;
     children: ReactNode;
 }
 
-const MainLayout = ({ pageTitle, children }: MainLayoutProps) => (
-    <>
-        <NextHead title={`Aurora | ${pageTitle}`} />
-        <AppShell padding="md">{children}</AppShell>
-    </>
-);
+const useStyles = createStyles((theme) => ({
+    body: {
+        display: "flex"
+    },
+    shell: {
+        display: "flex",
+        flexGrow: 1,
+        height: "100%"
+    }
+}));
+
+const MainLayout = ({ pageTitle, children }: MainLayoutProps) => {
+    const { classes } = useStyles();
+    return (
+        <>
+            <NextHead title={`Flux | ${pageTitle}`} />
+            <Box bg="cod_gray.8" className={classes.body}>
+                <AppShell padding={0} className={classes.shell}>
+                    {children}
+                </AppShell>
+            </Box>
+        </>
+    );
+};
 
 export default MainLayout;

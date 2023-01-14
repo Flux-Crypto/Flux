@@ -1,10 +1,10 @@
 /**
  * /users
  */
-import TransactionsBaseSchemaJSON from "@aurora/prisma/docs/schemas/transactions";
-import UserBaseSchemaJSON from "@aurora/prisma/docs/schemas/user";
-import UsersBaseSchemaJSON from "@aurora/prisma/docs/schemas/users";
-import WalletsBaseSchemaJSON from "@aurora/prisma/docs/schemas/wallets";
+import TransactionsBaseSchemaJSON from "@flux/prisma/docs/schemas/transactions";
+import UserBaseSchemaJSON from "@flux/prisma/docs/schemas/user";
+import UsersBaseSchemaJSON from "@flux/prisma/docs/schemas/users";
+import WalletsBaseSchemaJSON from "@flux/prisma/docs/schemas/wallets";
 
 export type UsersBaseSchema = typeof UsersBaseSchemaJSON;
 export type UserBaseSchema = typeof UserBaseSchemaJSON;

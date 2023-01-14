@@ -1,4 +1,4 @@
-import * as Prisma from "@aurora/prisma";
+import * as Prisma from "@flux/prisma";
 import { PrismaClient } from "@prisma/client";
 import { FastifyPluginAsync } from "fastify";
 import fp from "fastify-plugin";

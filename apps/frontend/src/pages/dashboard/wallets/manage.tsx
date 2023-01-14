@@ -13,12 +13,12 @@ import { useSession } from "next-auth/react";
 import { useEffect, useMemo, useState } from "react";
 
 import { UserSession } from "@lib/types/auth";
-import WalletModal from "@src/components/WalletModal";
+import WalletCard from "@src/components/wallets/overview/WalletCard/WalletCard";
+import WalletModal from "@src/components/wallets/overview/WalletModal/WalletModal";
 import { ManageContext, ModalData } from "@src/contexts/manageContext";
 import callAPI from "@src/lib/callAPI";
 import { UserWallet, UserWallets } from "@src/lib/types/api";
 
-import WalletCard from "@components/WalletCard";
 import DashboardLayout from "@layouts/DashboardLayout";
 
 interface WalletGridProps {

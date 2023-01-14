@@ -1,5 +1,5 @@
 {
-    "name": "@aurora/prettier-config-custom",
+    "name": "@flux/prettier-config-custom",
     "version": "0.1.0",
     "main": "index.js",
     "devDependencies": {

@@ -1,30 +1,14 @@
+name: CI Testing
 on:
     push:
         branches:
             - staging
-            - dev
+            - main
     pull_request:
         branches:
             - dev
-    workflow_dispatch:
-        inputs:
-            logLevel:
-                description: "Log level"
-                required: true
-                default: "warning"
-                type: choice
-                options:
-                    - info
-                    - warning
-                    - debug
-            tags:
-                description: "Test scenario tags"
-                required: false
-                type: boolean
-            environment:
-                description: "Environment to run tests against"
-                type: environment
-                required: true
+            - staging
+            - main
 
 jobs:
     test:
@@ -33,7 +17,8 @@ jobs:
         strategy:
             matrix:
                 node_version: ["16"]
-                os: [ubuntu-latest, windows-latest, macOS-latest]
+                os: [ubuntu-latest, windows-latest, macos-latest]
+        environment: test
         steps:
             - name: Clone Repository
               uses: actions/checkout@v3
@@ -41,14 +26,28 @@ jobs:
               uses: actions/setup-node@v3
               with:
                   node-version: ${{ matrix.node_version }}
-            - name: Install and Format
+            - name: Install
               run: |
                   echo ""
-                  echo "Installing dependencies..."
+                  echo "📥 Installing dependencies..."
                   npm install
                   echo ""
-                  echo "Formatting backend..."
-                  npm run lint:backend
+                  echo "🛠️ Building Prisma..."
+                  npm run build:prisma
                   echo ""
-                  echo "Formatting frontend..."
-                  npm run lint:frontend
+                  echo "🧱 Generating Prisma schema..."
+                  npm run generate
+            - name: Format and Lint
+              run: |
+                  echo ""
+                  echo "🧹 Formatting..."
+                  npm run format
+                  echo "🧼 Linting..."
+                  npm run lint
+            - name: Test
+              run: |
+                  echo ""
+                  echo "🔬 Testing backend API..."
+                  echo ""
+                  echo "⏳ Please hold. This might take a while..."
+                  npm test

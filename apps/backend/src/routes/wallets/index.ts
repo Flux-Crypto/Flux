@@ -1,4 +1,4 @@
-import WalletsSchema from "@aurora/prisma/docs/schemas/wallets";
+import WalletsSchema from "@flux/prisma/docs/schemas/wallets";
 import { FastifyInstance, FastifyServerOptions } from "fastify";
 
 import { FastifyDone } from "@lib/types/fastifyTypes";

@@ -1,35 +1,36 @@
 {
     "name": "backend",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "description": "",
     "main": "server.js",
     "scripts": {
         "format": "npx prettier -w src/**/*.ts",
-        "lint": "npm run format && npx eslint --ext .ts,.json --fix",
-        "local-test": "doppler run -- jest --watch -i",
-        "test": "doppler run -- jest -i",
+        "lint": "npx eslint --ext .ts,.json --fix",
+        "test:local": "doppler run -- jest --watch -i",
+        "test": "jest -i --coverage",
         "build": "rimraf ./build && tsc",
         "start": "doppler run npm run build && node build/index.js",
-        "open_docs_win": "start http://localhost:8000/docs && start ./docs/index.html",
-        "open_docs_mac": "open http://localhost:8000/docs && open ./docs/index.html",
-        "dev": "doppler run npx nodemon"
+        "open-docs": "run-script-os",
+        "open-docs:windows": "start http://localhost:8000/docs & start ./docs/index.html",
+        "open-docs:macos": "open http://localhost:8000/docs & open ./docs/index.html",
+        "dev": "npm run open-docs & doppler run npx nodemon"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/tot/aurora.git"
+        "url": "git+https://github.com/flux-crypto/flux.git"
     },
     "author": "",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/tot/aurora/issues"
+        "url": "https://github.com/flux-crypto/flux/issues"
     },
-    "homepage": "https://github.com/tot/aurora#readme",
+    "homepage": "https://github.com/flux-crypto/flux#readme",
     "dependencies": {
-        "@aurora/prisma": "^0.1.0",
         "@fastify/auth": "^4.2.0",
         "@fastify/cookie": "^8.3.0",
         "@fastify/cors": "^8.2.0",
         "@fastify/jwt": "^6.5.0",
+        "@flux/prisma": "*",
         "@prisma/client": "^4.8.0",
         "alchemy-sdk": "^2.2.5",
         "bcrypt": "^5.1.0",
@@ -48,10 +49,10 @@
         "web3": "^1.8.1"
     },
     "devDependencies": {
-        "@aurora/eslint-config-custom": "*",
-        "@aurora/prettier-config-custom": "*",
         "@fastify/swagger": "^8.2.1",
         "@fastify/swagger-ui": "^1.3.0",
+        "@flux/eslint-config-custom": "*",
+        "@flux/prettier-config-custom": "*",
         "@types/lodash": "^4.14.191",
         "@types/node": "^18.11.18",
         "jest-mock-extended": "^3.0.1",
@@ -60,6 +61,7 @@
         "prisma-docs-generator": "^0.5.0",
         "prisma-json-schema-generator": "^3.1.1",
         "rimraf": "^3.0.2",
+        "run-script-os": "^1.1.6",
         "ts-node": "^10.9.1",
         "tsconfig-paths": "^4.1.1"
     }

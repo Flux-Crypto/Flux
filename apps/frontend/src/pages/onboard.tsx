@@ -1,7 +1,5 @@
 import {
     Alert,
-    AppShell,
-    Box,
     Button,
     Container,
     Flex,
@@ -18,8 +16,8 @@ import { getSession, signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-import callAPI from "@src/lib/callAPI";
-import { UserSession } from "@src/lib/types/auth";
+import callAPI from "@lib/callAPI";
+import { UserSession } from "@lib/types/auth";
 
 import MainLayout from "@layouts/MainLayout";
 
@@ -85,14 +83,10 @@ const Landing = () => {
         if (session) {
             const { authToken, user } = session as UserSession;
 
-            const response = await callAPI(
-                `http://localhost:8000/api/v1/user`,
-                authToken,
-                {
-                    method: "PUT",
-                    body: JSON.stringify(values)
-                }
-            );
+            const response = await callAPI(`/v1/user`, authToken, {
+                method: "PUT",
+                body: JSON.stringify(values)
+            });
 
             if (response.ok) {
                 signIn("refresh-session", {
@@ -108,68 +102,63 @@ const Landing = () => {
 
     return (
         <MainLayout pageTitle="Onboard">
-            <AppShell padding="md">
-                <Flex h="100%" justify="center">
-                    <Container size={480} mt="8rem">
-                        <Paper
-                            withBorder
-                            className={classes.form}
-                            radius="md"
-                            p={30}
+            <Flex h="100%" justify="center" bg="slate-black.9">
+                <Container size={480} mt="8rem">
+                    <Paper
+                        withBorder
+                        className={classes.form}
+                        radius="md"
+                        p={30}
+                    >
+                        <Title className={classes.title} align="center" mt="md">
+                            Nice to meet you
+                        </Title>
+                        <Text
+                            className={classes.subtext}
+                            color="gray"
+                            align="center"
+                            mt="0.25rem"
+                            mb={20}
+                            c="slate_black.5"
                         >
-                            <Title
-                                className={classes.title}
-                                align="center"
+                            To get started, tell us about yourself.
+                        </Text>
+                        {error && (
+                            <Alert
+                                icon={<IconAlertCircle size={16} />}
+                                title="Something went wrong!"
+                                color="red"
                                 mt="md"
+                                mb="md"
                             >
-                                Nice to meet you
-                            </Title>
-                            <Text
-                                className={classes.subtext}
-                                color="gray"
-                                align="center"
-                                mt="0.25rem"
-                                mb={20}
-                                c="gray.6"
-                            >
-                                To get started, tell us about yourself.
-                            </Text>
-                            {error && (
-                                <Alert
-                                    icon={<IconAlertCircle size={16} />}
-                                    title="Something went wrong!"
-                                    color="red"
-                                    mt="md"
-                                >
-                                    {error}
-                                </Alert>
-                            )}
-                            <form onSubmit={form.onSubmit(submitHandler)}>
-                                <TextInput
-                                    label="First name"
-                                    placeholder="John"
-                                    {...form.getInputProps("firstName")}
-                                />
-                                <TextInput
-                                    label="Last name"
-                                    placeholder="Doe"
-                                    mt="md"
-                                    {...form.getInputProps("lastName")}
-                                />
+                                {error}
+                            </Alert>
+                        )}
+                        <form onSubmit={form.onSubmit(submitHandler)}>
+                            <TextInput
+                                label="First name"
+                                placeholder="John"
+                                {...form.getInputProps("firstName")}
+                            />
+                            <TextInput
+                                label="Last name"
+                                placeholder="Doe"
+                                mt="md"
+                                {...form.getInputProps("lastName")}
+                            />
 
-                                <Button
-                                    type="submit"
-                                    fullWidth
-                                    mt="xl"
-                                    disabled={!form.isValid()}
-                                >
-                                    Complete account setup
-                                </Button>
-                            </form>
-                        </Paper>
-                    </Container>
-                </Flex>
-            </AppShell>
+                            <Button
+                                type="submit"
+                                fullWidth
+                                mt="xl"
+                                disabled={!form.isValid()}
+                            >
+                                Complete account setup
+                            </Button>
+                        </form>
+                    </Paper>
+                </Container>
+            </Flex>
         </MainLayout>
     );
 };
