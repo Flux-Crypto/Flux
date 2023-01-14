@@ -26,9 +26,9 @@ import { UserSession } from "@lib/types/auth";
 import { ImportContext } from "@src/contexts/importContext";
 import { Transaction } from "@src/lib/types/api";
 
-import CSVImport from "@components/CSVImport";
 // import ImportTable from "@components/ImportTable";
 import ImportTable from "@components/Table/ImportTable";
+import CSVImport from "@components/transactions/import/CSVImport/CSVImport";
 import DashboardLayout from "@layouts/DashboardLayout";
 
 const Import = () => {
@@ -48,8 +48,8 @@ const Import = () => {
         setFetching(true);
 
         const { authToken } = session as UserSession;
+
         const keys = Object.keys(rowSelection);
-        console.log(transactions);
         const payload = _.filter(transactions, (_val: any, index: number) =>
             keys.includes(index.toString())
         );

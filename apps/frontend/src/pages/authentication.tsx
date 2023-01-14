@@ -35,7 +35,7 @@ const useStyles = createStyles((theme) => ({
     subtext: {
         color:
             theme.colorScheme === "dark"
-                ? theme.colors.slate_black[4]
+                ? theme.colors.cod_gray[4]
                 : theme.black,
         fontFamily: `Greycliff CF, ${theme.fontFamily}`,
         fontSize: "1rem"

@@ -3,14 +3,14 @@ import { FastifyInstance, FastifyServerOptions } from "fastify";
 
 import { FastifyDone } from "@lib/types/fastifyTypes";
 
-import baseRoute from "./base";
+import rootRoute from "./root";
 
 const users = (
     server: FastifyInstance,
     _opts: FastifyServerOptions,
     done: FastifyDone
 ) => {
-    server.register(baseRoute, IndexSchema);
+    server.register(rootRoute, IndexSchema);
 
     done();
 };

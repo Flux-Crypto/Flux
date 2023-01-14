@@ -1,4 +1,4 @@
-export const envToLogger = {
+export default {
     dev: {
         transport: {
             target: "pino-pretty",
@@ -9,16 +9,27 @@ export const envToLogger = {
             }
         }
     },
+    test: {
+        transport: {
+            target: "pino-pretty",
+            options: {
+                translateTime: "yyyy-dd-mm, h:MM:ss TT",
+                ignore: "pid,hostname",
+                colorize: true
+            }
+        },
+        level: "warn"
+    },
     stg: {
         transport: {
             target: "pino-pretty",
             options: {
                 translateTime: "yyyy-dd-mm, h:MM:ss TT",
                 ignore: "pid,hostname",
-                colorize: true,
-                level: "warn"
+                colorize: true
             }
-        }
+        },
+        level: "warn"
     },
     prd: {
         transport: {
@@ -26,10 +37,9 @@ export const envToLogger = {
             options: {
                 translateTime: "yyyy-dd-mm, h:MM:ss TT",
                 ignore: "pid,hostname",
-                colorize: true,
-                level: "warn"
+                colorize: true
             }
-        }
-    },
-    test: false
+        },
+        level: "warn"
+    }
 };

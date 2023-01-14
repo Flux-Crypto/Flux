@@ -1,0 +1,24 @@
+{
+    "folders": [
+        {
+            "path": "."
+        },
+        {
+            "path": "./apps/backend"
+        },
+        {
+            "path": "./apps/frontend"
+        },
+        {
+            "path": "./packages/prisma"
+        }
+    ],
+    "settings": {
+        "jest.disabledWorkspaceFolders": [
+            "prisma",
+            "frontend",
+            "backend",
+            "flux"
+        ]
+    }
+}
