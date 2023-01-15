@@ -6,7 +6,7 @@ import HttpStatus from "@lib/types/httpStatus";
 import { UsersBaseSchema } from "@lib/types/jsonObjects";
 import { UsersPostRequestBody } from "@lib/types/routeOptions";
 
-const baseRoute = (
+const rootRoute = (
     server: FastifyInstance,
     { get: getSchema, post: postSchema }: UsersBaseSchema,
     done: FastifyDone
@@ -94,4 +94,4 @@ const baseRoute = (
     done();
 };
 
-export default baseRoute;
+export default rootRoute;

@@ -7,7 +7,7 @@ import HttpStatus from "@lib/types/httpStatus";
 import { UserBaseSchema } from "@lib/types/jsonObjects";
 import { UsersPutRequestBody } from "@lib/types/routeOptions";
 
-const baseRoute = (
+const rootRoute = (
     server: FastifyInstance,
     { get: getSchema, put: putSchema }: UserBaseSchema,
     done: FastifyDone
@@ -103,4 +103,4 @@ const baseRoute = (
     done();
 };
 
-export default baseRoute;
+export default rootRoute;

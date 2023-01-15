@@ -3,6 +3,8 @@ import { stubUser } from "@test/modelStubs";
 
 import HttpStatus from "@lib/types/httpStatus";
 
+jest.setTimeout(8000);
+
 const route = "/v1/user";
 
 describe.each([

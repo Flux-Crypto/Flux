@@ -9,7 +9,7 @@ import {
     TransactionsRequestParams
 } from "@lib/types/routeOptions";
 
-const baseRoute = (
+const rootRoute = (
     server: FastifyInstance,
     {
         get: getSchema,
@@ -161,4 +161,4 @@ const baseRoute = (
     done();
 };
 
-export default baseRoute;
+export default rootRoute;

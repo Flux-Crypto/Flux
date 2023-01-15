@@ -3,14 +3,14 @@ import { FastifyInstance, FastifyServerOptions } from "fastify";
 
 import { FastifyDone } from "@lib/types/fastifyTypes";
 
-import baseRoute from "./base";
+import rootRoute from "./root";
 
 const transactions = (
     server: FastifyInstance,
     _opts: FastifyServerOptions,
     done: FastifyDone
 ) => {
-    server.register(baseRoute, TransactionsSchema);
+    server.register(rootRoute, TransactionsSchema);
 
     done();
 };

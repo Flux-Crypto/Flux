@@ -2,14 +2,14 @@ import { FastifyInstance, FastifyServerOptions } from "fastify";
 
 import { FastifyDone } from "@lib/types/fastifyTypes";
 
-import baseRoute from "./base";
+import rootRoute from "./root";
 
 const wallet = (
     server: FastifyInstance,
     _opts: FastifyServerOptions,
     done: FastifyDone
 ) => {
-    server.register(baseRoute);
+    server.register(rootRoute);
 
     done();
 };
