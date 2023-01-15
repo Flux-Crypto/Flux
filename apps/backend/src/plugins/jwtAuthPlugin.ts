@@ -1,13 +1,13 @@
 import jwtAuth from "@fastify/jwt";
 import {
     FastifyInstance,
+    FastifyPluginAsync,
     FastifyReply,
     FastifyRequest,
     FastifyServerOptions
 } from "fastify";
 import fp from "fastify-plugin";
 
-import { FastifyDone } from "@lib/types/fastifyTypes";
 import HttpStatus from "@lib/types/httpStatus";
 
 declare module "fastify" {
@@ -16,12 +16,8 @@ declare module "fastify" {
     }
 }
 
-const jwtAuthPlugin = fp(
-    async (
-        fastify: FastifyInstance,
-        _opts: FastifyServerOptions,
-        done: FastifyDone
-    ) => {
+const jwtAuthPlugin: FastifyPluginAsync = fp(
+    async (fastify: FastifyInstance, _opts: FastifyServerOptions) => {
         fastify.register(jwtAuth, {
             secret: process.env.NEXTAUTH_SECRET as string
         });
@@ -38,8 +34,6 @@ const jwtAuthPlugin = fp(
                 }
             }
         );
-
-        done();
     }
 );
 

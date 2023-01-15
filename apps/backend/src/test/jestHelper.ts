@@ -93,6 +93,8 @@ const createUsers = async (prisma: PrismaClient) => {
 
 const app = () => {
     const fastifyApp = build();
+    console.log(process.env.DB_URL !== undefined);
+    console.log(process.env.DB_URL);
 
     beforeAll(async () => {
         await fastifyApp.ready();
