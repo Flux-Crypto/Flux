@@ -9,7 +9,7 @@ const runServer = async () => {
             fastifyApp.log.fatal(err);
             process.exit(1);
         }
-        fastifyApp.log.debug(`Server err at ${address}`);
+        fastifyApp.log.debug(`Server listening at ${address}`);
     });
 };
 
