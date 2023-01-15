@@ -2,6 +2,7 @@ import {
     Alert,
     Button,
     Container,
+    Flex,
     Modal,
     Paper,
     Text,
@@ -20,7 +21,7 @@ import MainLayout from "@layouts/MainLayout";
 const useStyles = createStyles((theme) => ({
     form: {
         maxWidth: 450,
-
+        backgroundColor: theme.colors.cod_gray[7],
         [`@media (max-width: ${theme.breakpoints.sm}px)`]: {
             maxWidth: "100%"
         }
@@ -29,16 +30,14 @@ const useStyles = createStyles((theme) => ({
     title: {
         color: theme.colorScheme === "dark" ? theme.white : theme.black,
         fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-        fontSize: "1.75rem"
+        fontSize: "1.5rem"
     },
 
     subtext: {
         color:
-            theme.colorScheme === "dark"
-                ? theme.colors.cod_gray[4]
-                : theme.black,
+            theme.colorScheme === "dark" ? theme.colors.gray[5] : theme.black,
         fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-        fontSize: "1rem"
+        fontSize: "0.9rem"
     },
 
     link: {
@@ -92,11 +91,18 @@ const Authentication = () => {
                 title="Check your inbox!"
             >
                 <Text size="sm">
-                    Click the magic link in your email to sign in to Aurora.
+                    Click the magic link in your email to sign in to Flux.
                 </Text>
             </Modal>
-            <Container size={420} mt="8rem">
-                <Paper withBorder className={classes.form} radius="md" p={30}>
+            <Flex align="center" justify="center" h="100%" mt="-4rem">
+                <Paper
+                    withBorder
+                    maw="22rem"
+                    w="100%"
+                    className={classes.form}
+                    radius="sm"
+                    p={30}
+                >
                     <Title className={classes.title} align="center">
                         Welcome to Flux
                     </Title>
@@ -106,7 +112,7 @@ const Authentication = () => {
                         mt="0.25rem"
                         mb={20}
                     >
-                        Beta user access
+                        Join the next era of crypto financial management
                     </Text>
                     {error && (
                         <Alert
@@ -135,7 +141,7 @@ const Authentication = () => {
                         </Button>
                     </form>
                 </Paper>
-            </Container>
+            </Flex>
         </MainLayout>
     );
 };

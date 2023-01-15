@@ -33,6 +33,7 @@ export interface UserSession extends Session {
         id: string;
         firstName: string;
         lastName: string;
+        image: string;
     };
     authToken: string;
 }

@@ -37,7 +37,8 @@ const useStyles = createStyles((theme) => ({
     },
 
     subtext: {
-        color: theme.colorScheme === "dark" ? theme.white : theme.black,
+        color:
+            theme.colorScheme === "dark" ? theme.colors.gray[5] : theme.black,
         fontFamily: `Greycliff CF, ${theme.fontFamily}`,
         fontSize: "1rem"
     },
@@ -102,15 +103,15 @@ const Landing = () => {
 
     return (
         <MainLayout pageTitle="Onboard">
-            <Flex h="100%" justify="center" bg="slate-black.9">
-                <Container size={480} mt="8rem">
+            <Flex h="100%" justify="center" align="center" bg="slate-black.9">
+                <Container w="100%" maw="24rem" mt="-8rem">
                     <Paper
                         withBorder
                         className={classes.form}
                         radius="md"
                         p={30}
                     >
-                        <Title className={classes.title} align="center" mt="md">
+                        <Title className={classes.title} align="center" mt="sm">
                             Nice to meet you
                         </Title>
                         <Text
