@@ -1,4 +1,5 @@
 import { reset } from "@flux/prisma/src/helpers";
+import { PrismaClient } from "@prisma/client";
 import { FastifyInstance } from "fastify";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import jwt from "jsonwebtoken";
@@ -6,7 +7,7 @@ import { env } from "process";
 
 import app from "../app";
 
-type HTTPMethods =
+export type HTTPMethods =
     | "DELETE"
     | "delete"
     | "GET"
@@ -25,7 +26,14 @@ type HTTPMethods =
 export const testUser = {
     data: {
         id: "63c24e670b17d5516e0cb49c",
-        email: "test@aurora.crypto"
+        email: "test@flux.crypto"
+    }
+};
+
+export const testDummy = {
+    data: {
+        id: "63c381109d3cb4056b0d6a47",
+        email: "dummy@flux.crypto"
     }
 };
 
@@ -76,6 +84,13 @@ export const callAPI = (
     });
 };
 
+const createUsers = async (prisma: PrismaClient) => {
+    /* simulate an active session with a test user and fake JWT */
+    const createTestUser = prisma.user.create(testUser);
+    const createTestDummy = prisma.user.create(testDummy);
+    await prisma.$transaction([createTestUser, createTestDummy]);
+};
+
 const build = () => {
     const fastifyApp = app();
 
@@ -84,15 +99,13 @@ const build = () => {
 
         const { prisma } = fastifyApp;
         await reset(prisma);
-        /* simulate an active session with a test user and fake JWT */
-        await prisma.user.create(testUser);
+        await createUsers(prisma);
     });
 
     beforeEach(async () => {
         const { prisma } = fastifyApp;
         await reset(prisma);
-        /* simulate an active session with a test user and fake JWT */
-        await prisma.user.create(testUser);
+        await createUsers(prisma);
     });
 
     afterAll(async () => {

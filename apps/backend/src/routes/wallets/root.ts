@@ -380,23 +380,50 @@ const baseRoute = (
             const { id } = (request.user as JWT).user;
 
             const { walletAddress } = request.params as WalletsRequestParams;
-            if (!walletAddress) {
-                const message = "Invalid seed phrase mnemonic";
+            if (!ethers.utils.isAddress(walletAddress)) {
+                const message = "Invalid wallet address";
                 log.error(message);
                 reply.code(HttpStatus.BAD_REQUEST).send(message);
                 return;
             }
 
             try {
-                const { rdUsers, rdwrUsers } = await prisma.wallet.update({
+                const user = await prisma.user.findUnique({
+                    where: {
+                        id
+                    },
+                    select: {
+                        rdWalletAddresses: true
+                    }
+                });
+
+                if (!user) {
+                    const message = "Couldn't find user!";
+                    log.error(message);
+                    reply.code(HttpStatus.NOT_FOUND).send(message);
+                    return;
+                }
+
+                const { rdWalletAddresses } = user;
+                const isReadOnly = rdWalletAddresses.includes(walletAddress);
+
+                await prisma.user.update({
+                    where: {
+                        id
+                    },
+                    data: {
+                        [isReadOnly ? "rdWallets" : "rdwrWallets"]: {
+                            disconnect: [{ address: walletAddress }]
+                        }
+                    }
+                });
+
+                const { rdUserIds, rdwrUserIds } = await prisma.wallet.update({
                     where: {
                         address: walletAddress
                     },
                     data: {
-                        rdUsers: {
-                            disconnect: [{ id }]
-                        },
-                        rdwrUsers: {
+                        [isReadOnly ? "rdUsers" : "rdwrUsers"]: {
                             disconnect: [{ id }]
                         },
                         walletNames: {
@@ -407,12 +434,12 @@ const baseRoute = (
                         }
                     },
                     select: {
-                        rdUsers: true,
-                        rdwrUsers: true
+                        rdUserIds: true,
+                        rdwrUserIds: true
                     }
                 });
 
-                if (!rdUsers && !rdwrUsers) {
+                if (!rdUserIds.length && !rdwrUserIds.length) {
                     await prisma.wallet.delete({
                         where: {
                             address: walletAddress
