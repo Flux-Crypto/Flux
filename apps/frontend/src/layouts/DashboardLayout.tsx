@@ -1,10 +1,8 @@
 import { Box, Flex, createStyles } from "@mantine/core";
-import { useSession } from "next-auth/react";
 import { ReactNode } from "react";
 
 import DashboardNavbar from "@src/components/dashboard/DashboardNavbar/DashboardNavbar";
 import Header from "@src/components/dashboard/Header/Header";
-import { UserSession } from "@src/lib/types/auth";
 
 import MainLayout from "./MainLayout";
 
@@ -33,19 +31,9 @@ const useStyles = createStyles((theme) => ({
 const DashboardLayout = ({ pageTitle, children }: DashboardLayoutProps) => {
     const { classes } = useStyles();
 
-    const { data: session, status } = useSession();
-
-    if (status === "loading") {
-        return null;
-    }
-
-    const {
-        user: { firstName, lastName, email }
-    } = session as UserSession;
-
     return (
         <MainLayout {...{ pageTitle }}>
-            <DashboardNavbar name={`${firstName} ${lastName}`} {...{ email }} />
+            <DashboardNavbar />
             <Box className={classes.parent}>
                 <Header />
                 <Flex className={classes.children}>{children}</Flex>

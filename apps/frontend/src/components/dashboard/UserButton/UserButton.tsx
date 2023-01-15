@@ -4,12 +4,13 @@ import {
     Menu,
     Text,
     UnstyledButton,
-    UnstyledButtonProps,
     createStyles
 } from "@mantine/core";
 import { IconLogout, IconSettings, IconUsers } from "@tabler/icons";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+
+import { UserSession } from "@lib/types/auth";
 
 const NavigationLinks = [
     {
@@ -58,33 +59,42 @@ const useStyles = createStyles((theme) => ({
     }
 }));
 
-export interface UserButtonProps extends UnstyledButtonProps {
-    image: string;
-    name: string;
-    email: string;
-}
-
-const UserButton = ({ image, name, email, ...others }: UserButtonProps) => {
+const UserButton = () => {
     const { classes } = useStyles();
     const router = useRouter();
+    const { data: session, status } = useSession();
+
+    if (status === "loading") {
+        return null;
+    }
+
+    const {
+        user: { firstName, lastName, email, image }
+    } = session as UserSession;
 
     return (
         <Menu shadow="md" width={200} position="top" withArrow>
             <Menu.Target>
-                <UnstyledButton className={classes.user} {...others}>
+                <UnstyledButton className={classes.user}>
                     <Group>
-                        <Avatar src={image} radius="xl" />
+                        <Avatar
+                            src={
+                                image ??
+                                "https://images.unsplash.com/photo-1589254065909-b7086229d08c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3087&q=80"
+                            }
+                            radius="xl"
+                        />
 
                         <div style={{ flex: 1 }}>
                             <Text size="sm" weight={500}>
-                                {name}
+                                {firstName} {lastName}
                             </Text>
 
                             <Text color="dimmed" size="xs">
                                 {email}
                             </Text>
                         </div>
-                        {/* TODO: Add badge for user role */}
+                        {/* // TODO: Add badge for user role */}
                     </Group>
                 </UnstyledButton>
             </Menu.Target>

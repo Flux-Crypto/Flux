@@ -15,8 +15,8 @@ import {
     IconZoomCode
 } from "@tabler/icons";
 
-import LinksGroup from "../../global/LinksGroup/LinksGroup";
-import UserButton from "../UserButton/UserButton";
+import UserButton from "@components/dashboard/UserButton/UserButton";
+import LinksGroup from "@components/global/LinksGroup/LinksGroup";
 
 const navbarLinks = [
     { label: "Dashboard", icon: IconDashboard },
@@ -36,7 +36,14 @@ const navbarLinks = [
             { label: "Import", link: "/transactions/import" }
         ]
     },
-    { label: "Explorer", icon: IconZoomCode },
+    {
+        label: "Explorer",
+        icon: IconZoomCode,
+        links: [
+            { label: "Wallet", link: "/explorer/wallet" },
+            { label: "Transaction", link: "/explorer/transaction" }
+        ]
+    },
     { label: "Settings", icon: IconAdjustments },
     {
         label: "Security",
@@ -99,12 +106,7 @@ const useStyles = createStyles((theme) => ({
     }
 }));
 
-export interface DashboardNavbarProps {
-    name: string;
-    email: string;
-}
-
-const DashboardNavbar = ({ name, email }: DashboardNavbarProps) => {
+const DashboardNavbar = () => {
     const { classes } = useStyles();
 
     const links = navbarLinks.map((item) => (
@@ -129,10 +131,7 @@ const DashboardNavbar = ({ name, email }: DashboardNavbarProps) => {
             </Navbar.Section>
 
             <Navbar.Section className={classes.footer}>
-                <UserButton
-                    image="https://images.unsplash.com/photo-1589254065909-b7086229d08c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3087&q=80"
-                    {...{ name, email }}
-                />
+                <UserButton />
             </Navbar.Section>
         </Navbar>
     );
