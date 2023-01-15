@@ -1,31 +1,30 @@
 import {
-    AssetTransfersCategory,
-    AssetTransfersResult,
-    SortingOrder
-} from "alchemy-sdk";
-import {
     FastifyInstance,
     FastifyReply,
     FastifyRequest,
     FastifyServerOptions
 } from "fastify";
 import _ from "lodash";
+import Web3 from "web3";
 
-import { alchemy } from "@lib/blockchain";
+import { getMoralisTransactions, processTransaction } from "@lib/blockchain";
+import {
+    MoralisTransactionsResponse,
+    TokenTransactionsCollection
+} from "@lib/types/externalAPIOptions";
 import { FastifyDone } from "@lib/types/fastifyTypes";
 import HttpStatus from "@lib/types/httpStatus";
 import {
     ExplorerWalletRequestHeaders,
     ExplorerWalletRequestParams
 } from "@lib/types/routeOptions";
-import { AlchemyTransactionsOptions } from "@src/lib/types/externalAPIOptions";
 
 const wallet = (
     server: FastifyInstance,
     _opts: FastifyServerOptions,
     done: FastifyDone
 ) => {
-    const { log } = server;
+    const { prisma, log } = server;
 
     server.get(
         "/:walletAddress",
@@ -34,9 +33,7 @@ const wallet = (
             // TODO: add schema
         },
         async (request: FastifyRequest, reply: FastifyReply) => {
-            const { "x-page-key": pageKey } =
-                request.headers as ExplorerWalletRequestHeaders;
-
+            // Add query string option for most recent or oldest
             const { walletAddress } =
                 request.params as ExplorerWalletRequestParams;
             if (!walletAddress) {
@@ -56,49 +53,68 @@ const wallet = (
                 reply.code(HttpStatus.BAD_REQUEST).send(message);
             }
 
-            let alchemyOpts: AlchemyTransactionsOptions = {
-                fromBlock: "0x0",
-                fromAddress: walletAddress,
-                excludeZeroValue: true,
-                order: SortingOrder.DESCENDING,
-                withMetadata: true,
-                maxCount: 25,
-                category: [
-                    AssetTransfersCategory.EXTERNAL,
-                    AssetTransfersCategory.ERC20
-                ]
-            };
+            const { "x-page-key": pageKey } =
+                request.headers as ExplorerWalletRequestHeaders;
 
-            // Multiple pages of data
-            // NOTE: Page key only lasts for 10 min before expiring!
-            const PAGE_KEY_REGEX =
-                /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
-            if (pageKey.match(PAGE_KEY_REGEX)) {
-                alchemyOpts = { ...alchemyOpts, pageKey };
+            const web3 = new Web3(
+                Web3.givenProvider ||
+                    `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`
+            );
+
+            const response = await getMoralisTransactions(
+                walletAddress,
+                2,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                pageKey ?? undefined
+            );
+            const rawData: MoralisTransactionsResponse = await response.json();
+
+            if (rawData.total === 0) {
+                reply.send({
+                    data: {
+                        total: 0,
+                        result: []
+                    }
+                });
             }
 
-            const { transfers } = await alchemy.core.getAssetTransfers(
-                alchemyOpts
-            );
-            if (!transfers.length)
-                reply.send("No transactions for this wallet.");
+            const data = _.mapKeys(
+                _.omit(rawData, "page_size"),
+                (_value, key) => {
+                    if (key === "cursor") return "pageKey";
+                    return key;
+                }
+            ) as unknown as TokenTransactionsCollection;
 
-            const results = _.map(transfers, (transfer: AssetTransfersResult) =>
-                _.pick(transfer, [
-                    "blockNum",
-                    "hash",
-                    "from",
-                    "to",
-                    "value",
-                    "asset",
-                    "metadata",
-                    "pageKey"
-                ])
+            const tokens = {};
+            const rawTransactions = [];
+
+            // eslint-disable-next-line no-restricted-syntax
+            for (const transaction of data.result) {
+                rawTransactions.push(
+                    // eslint-disable-next-line no-await-in-loop
+                    await processTransaction(prisma, log, tokens, transaction)
+                );
+            }
+
+            const chainTxns = await Promise.all(
+                rawTransactions.map((txn) =>
+                    web3.eth.getTransaction(txn.transactionHash)
+                )
             );
+
+            const transactions = rawTransactions.map((txn, index) => {
+                const { gasPrice, gas } = chainTxns[index];
+                return { ...txn, gasPrice, gas };
+            });
 
             reply.send({
                 data: {
-                    results
+                    ...data,
+                    result: transactions
                 }
             });
         }
