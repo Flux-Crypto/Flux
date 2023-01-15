@@ -1,4 +1,4 @@
-import { reset } from "@flux/prisma/src/helpers";
+import { disconnect, reset } from "@flux/prisma/src/helpers";
 import { PrismaClient } from "@prisma/client";
 import { FastifyInstance } from "fastify";
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -111,6 +111,7 @@ const build = () => {
     afterAll(async () => {
         const { prisma } = fastifyApp;
         await reset(prisma);
+        await disconnect(prisma);
         fastifyApp.close();
     });
 
