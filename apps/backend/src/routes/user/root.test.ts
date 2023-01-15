@@ -80,16 +80,15 @@ describe(`PUT ${route}`, () => {
         expect(res.statusCode).toBe(HttpStatus.BAD_REQUEST);
         expect(res.statusMessage).toBe("Bad Request");
         expect(res.body).toBe("Not a valid email");
-
-        // TODO: prevent updating api key
     });
+
+    test.todo("prevent updating api key");
 
     test("receives an OK request and returns OK response", async () => {
         const res = await callAPI(app, route, {
             options: {
                 method: "PUT",
                 body: JSON.stringify({
-                    // TODO: incorporate other User fields
                     firstName: "alice",
                     lastName: "bob",
                     email: "johndoe@email.com",
@@ -104,12 +103,23 @@ describe(`PUT ${route}`, () => {
         expect(res.body).toBeFalsy();
     });
 
+    test.todo("incorporate other User fields");
+
     test("updates user information based on requested changes", async () => {
-        const res = await callAPI(app, route, {
+        await callAPI(app, route, {
             options: {
-                method: "GET"
+                method: "PUT",
+                body: JSON.stringify({
+                    firstName: "alice",
+                    lastName: "bob",
+                    email: "johndoe@email.com",
+                    exchangeAPIKeys: ["abcdef123"],
+                    processorAPIKeys: ["uvwxyz456"]
+                })
             }
         });
+
+        const res = await callAPI(app, route);
         const { data } = await res.json();
 
         expect(data).toBeInstanceOf(Object);

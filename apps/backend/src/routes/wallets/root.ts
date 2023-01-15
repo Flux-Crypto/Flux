@@ -162,6 +162,10 @@ const baseRoute = (
                             [seedPhrase ? "rdwrUsers" : "rdUsers"]: {
                                 connect: { id }
                             }
+                        },
+                        select: {
+                            address: true,
+                            seedPhrase: !!seedPhrase
                         }
                     });
 
@@ -178,6 +182,10 @@ const baseRoute = (
                         [seedPhrase ? "rdwrUsers" : "rdUsers"]: {
                             connect: { id }
                         }
+                    },
+                    select: {
+                        address: true,
+                        seedPhrase: !!seedPhrase
                     }
                 });
 

@@ -1,5 +1,4 @@
 import { reset } from "@flux/prisma/src/helpers";
-import { PrismaClient } from "@prisma/client";
 import { FastifyInstance } from "fastify";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import jwt from "jsonwebtoken";
@@ -30,9 +29,18 @@ export const testUser = {
     }
 };
 
-// TODO: add an option for testUser with apiKey?
+const {
+    data: { id }
+} = testUser;
+const payload = {
+    user: {
+        id
+    }
+};
 
-let token: string;
+export const token = jwt.sign(payload, env.NEXTAUTH_SECRET);
+
+// TODO: add an option for testUser with apiKey?
 
 export const callAPI = (
     fastifyApp: FastifyInstance,
@@ -68,19 +76,6 @@ export const callAPI = (
     });
 };
 
-const setupDB = async (prisma: PrismaClient) => {
-    /* simulate an active session with a test user and fake JWT */
-    const { id } = await prisma.user.create(testUser);
-
-    const payload = {
-        user: {
-            id
-        }
-    };
-
-    token = jwt.sign(payload, env.NEXTAUTH_SECRET);
-};
-
 const build = () => {
     const fastifyApp = app();
 
@@ -89,7 +84,15 @@ const build = () => {
 
         const { prisma } = fastifyApp;
         await reset(prisma);
-        await setupDB(prisma);
+        /* simulate an active session with a test user and fake JWT */
+        await prisma.user.create(testUser);
+    });
+
+    beforeEach(async () => {
+        const { prisma } = fastifyApp;
+        await reset(prisma);
+        /* simulate an active session with a test user and fake JWT */
+        await prisma.user.create(testUser);
     });
 
     afterAll(async () => {
