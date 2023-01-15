@@ -21,6 +21,7 @@
         "build:prisma": "npm run build --workspace=@flux/prisma",
         "generate:local": "npm run generate:local --workspace=@flux/prisma",
         "generate": "npm run generate --workspace=@flux/prisma",
+        "reset:local": "npm run reset:local --workspace=@flux/prisma",
         "reset": "npm run reset --workspace=@flux/prisma",
         "studio": "npm run studio --workspace=@flux/prisma",
         "storybook": "npm run storybook --workspace=frontend",

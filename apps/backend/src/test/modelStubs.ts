@@ -14,3 +14,9 @@ export const stubUser = {
     // createdAt: "2023-01-13T21:11:30.504Z",
     // updatedAt: "2023-01-13T21:11:30.504Z"
 };
+
+export const stubWallet = {
+    address: "0x6887246668a3b87f54deb3b94ba47a6f63f32985",
+    seedPhrase:
+        "inquiry blame advance neglect foster time debris uncover hen ten indicate dinosaur"
+};
