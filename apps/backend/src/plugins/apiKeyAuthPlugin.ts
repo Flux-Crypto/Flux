@@ -1,9 +1,9 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import {
     FastifyInstance,
-    FastifyPluginAsync,
     FastifyReply,
-    FastifyRequest
+    FastifyRequest,
+    FastifyServerOptions
 } from "fastify";
 import fp from "fastify-plugin";
 
@@ -17,16 +17,20 @@ declare module "fastify" {
     }
 }
 
-const apiKeyAuthPlugin: FastifyPluginAsync = fp(
-    async (server: FastifyInstance) => {
-        const { log, prisma } = server;
+const apiKeyAuthPlugin = fp(
+    async (
+        fastify: FastifyInstance,
+        _opts: FastifyServerOptions,
+        done: FastifyDone
+    ) => {
+        const { log, prisma } = fastify;
 
-        server.decorate(
+        fastify.decorate(
             "verifyAPIKey",
             async (
                 request: FastifyRequest,
                 reply: FastifyReply,
-                done: FastifyDone
+                decoratorDone: FastifyDone
             ) => {
                 const { "x-api-key": apiKey } =
                     request.headers as APIAuthenticationHeaders;
@@ -65,9 +69,11 @@ const apiKeyAuthPlugin: FastifyPluginAsync = fp(
                     reply.send(message);
                 }
 
-                done();
+                decoratorDone();
             }
         );
+
+        done();
     }
 );
 

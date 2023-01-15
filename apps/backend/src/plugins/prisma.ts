@@ -1,7 +1,9 @@
 import * as Prisma from "@flux/prisma";
 import { PrismaClient } from "@prisma/client";
-import { FastifyPluginAsync } from "fastify";
+import { FastifyInstance, FastifyServerOptions } from "fastify";
 import fp from "fastify-plugin";
+
+import { FastifyDone } from "@lib/types/fastifyTypes";
 
 // Use TypeScript module augmentation to declare the type of server.prisma to be PrismaClient
 declare module "fastify" {
@@ -10,17 +12,25 @@ declare module "fastify" {
     }
 }
 
-const prismaPlugin: FastifyPluginAsync = fp(async (server) => {
-    const { prisma } = await Prisma.createContext();
+const prismaPlugin = fp(
+    async (
+        fastify: FastifyInstance,
+        _opts: FastifyServerOptions,
+        done: FastifyDone
+    ) => {
+        const { prisma } = await Prisma.createContext();
 
-    await prisma.$connect();
+        await prisma.$connect();
 
-    // Make Prisma Client available through the fastify server instance: server.prisma
-    server.decorate("prisma", prisma);
+        // Make Prisma Client available through the fastify server instance: server.prisma
+        fastify.decorate("prisma", prisma);
 
-    server.addHook("onClose", async (serv) => {
-        await serv.prisma.$disconnect();
-    });
-});
+        fastify.addHook("onClose", async (serv) => {
+            await serv.prisma.$disconnect();
+        });
+
+        done();
+    }
+);
 
 export default prismaPlugin;
