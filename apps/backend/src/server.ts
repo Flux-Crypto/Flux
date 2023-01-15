@@ -1,7 +1,7 @@
-import app from "./app";
+import build from "./app";
 
 const runServer = async () => {
-    const fastifyApp = await app();
+    const fastifyApp = build();
 
     await fastifyApp.ready();
     fastifyApp.listen({ port: 8000 }, (err, address) => {

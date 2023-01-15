@@ -5,7 +5,7 @@ import { FastifyInstance } from "fastify";
 import jwt from "jsonwebtoken";
 import { env } from "process";
 
-import app from "../app";
+import build from "../app";
 
 export type HTTPMethods =
     | "DELETE"
@@ -91,11 +91,12 @@ const createUsers = async (prisma: PrismaClient) => {
     await prisma.$transaction([createTestUser, createTestDummy]);
 };
 
-const build = () => {
-    const fastifyApp = app();
+const app = () => {
+    const fastifyApp = build();
 
     beforeAll(async () => {
         await fastifyApp.ready();
+        await fastifyApp.listen();
 
         const { prisma } = fastifyApp;
         await reset(prisma);
@@ -117,6 +118,6 @@ const build = () => {
     return fastifyApp;
 };
 
-const fastifyApp = build();
+const fastifyApp = app();
 
 export default fastifyApp;

@@ -23,12 +23,13 @@ import user from "@routes/user";
 import users from "@routes/users";
 import wallets from "@routes/wallets";
 
-const app = () => {
+const build = () => {
     // TODO: fix `Type 'undefined' cannot be used as an index type`
     const NODE_ENV = env.DOPPLER_ENVIRONMENT as "dev" | "test" | "stg" | "prd";
 
     const fastifyApp = fastify({
-        logger: envToLogger[NODE_ENV] ?? true
+        logger: envToLogger[NODE_ENV] ?? true,
+        pluginTimeout: 20000
     });
 
     fastifyApp.register(cors, {
@@ -68,4 +69,4 @@ const app = () => {
     return fastifyApp;
 };
 
-export default app;
+export default build;
