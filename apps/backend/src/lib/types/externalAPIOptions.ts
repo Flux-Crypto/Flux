@@ -25,6 +25,18 @@ export interface FormattedTransaction {
     token?: TokenMetadata;
 }
 
+export interface FetchTransactionParams {
+    walletAddress: string;
+    limit: number;
+    fromDate?: Date;
+    toDate?: Date;
+    fromBlock?: number;
+    toBlock?: number;
+    cursor?: string;
+    page?: number;
+    chain?: string;
+}
+
 export interface MoralisTokenMetadata extends TokenMetadataResponse {
     address: string;
 }

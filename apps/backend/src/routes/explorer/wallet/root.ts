@@ -64,15 +64,11 @@ const wallet = (
                     `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`
             );
 
-            const response = await getMoralisTransactions(
+            const response = await getMoralisTransactions({
                 walletAddress,
-                2,
-                undefined,
-                undefined,
-                undefined,
-                undefined,
-                pageKey ?? undefined
-            );
+                limit: 25,
+                cursor: pageKey ?? undefined
+            });
             const rawData: MoralisTransactionsResponse = await response.json();
 
             if (rawData.total === 0) {

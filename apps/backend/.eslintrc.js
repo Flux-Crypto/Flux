@@ -15,6 +15,8 @@ module.exports = {
                 caughtErrorsIgnorePattern: "^_"
             }
         ],
-        "no-param-reassign": ["error", { props: false }]
+        "no-param-reassign": ["error", { props: false }],
+        "no-restricted-syntax": "off",
+        "no-await-in-loop": "off"
     }
 };

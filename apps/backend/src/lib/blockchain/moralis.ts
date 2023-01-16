@@ -3,23 +3,25 @@ import { FastifyBaseLogger } from "fastify";
 import _ from "lodash";
 
 import {
+    FetchTransactionParams,
     FormattedTransaction,
     MoralisTransaction,
     MoralisTransactionWithMetadata
-} from "../types/externalAPIOptions";
+} from "@lib/types/externalAPIOptions";
+
 import { fetchMetadata } from "./alchemy";
 
-export const getMoralisTransactions = async (
-    walletAddress: string,
-    limit: number,
-    fromDate?: Date,
-    toDate?: Date,
-    fromBlock?: number,
-    toBlock?: number,
-    cursor?: string,
-    page?: number,
+export const getMoralisTransactions = async ({
+    walletAddress,
+    limit,
+    fromDate,
+    toDate,
+    fromBlock,
+    toBlock,
+    cursor,
+    page,
     chain = "eth"
-) => {
+}: FetchTransactionParams) => {
     const fromDateQuery = fromDate ? `&from_date=${fromDate}` : "";
     const toDateQuery = toDate ? `&to_date=${toDate}` : "";
     const fromBlockQuery = fromBlock ? `&from_block=${fromBlock}` : "";
