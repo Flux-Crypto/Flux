@@ -6,7 +6,7 @@ import {
 } from "fastify";
 import _ from "lodash";
 
-import { alchemy } from "@lib/blockchain";
+import { alchemy } from "@lib/blockchain/alchemy";
 import { FastifyDone } from "@lib/types/fastifyTypes";
 import HttpStatus from "@lib/types/httpStatus";
 import { ExplorerTransactionRequestParams } from "@lib/types/routeOptions";
@@ -79,9 +79,7 @@ const baseRoute = (
             }
 
             reply.send({
-                data: {
-                    transaction: txn
-                }
+                transaction: txn
             });
         }
     );

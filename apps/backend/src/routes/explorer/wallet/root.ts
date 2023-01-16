@@ -7,7 +7,10 @@ import {
 import _ from "lodash";
 import Web3 from "web3";
 
-import { getMoralisTransactions, processTransaction } from "@lib/blockchain";
+import {
+    getMoralisTransactions,
+    processTransaction
+} from "@lib/blockchain/moralis";
 import {
     MoralisTransactionsResponse,
     TokenTransactionsCollection
@@ -74,11 +77,10 @@ const wallet = (
 
             if (rawData.total === 0) {
                 reply.send({
-                    data: {
-                        total: 0,
-                        result: []
-                    }
+                    total: 0,
+                    result: []
                 });
+                return;
             }
 
             const data = _.mapKeys(
@@ -112,10 +114,8 @@ const wallet = (
             });
 
             reply.send({
-                data: {
-                    ...data,
-                    result: transactions
-                }
+                ...data,
+                result: transactions
             });
         }
     );
