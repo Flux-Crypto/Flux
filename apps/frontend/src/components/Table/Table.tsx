@@ -55,6 +55,11 @@ const useStyles = createStyles((theme) => ({
         fontSize: "12px",
         padding: "0.75rem"
     },
+    tr: {
+        "&:last-child td": {
+            borderBottom: "none"
+        }
+    },
     cursorPointer: {
         cursor: "pointer"
     },
@@ -237,7 +242,7 @@ const Table = ({
                                         rowSelection &&
                                         row.toggleSelected(!row.getIsSelected())
                                     }
-                                    className={classNames({
+                                    className={classNames(classes.tr, {
                                         "cursor-pointer": rowSelection
                                     })}
                                 >

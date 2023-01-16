@@ -9,6 +9,33 @@ export interface Transaction {
     tags: string[];
 }
 
+export interface Token {
+    address: string;
+    decimals: number;
+    logo: string;
+    name: string;
+    symbol: string;
+}
+export interface BlockchainTransaction {
+    blockHash: string;
+    blockNumber: string;
+    blockTimestamp: string;
+    fromAddress: string;
+    toAddress: string;
+    gas: number;
+    gasPrice: string;
+    transactionHash: string;
+    value: string;
+    token: Token;
+}
+
+export interface BlockchainTransactionsResponse {
+    page: number;
+    pageKey: string | null;
+    total: number;
+    result: BlockchainTransaction[];
+}
+
 export interface UserWallet {
     address: string;
     seedPhrase?: string;
