@@ -1,11 +1,13 @@
 import app, { HTTPMethods, callAPI } from "@test/jestHelper";
-import { stubUser } from "@test/modelStubs";
+import { objectIdRegex, stubUser } from "@test/modelStubs";
 
 import HttpStatus from "@lib/types/httpStatus";
 
 const route = "/v1/users";
 const { email } = stubUser;
 
+// TODO: these routes (/users) should only be accessible by special authorization
+// (maybe specific API key, users should not be able to access these)
 describe.each([
     { route, method: "GET" as HTTPMethods },
     { route, method: "POST" as HTTPMethods }
@@ -100,8 +102,7 @@ describe(`POST ${route}`, () => {
         expect(data).toBeInstanceOf(Object);
         expect(data).toMatchObject(stubUser);
 
-        expect(data.id).toMatch(/^[a-f\d]{24}$/i);
-        expect(data.email).toEqual(email);
+        expect(data.id).toMatch(objectIdRegex);
         expect(data.emailVerified).toEqual(data.createdAt);
         expect(data.emailVerified).toEqual(data.updatedAt);
     });

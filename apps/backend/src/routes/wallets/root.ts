@@ -5,7 +5,7 @@ import _ from "lodash";
 
 import { FastifyDone, JWT } from "@lib/types/fastifyTypes";
 import HttpStatus from "@lib/types/httpStatus";
-import { WalletsBaseSchema } from "@lib/types/jsonObjects";
+import { WalletsRootSchema } from "@lib/types/jsonObjects";
 import {
     WalletsRequestParams,
     WalletsRequestPostBody,
@@ -38,7 +38,7 @@ const rootRoute = (
         post: postSchema,
         put: putSchema,
         delete: deleteSchema
-    }: WalletsBaseSchema,
+    }: WalletsRootSchema,
     done: FastifyDone
 ) => {
     const { prisma, log } = server;

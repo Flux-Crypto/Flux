@@ -3,12 +3,12 @@ import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 import { FastifyDone } from "@lib/types/fastifyTypes";
 import HttpStatus from "@lib/types/httpStatus";
-import { UsersBaseSchema } from "@lib/types/jsonObjects";
+import { UsersRootSchema } from "@lib/types/jsonObjects";
 import { UsersPostRequestBody } from "@lib/types/routeOptions";
 
 const rootRoute = (
     server: FastifyInstance,
-    { get: getSchema, post: postSchema }: UsersBaseSchema,
+    { get: getSchema, post: postSchema }: UsersRootSchema,
     done: FastifyDone
 ) => {
     const { prisma, log } = server;

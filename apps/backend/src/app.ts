@@ -28,8 +28,7 @@ const build = () => {
     const NODE_ENV = env.DOPPLER_ENVIRONMENT as "dev" | "test" | "stg" | "prd";
 
     const fastifyApp = fastify({
-        logger: envToLogger[NODE_ENV] ?? true,
-        pluginTimeout: 20000
+        logger: envToLogger[NODE_ENV] ?? true
     });
 
     fastifyApp.register(cors, {

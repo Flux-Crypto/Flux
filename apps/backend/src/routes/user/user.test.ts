@@ -1,11 +1,12 @@
 import app, { HTTPMethods, callAPI, testUser } from "@test/jestHelper";
-import { stubUser } from "@test/modelStubs";
+import { objectIdRegex, stubUser } from "@test/modelStubs";
 
 import HttpStatus from "@lib/types/httpStatus";
 
-jest.setTimeout(8000);
-
 const route = "/v1/user";
+const {
+    data: { id }
+} = testUser;
 
 describe.each([
     { route, method: "GET" as HTTPMethods },
@@ -34,9 +35,8 @@ describe(`GET ${route}`, () => {
 
     test("returns the associated user", async () => {
         const res = await callAPI(app, route);
-        const { data } = await res.json();
+        const data = await res.json();
 
-        expect(data).toBeInstanceOf(Object);
         expect(data).toMatchObject(testUser.data);
         expect(data.apiKey).toBeFalsy();
         expect(data.exchangeAPIKeys).toHaveLength(0);
@@ -109,6 +109,8 @@ describe(`PUT ${route}`, () => {
     test.todo("incorporate other User fields");
 
     test("updates user information based on requested changes", async () => {
+        const { prisma } = app;
+
         await callAPI(app, route, {
             options: {
                 method: "PUT",
@@ -122,21 +124,24 @@ describe(`PUT ${route}`, () => {
             }
         });
 
-        const res = await callAPI(app, route);
-        const { data } = await res.json();
+        const user = await prisma.user.findUnique({
+            where: {
+                id
+            }
+        });
 
-        expect(data).toBeInstanceOf(Object);
-        expect(data).not.toMatchObject(stubUser);
+        expect(user).toBeInstanceOf(Object);
+        expect(user).not.toMatchObject(stubUser);
 
-        expect(data.id).toMatch(/^[a-f\d]{24}$/i);
-        expect(data.firstName).toBe("alice");
-        expect(data.lastName).toBe("bob");
-        expect(data.email).toBe("johndoe@email.com");
-        expect(data.emailVerified).toEqual(data.createdAt);
-        expect(data.emailVerified).toEqual(data.updatedAt);
+        expect(user?.id).toMatch(objectIdRegex);
+        expect(user?.firstName).toBe("alice");
+        expect(user?.lastName).toBe("bob");
+        expect(user?.email).toBe("johndoe@email.com");
+        expect(user?.emailVerified).toEqual(user?.createdAt);
+        expect(user?.emailVerified).toEqual(user?.updatedAt);
         // TODO: add check for apiKey not changing
-        expect(data.exchangeAPIKeys).toContain("abcdef123");
-        expect(data.processorAPIKeys).toContain("uvwxyz456");
+        expect(user?.exchangeAPIKeys).toContain("abcdef123");
+        expect(user?.processorAPIKeys).toContain("uvwxyz456");
     });
 
     test.todo("more complex behavior, like updating lists");

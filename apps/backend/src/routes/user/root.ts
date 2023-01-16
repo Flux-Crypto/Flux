@@ -4,12 +4,12 @@ import _ from "lodash";
 
 import { FastifyDone, JWT } from "@lib/types/fastifyTypes";
 import HttpStatus from "@lib/types/httpStatus";
-import { UserBaseSchema } from "@lib/types/jsonObjects";
+import { UserRootSchema } from "@lib/types/jsonObjects";
 import { UsersPutRequestBody } from "@lib/types/routeOptions";
 
 const rootRoute = (
     server: FastifyInstance,
-    { get: getSchema, put: putSchema }: UserBaseSchema,
+    { get: getSchema, put: putSchema }: UserRootSchema,
     done: FastifyDone
 ) => {
     const { prisma, log } = server;
@@ -30,9 +30,7 @@ const rootRoute = (
                     }
                 });
 
-                reply.send({
-                    data: user
-                });
+                reply.send(user);
             } catch (e) {
                 if (e instanceof PrismaClientKnownRequestError) {
                     log.fatal(e);

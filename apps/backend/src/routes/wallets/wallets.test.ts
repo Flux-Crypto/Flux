@@ -9,8 +9,6 @@ import app, {
 import HttpStatus from "@lib/types/httpStatus";
 import { stubWallet } from "@src/test/modelStubs";
 
-jest.setTimeout(18000);
-
 enum WalletAccess {
     ReadOnly = "read-only",
     ReadWrite = "read-write"
