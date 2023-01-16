@@ -1,4 +1,5 @@
 import { TokenMetadata } from "@prisma/client";
+import { TokenMetadataResponse } from "alchemy-sdk";
 
 export interface MoralisTransaction {
     transaction_hash: string;
@@ -24,8 +25,12 @@ export interface FormattedTransaction {
     token?: TokenMetadata;
 }
 
+export interface MoralisTokenMetadata extends TokenMetadataResponse {
+    address: string;
+}
+
 export interface MoralisTransactionWithMetadata extends MoralisTransaction {
-    token: TokenMetadata;
+    token: MoralisTokenMetadata;
 }
 export interface MoralisTransactionsResponse {
     total: number;
@@ -40,4 +45,37 @@ export interface TokenTransactionsCollection {
     page: number;
     pageKey: string;
     result: MoralisTransaction[];
+}
+
+export interface QNTokenAsset {
+    address: string;
+    amount: number;
+    chain: string;
+    decimals: number;
+    name: string;
+    network: string;
+    symbol: string;
+    logoURI: string;
+}
+export interface QNTokenBalanceResult {
+    assets: QNTokenAsset[];
+    owner: string;
+    totalPages: number;
+    totalItems: number;
+    pageNumber: number;
+}
+
+export interface QNTokenBalanceResponse {
+    jsonrpc: string;
+    id: number;
+    result: QNTokenBalanceResult;
+}
+
+export interface TokenAsset {
+    address: string;
+    amount: number;
+    decimals: number;
+    name: string;
+    symbol: string;
+    logo: string;
 }
