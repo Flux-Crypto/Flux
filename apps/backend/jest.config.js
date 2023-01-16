@@ -8,6 +8,11 @@ module.exports = {
     preset: "ts-jest",
     testEnvironment: "node",
     roots: ["<rootDir>"],
+    displayName: {
+        name: "API",
+        color: "magentaBright"
+    },
+    reporters: ["default", "jest-junit"],
     modulePaths: [compilerOptions.baseUrl], // <-- This will be set to 'baseUrl' value
     moduleNameMapper: pathsToModuleNameMapper(
         compilerOptions.paths /*, { prefix: '<rootDir>/' } */
