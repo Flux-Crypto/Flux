@@ -6,8 +6,8 @@
     "scripts": {
         "format": "npx prettier -w src/**/*.ts",
         "lint": "npx eslint --ext .ts,.json --fix",
-        "test:local": "doppler run -- jest --watch -i",
-        "test": "jest -i --ci --coverage --reporters=default --reporters=jest-junit --detectOpenHandles",
+        "test:local": "doppler run -- jest -i --watch",
+        "test": "jest -i --ci --coverage=true --reporters=default --reporters=jest-junit --detectOpenHandles",
         "build": "rimraf ./build && tsc",
         "start": "doppler run npm run build && node build/index.js",
         "open-docs": "run-script-os",
@@ -63,14 +63,5 @@
         "run-script-os": "^1.1.6",
         "ts-node": "^10.9.1",
         "tsconfig-paths": "^4.1.1"
-    },
-    "jest-junit": {
-        "outputDirectory": "reports",
-        "outputName": "jest-junit.xml",
-        "ancestorSeparator": " › ",
-        "uniqueOutputName": "false",
-        "suiteNameTemplate": "{filepath}",
-        "classNameTemplate": "{classname}",
-        "titleTemplate": "{title}"
     }
 }

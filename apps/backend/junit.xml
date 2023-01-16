@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="53" failures="0" errors="0" time="23.278">
+  <testsuite name="route authorization for GET /v1/wallets" errors="0" failures="0" skipped="1" timestamp="2023-01-16T07:19:41" time="13.805" tests="30">
+    <testcase classname="route authorization for GET /v1/wallets returns Bad Request for unauthorized request" name="route authorization for GET /v1/wallets returns Bad Request for unauthorized request" time="0.198">
+    </testcase>
+    <testcase classname="route authorization for POST /v1/wallets returns Bad Request for unauthorized request" name="route authorization for POST /v1/wallets returns Bad Request for unauthorized request" time="0.173">
+    </testcase>
+    <testcase classname="route authorization for PUT /v1/wallets/0x6887246668a3b87f54deb3b94ba47a6f63f32985 returns Bad Request for unauthorized request" name="route authorization for PUT /v1/wallets/0x6887246668a3b87f54deb3b94ba47a6f63f32985 returns Bad Request for unauthorized request" time="0.172">
+    </testcase>
+    <testcase classname="route authorization for DELETE /v1/wallets/0x6887246668a3b87f54deb3b94ba47a6f63f32985 returns Bad Request for unauthorized request" name="route authorization for DELETE /v1/wallets/0x6887246668a3b87f54deb3b94ba47a6f63f32985 returns Bad Request for unauthorized request" time="0.171">
+    </testcase>
+    <testcase classname="GET /v1/wallets receives an OK request and returns OK response" name="GET /v1/wallets receives an OK request and returns OK response" time="0.224">
+    </testcase>
+    <testcase classname="GET /v1/wallets returns empty lists if user has no wallets" name="GET /v1/wallets returns empty lists if user has no wallets" time="0.202">
+    </testcase>
+    <testcase classname="GET /v1/wallets returns read-only wallets associated with user" name="GET /v1/wallets returns read-only wallets associated with user" time="0.292">
+    </testcase>
+    <testcase classname="GET /v1/wallets returns read-write wallets associated with user" name="GET /v1/wallets returns read-write wallets associated with user" time="0.392">
+    </testcase>
+    <testcase classname="GET /v1/wallets returns named read-only wallets associated with user" name="GET /v1/wallets returns named read-only wallets associated with user" time="0.348">
+    </testcase>
+    <testcase classname="GET /v1/wallets returns named read-write wallets associated with user" name="GET /v1/wallets returns named read-write wallets associated with user" time="0.331">
+    </testcase>
+    <testcase classname="POST /v1/wallets returns Bad Request for missing body" name="POST /v1/wallets returns Bad Request for missing body" time="0.185">
+    </testcase>
+    <testcase classname="POST /v1/wallets returns Bad Request for invalid body: invalid field" name="POST /v1/wallets returns Bad Request for invalid body: invalid field" time="0.167">
+    </testcase>
+    <testcase classname="POST /v1/wallets returns Bad Request for invalid body: missing wallet address" name="POST /v1/wallets returns Bad Request for invalid body: missing wallet address" time="0.178">
+    </testcase>
+    <testcase classname="POST /v1/wallets returns Bad Request for invalid body: invalid wallet address" name="POST /v1/wallets returns Bad Request for invalid body: invalid wallet address" time="0.155">
+    </testcase>
+    <testcase classname="POST /v1/wallets returns Bad Request for invalid body: invalid seed phrase" name="POST /v1/wallets returns Bad Request for invalid body: invalid seed phrase" time="0.157">
+    </testcase>
+    <testcase classname="POST /v1/wallets receives an OK request and returns OK response" name="POST /v1/wallets receives an OK request and returns OK response" time="0.257">
+    </testcase>
+    <testcase classname="POST /v1/wallets returns data for created read-only wallet" name="POST /v1/wallets returns data for created read-only wallet" time="0.3">
+    </testcase>
+    <testcase classname="POST /v1/wallets returns data for created read-write wallet" name="POST /v1/wallets returns data for created read-write wallet" time="0.279">
+    </testcase>
+    <testcase classname="POST /v1/wallets returns OK for linking already existing wallet as read-only" name="POST /v1/wallets returns OK for linking already existing wallet as read-only" time="0.472">
+    </testcase>
+    <testcase classname="POST /v1/wallets returns OK for linking already existing wallet as read-write" name="POST /v1/wallets returns OK for linking already existing wallet as read-write" time="0.494">
+    </testcase>
+    <testcase classname="POST /v1/wallets updates already existing wallet as read-only for user" name="POST /v1/wallets updates already existing wallet as read-only for user" time="0.457">
+    </testcase>
+    <testcase classname="POST /v1/wallets updates already existing wallet as read-write for user" name="POST /v1/wallets updates already existing wallet as read-write for user" time="0.545">
+    </testcase>
+    <testcase classname="PUT /v1/wallets/:walletAddress returns data for created named wallet" name="PUT /v1/wallets/:walletAddress returns data for created named wallet" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="DELETE /v1/wallets/:walletAddress returns Not Found for missing parameter" name="DELETE /v1/wallets/:walletAddress returns Not Found for missing parameter" time="0.173">
+    </testcase>
+    <testcase classname="DELETE /v1/wallets/:walletAddress returns Bad Request for invalid wallet parameter" name="DELETE /v1/wallets/:walletAddress returns Bad Request for invalid wallet parameter" time="0.161">
+    </testcase>
+    <testcase classname="DELETE /v1/wallets/:walletAddress receives an OK request and returns OK response" name="DELETE /v1/wallets/:walletAddress receives an OK request and returns OK response" time="0.519">
+    </testcase>
+    <testcase classname="DELETE /v1/wallets/:walletAddress deletes connected read-only wallet with no remaining connections" name="DELETE /v1/wallets/:walletAddress deletes connected read-only wallet with no remaining connections" time="0.612">
+    </testcase>
+    <testcase classname="DELETE /v1/wallets/:walletAddress deletes connected read-write wallet with no remaining connections" name="DELETE /v1/wallets/:walletAddress deletes connected read-write wallet with no remaining connections" time="0.524">
+    </testcase>
+    <testcase classname="DELETE /v1/wallets/:walletAddress unlinks connected read-only wallet with remaining connections" name="DELETE /v1/wallets/:walletAddress unlinks connected read-only wallet with remaining connections" time="0.81">
+    </testcase>
+    <testcase classname="DELETE /v1/wallets/:walletAddress unlinks connected read-write wallet with remaining connections" name="DELETE /v1/wallets/:walletAddress unlinks connected read-write wallet with remaining connections" time="0.965">
+    </testcase>
+  </testsuite>
+  <testsuite name="route authorization for GET /v1/user" errors="0" failures="0" skipped="0" timestamp="2023-01-16T07:19:55" time="3.633" tests="9">
+    <testcase classname="route authorization for GET /v1/user returns Bad Request for unauthorized request" name="route authorization for GET /v1/user returns Bad Request for unauthorized request" time="0.181">
+    </testcase>
+    <testcase classname="route authorization for PUT /v1/user returns Bad Request for unauthorized request" name="route authorization for PUT /v1/user returns Bad Request for unauthorized request" time="0.158">
+    </testcase>
+    <testcase classname="GET /v1/user receives an OK request and returns OK response" name="GET /v1/user receives an OK request and returns OK response" time="0.176">
+    </testcase>
+    <testcase classname="GET /v1/user returns the associated user" name="GET /v1/user returns the associated user" time="0.182">
+    </testcase>
+    <testcase classname="PUT /v1/user returns Bad Request for missing body" name="PUT /v1/user returns Bad Request for missing body" time="0.165">
+    </testcase>
+    <testcase classname="PUT /v1/user returns Bad Request for invalid body: invalid field" name="PUT /v1/user returns Bad Request for invalid body: invalid field" time="0.165">
+    </testcase>
+    <testcase classname="PUT /v1/user returns Bad Request for invalid body: invalid email" name="PUT /v1/user returns Bad Request for invalid body: invalid email" time="0.164">
+    </testcase>
+    <testcase classname="PUT /v1/user prevent updating api key" name="PUT /v1/user prevent updating api key" time="0">
+    </testcase>
+    <testcase classname="PUT /v1/user receives an OK request and returns OK response" name="PUT /v1/user receives an OK request and returns OK response" time="0.235">
+    </testcase>
+    <testcase classname="PUT /v1/user incorporate other User fields" name="PUT /v1/user incorporate other User fields" time="0">
+    </testcase>
+    <testcase classname="PUT /v1/user updates user information based on requested changes" name="PUT /v1/user updates user information based on requested changes" time="0.256">
+    </testcase>
+    <testcase classname="PUT /v1/user more complex behavior, like updating lists" name="PUT /v1/user more complex behavior, like updating lists" time="0">
+    </testcase>
+    <testcase classname="PUT /v1/user validating api keys, etc." name="PUT /v1/user validating api keys, etc." time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="route authorization for GET /v1/users" errors="0" failures="0" skipped="0" timestamp="2023-01-16T07:19:59" time="3.076" tests="8">
+    <testcase classname="route authorization for GET /v1/users returns Bad Request for unauthorized request" name="route authorization for GET /v1/users returns Bad Request for unauthorized request" time="0.171">
+    </testcase>
+    <testcase classname="route authorization for POST /v1/users returns Bad Request for unauthorized request" name="route authorization for POST /v1/users returns Bad Request for unauthorized request" time="0.162">
+    </testcase>
+    <testcase classname="GET /v1/users receves an OK request and returns OK response" name="GET /v1/users receves an OK request and returns OK response" time="0.208">
+    </testcase>
+    <testcase classname="GET /v1/users returns an array of users" name="GET /v1/users returns an array of users" time="0.194">
+    </testcase>
+    <testcase classname="POST /v1/users returns Bad Request for invalid body: missing email" name="POST /v1/users returns Bad Request for invalid body: missing email" time="0.167">
+    </testcase>
+    <testcase classname="POST /v1/users returns Bad Request for invalid body: invalid email" name="POST /v1/users returns Bad Request for invalid body: invalid email" time="0.183">
+    </testcase>
+    <testcase classname="POST /v1/users receives an OK request and returns OK response" name="POST /v1/users receives an OK request and returns OK response" time="0.254">
+    </testcase>
+    <testcase classname="POST /v1/users returns a created user" name="POST /v1/users returns a created user" time="0.221">
+    </testcase>
+  </testsuite>
+  <testsuite name="route authorization for GET /v1/transactions" errors="0" failures="0" skipped="0" timestamp="2023-01-16T07:20:02" time="2.624" tests="6">
+    <testcase classname="route authorization for GET /v1/transactions returns Bad Request for unauthorized request" name="route authorization for GET /v1/transactions returns Bad Request for unauthorized request" time="0.17">
+    </testcase>
+    <testcase classname="route authorization for POST /v1/transactions returns Bad Request for unauthorized request" name="route authorization for POST /v1/transactions returns Bad Request for unauthorized request" time="0.173">
+    </testcase>
+    <testcase classname="route authorization for DELETE /v1/transactions/63b27824cc5b18dda70b8442 returns Bad Request for unauthorized request" name="route authorization for DELETE /v1/transactions/63b27824cc5b18dda70b8442 returns Bad Request for unauthorized request" time="0.166">
+    </testcase>
+    <testcase classname="GET /v1/transactions receives an OK request and returns OK response" name="GET /v1/transactions receives an OK request and returns OK response" time="0.228">
+    </testcase>
+    <testcase classname="GET /v1/transactions returns empty list if user has no transactions" name="GET /v1/transactions returns empty list if user has no transactions" time="0.17">
+    </testcase>
+    <testcase classname="GET /v1/transactions returns transactions associated with user" name="GET /v1/transactions returns transactions associated with user" time="0.328">
+    </testcase>
+  </testsuite>
+</testsuites>

@@ -74,7 +74,7 @@ jobs:
               if: success() || failure()
               with:
                   name: JEST Tests
-                  path: reports/jest-*.xml
+                  path: apps/backend/reports/jest-*.xml
                   reporter: jest-junit
                   list-suites: all
                   list-tests: all
