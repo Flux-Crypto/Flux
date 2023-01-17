@@ -1,4 +1,4 @@
-import { Box, TextInput, createStyles } from "@mantine/core";
+import { Box, Button, Group, TextInput, createStyles } from "@mantine/core";
 import {
     IconArrowsSort,
     IconCaretDown,
@@ -261,6 +261,12 @@ const Table = ({
                             ))}
                         </tbody>
                     </table>
+                    <Group spacing="xs">
+                        <Button type="button">{"<<"}</Button>
+                        <Button type="button">{"<"}</Button>
+                        <Button type="button">{">"}</Button>
+                        <Button type="button">{">>"}</Button>
+                    </Group>
                 </div>
             </Box>
         </>

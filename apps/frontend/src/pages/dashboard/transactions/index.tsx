@@ -40,23 +40,24 @@ const Transactions = () => {
                 const transactionsData = await response.json();
 
                 setTransactions(transactionsData);
+                setFetching(false);
             };
-            const fetchBlockchainTransactions = async () => {
-                // const response = await callAPI("/v1/user", authToken);
-                // get imported txns
-                const response = await callAPI("/v1/wallets", authToken);
+            // const fetchBlockchainTransactions = async () => {
+            //     // const response = await callAPI("/v1/user", authToken);
+            //     // get imported txns
+            //     const response = await callAPI("/v1/wallets", authToken);
 
-                if (!response.ok) {
-                    console.log(await response.text());
-                    return;
-                }
+            //     if (!response.ok) {
+            //         console.log(await response.text());
+            //         return;
+            //     }
 
-                const transactionsData = await response.json();
+            //     const transactionsData = await response.json();
 
-                setTransactions(transactionsData);
-            };
-
-            Promise.all([fetchImportedTransactions, fetchWallets]);
+            //     setTransactions(transactionsData);
+            // };
+            fetchImportedTransactions();
+            // Promise.all([fetchImportedTransactions]);
         }
     }, [isFetching, session]);
 
