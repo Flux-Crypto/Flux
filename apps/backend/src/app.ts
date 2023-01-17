@@ -23,27 +23,27 @@ import user from "@routes/user";
 import users from "@routes/users";
 import wallets from "@routes/wallets";
 
-const app = () => {
+const build = () => {
     // TODO: fix `Type 'undefined' cannot be used as an index type`
     const NODE_ENV = env.DOPPLER_ENVIRONMENT as "dev" | "test" | "stg" | "prd";
 
-    const fastifyServer = fastify({
+    const fastifyApp = fastify({
         logger: envToLogger[NODE_ENV] ?? true
     });
 
-    fastifyServer.register(cors, {
+    fastifyApp.register(cors, {
         origin: NODE_ENV === "dev" ? "*" : process.env.CLIENT_HOSTNAME
     });
-    fastifyServer.register(prismaPlugin);
-    fastifyServer.register(jwtAuthPlugin);
-    fastifyServer.register(apiKeyAuthPlugin);
-    fastifyServer.register(authPlugin);
+    fastifyApp.register(prismaPlugin);
+    fastifyApp.register(jwtAuthPlugin);
+    fastifyApp.register(apiKeyAuthPlugin);
+    fastifyApp.register(authPlugin);
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore:next-line
-    fastifyServer.register(swagger, swaggerOptions);
-    fastifyServer.register(swaggerUI, swaggerUIOptions);
+    fastifyApp.register(swagger, swaggerOptions);
+    fastifyApp.register(swaggerUI, swaggerUIOptions);
 
-    fastifyServer.register(
+    fastifyApp.register(
         (
             server: FastifyInstance,
             _opts: FastifyServerOptions,
@@ -60,12 +60,12 @@ const app = () => {
         { prefix: "/api/v1" }
     );
 
-    fastifyServer.get(
+    fastifyApp.get(
         "/ping",
         async (_request: FastifyRequest, _reply: FastifyReply) => "pong\n"
     );
 
-    return fastifyServer;
+    return fastifyApp;
 };
 
-export default app;
+export default build;

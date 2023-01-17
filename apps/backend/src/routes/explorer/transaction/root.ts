@@ -11,7 +11,7 @@ import { FastifyDone } from "@lib/types/fastifyTypes";
 import HttpStatus from "@lib/types/httpStatus";
 import { ExplorerTransactionRequestParams } from "@lib/types/routeOptions";
 
-const baseRoute = (
+const rootRoute = (
     server: FastifyInstance,
     _opts: FastifyServerOptions,
     done: FastifyDone
@@ -87,4 +87,4 @@ const baseRoute = (
     done();
 };
 
-export default baseRoute;
+export default rootRoute;

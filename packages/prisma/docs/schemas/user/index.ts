@@ -16,8 +16,8 @@ export default {
             "200": {
                 description: "OK",
                 type: "object",
-                properties: { data: UserSchema },
-                example: { data: UserExample }
+                properties: UserSchema,
+                example: UserExample
             },
             "400": {
                 description: "Bad request. Missing user id parameter.",

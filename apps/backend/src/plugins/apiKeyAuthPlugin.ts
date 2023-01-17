@@ -3,7 +3,8 @@ import {
     FastifyInstance,
     FastifyPluginAsync,
     FastifyReply,
-    FastifyRequest
+    FastifyRequest,
+    FastifyServerOptions
 } from "fastify";
 import fp from "fastify-plugin";
 
@@ -18,10 +19,10 @@ declare module "fastify" {
 }
 
 const apiKeyAuthPlugin: FastifyPluginAsync = fp(
-    async (server: FastifyInstance) => {
-        const { log, prisma } = server;
+    async (fastify: FastifyInstance, _opts: FastifyServerOptions) => {
+        const { log, prisma } = fastify;
 
-        server.decorate(
+        fastify.decorate(
             "verifyAPIKey",
             async (
                 request: FastifyRequest,

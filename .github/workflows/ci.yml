@@ -2,6 +2,7 @@ name: CI Testing
 on:
     push:
         branches:
+            - dev
             - staging
             - main
     pull_request:
@@ -19,35 +20,63 @@ jobs:
                 node_version: ["16"]
                 os: [ubuntu-latest, windows-latest, macos-latest]
         environment: test
+        env:
+            ALCHEMY_API_KEY: ${{ secrets.ALCHEMY_API_KEY }}
+            API_HOSTNAME: ${{ secrets.API_HOSTNAME }}
+            CLIENT_HOSTNAME: ${{ secrets.CLIENT_HOSTNAME }}
+            DB_URL: ${{ secrets.DB_URL }}
+            DOPPLER_CONFIG: ${{ secrets.DOPPLER_CONFIG }}
+            DOPPLER_ENVIRONMENT: ${{ secrets.DOPPLER_ENVIRONMENT }}
+            DOPPLER_PROJECT: ${{ secrets.DOPPLER_PROJECT }}
+            EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+            EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
+            EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+            EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
+            EMAIL_SERVER: ${{ secrets.EMAIL_SERVER }}
+            EMAIL_USER: ${{ secrets.EMAIL_USER }}
+            ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
+            NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+            NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
         steps:
             - name: Clone Repository
               uses: actions/checkout@v3
+
             - name: Use Node.js ${{ matrix.node_version }}
               uses: actions/setup-node@v3
               with:
                   node-version: ${{ matrix.node_version }}
+
             - name: Install
               run: |
-                  echo ""
                   echo "📥 Installing dependencies..."
                   npm install
-                  echo ""
                   echo "🛠️ Building Prisma..."
                   npm run build:prisma
-                  echo ""
                   echo "🧱 Generating Prisma schema..."
                   npm run generate
+
             - name: Format and Lint
               run: |
-                  echo ""
                   echo "🧹 Formatting..."
                   npm run format
                   echo "🧼 Linting..."
                   npm run lint
+
             - name: Test
               run: |
-                  echo ""
                   echo "🔬 Testing backend API..."
-                  echo ""
                   echo "⏳ Please hold. This might take a while..."
                   npm test
+                  echo "🌟 Testing complete!"
+
+            - name: Test Report
+              uses: dorny/test-reporter@v1
+              if: success() || failure()
+              with:
+                  name: JEST Tests
+                  path: apps/backend/reports/jest-*.xml
+                  reporter: jest-junit
+                  list-suites: all
+                  list-tests: all
+                  max-annotations: 10
+                  fail-on-error: true

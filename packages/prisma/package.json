@@ -6,9 +6,9 @@
     "scripts": {
         "build": "npx tsc",
         "generate:local": "run-script-os",
-        "generate:windows:local": "doppler run npx prisma generate && copy src\\index.d.ts dist /y",
-        "generate:macos:local": "doppler run npx prisma generate && cp src/index.d.ts dist/index.d.ts",
-        "generate:default:local": "npm run generate:macos:local",
+        "generate:local:windows": "doppler run npx prisma generate && copy src\\index.d.ts dist /y",
+        "generate:local:macos": "doppler run npx prisma generate && cp src/index.d.ts dist/index.d.ts",
+        "generate:local:default": "npm run generate:macos:local",
         "generate": "run-script-os",
         "generate:windows": "npx prisma generate && copy src\\index.d.ts dist /y",
         "generate:macos": "npx prisma generate && cp src/index.d.ts dist/index.d.ts",

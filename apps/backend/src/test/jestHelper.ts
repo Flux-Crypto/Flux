@@ -5,9 +5,9 @@ import { FastifyInstance } from "fastify";
 import jwt from "jsonwebtoken";
 import { env } from "process";
 
-import app from "../app";
+import build from "../app";
 
-type HTTPMethods =
+export type HTTPMethods =
     | "DELETE"
     | "delete"
     | "GET"
@@ -25,12 +25,30 @@ type HTTPMethods =
 
 export const testUser = {
     data: {
-        email: "test@aurora.crypto",
-        apiKey: "abcdef12345"
+        id: "63c24e670b17d5516e0cb49c",
+        email: "test@flux.crypto"
     }
 };
 
-let token: string;
+export const testDummy = {
+    data: {
+        id: "63c381109d3cb4056b0d6a47",
+        email: "dummy@flux.crypto"
+    }
+};
+
+const {
+    data: { id }
+} = testUser;
+const payload = {
+    user: {
+        id
+    }
+};
+
+export const token = jwt.sign(payload, env.NEXTAUTH_SECRET);
+
+// TODO: add an option for testUser with apiKey?
 
 export const callAPI = (
     fastifyApp: FastifyInstance,
@@ -66,36 +84,40 @@ export const callAPI = (
     });
 };
 
-const setupDB = async (prisma: PrismaClient) => {
-    await reset(prisma);
-
+const createUsers = async (prisma: PrismaClient) => {
     /* simulate an active session with a test user and fake JWT */
-    const { id } = await prisma.user.create(testUser);
-
-    const payload = {
-        user: {
-            id
-        }
-    };
-
-    token = jwt.sign(payload, env.NEXTAUTH_SECRET);
+    const createTestUser = prisma.user.create(testUser);
+    const createTestDummy = prisma.user.create(testDummy);
+    await prisma.$transaction([createTestUser, createTestDummy]);
 };
 
-const build = () => {
-    const fastifyApp = app();
+const app = () => {
+    const fastifyApp = build();
 
     beforeAll(async () => {
+        await fastifyApp.ready();
         await fastifyApp.listen();
 
         const { prisma } = fastifyApp;
-        await setupDB(prisma);
+        await reset(prisma);
+        await createUsers(prisma);
     });
 
-    afterAll(() => fastifyApp.close());
+    beforeEach(async () => {
+        const { prisma } = fastifyApp;
+        await reset(prisma);
+        await createUsers(prisma);
+    });
+
+    afterAll(async () => {
+        const { prisma } = fastifyApp;
+        await reset(prisma);
+        await fastifyApp.close();
+    });
 
     return fastifyApp;
 };
 
-const fastifyApp = build();
+const fastifyApp = app();
 
 export default fastifyApp;

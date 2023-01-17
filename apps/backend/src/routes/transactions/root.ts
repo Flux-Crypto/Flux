@@ -3,19 +3,19 @@ import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 import { FastifyDone, JWT } from "@lib/types/fastifyTypes";
 import HttpStatus from "@lib/types/httpStatus";
-import { TransactionsBaseSchema } from "@lib/types/jsonObjects";
+import { TransactionsRootSchema } from "@lib/types/jsonObjects";
 import {
     TransactionsRequestBody,
     TransactionsRequestParams
 } from "@lib/types/routeOptions";
 
-const baseRoute = (
+const rootRoute = (
     server: FastifyInstance,
     {
         get: getSchema,
         post: postSchema,
         delete: deleteSchema
-    }: TransactionsBaseSchema,
+    }: TransactionsRootSchema,
     done: FastifyDone
 ) => {
     const { prisma, log } = server;
@@ -161,4 +161,4 @@ const baseRoute = (
     done();
 };
 
-export default baseRoute;
+export default rootRoute;

@@ -1,5 +1,11 @@
 import jwtAuth from "@fastify/jwt";
-import { FastifyPluginAsync, FastifyReply, FastifyRequest } from "fastify";
+import {
+    FastifyInstance,
+    FastifyPluginAsync,
+    FastifyReply,
+    FastifyRequest,
+    FastifyServerOptions
+} from "fastify";
 import fp from "fastify-plugin";
 
 import HttpStatus from "@lib/types/httpStatus";
@@ -10,23 +16,25 @@ declare module "fastify" {
     }
 }
 
-const jwtAuthPlugin: FastifyPluginAsync = fp(async (server) => {
-    server.register(jwtAuth, {
-        secret: process.env.NEXTAUTH_SECRET as string
-    });
+const jwtAuthPlugin: FastifyPluginAsync = fp(
+    async (fastify: FastifyInstance, _opts: FastifyServerOptions) => {
+        fastify.register(jwtAuth, {
+            secret: process.env.NEXTAUTH_SECRET as string
+        });
 
-    server.decorate(
-        "verifyJWT",
-        async (request: FastifyRequest, reply: FastifyReply) => {
-            try {
-                await request.jwtVerify();
-            } catch (err) {
-                reply
-                    .code(HttpStatus.BAD_REQUEST)
-                    .send("Invalid authentication.");
+        fastify.decorate(
+            "verifyJWT",
+            async (request: FastifyRequest, reply: FastifyReply) => {
+                try {
+                    await request.jwtVerify();
+                } catch (err) {
+                    reply
+                        .code(HttpStatus.BAD_REQUEST)
+                        .send("Invalid authentication.");
+                }
             }
-        }
-    );
-});
+        );
+    }
+);
 
 export default jwtAuthPlugin;
