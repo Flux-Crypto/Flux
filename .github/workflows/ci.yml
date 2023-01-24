@@ -69,7 +69,7 @@ jobs:
                   npm test
                   echo "🌟 Testing complete!"
 
-            - name: Test Report
+            - name: Test Report for node ${{ matrix.node_version }} and ${{ matrix.os }}
               uses: dorny/test-reporter@v1
               if: success() || failure()
               with:

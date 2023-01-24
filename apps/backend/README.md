@@ -1,12 +1,19 @@
 # Backend
 
-## Technologies
+## Services and Technologies
 
+- Language: **Typescript**
+- Framework: **Node.js**
 - Server: **Fastify**
 - Database: **MongoDB**
 - ORM: **Prisma**
 - Secrets: **Doppler**
 - Documentation: **SwaggerUI**
+- Testing: **JEST**
+- Third-party APIs
+  - **Alchemy**
+  - **Moralis**
+  - **Etherscan**
 
 ## Development
 
@@ -16,9 +23,9 @@ There are 2 main areas that you can contribute to, the API and the database. Go 
 
 To develop the API, here are a few steps to get started:
 
-1. Create an endpoint in `src/routes`. Be sure to update route parameters in `types/routeParams.ts`.
+1. Create an endpoint in `src/routes`. Be sure to add the route params typing in [routeOptions.ts](src/lib/types/routeOptions.ts).
 
-2. If it's a new base route, register it in `src/index.ts`. Also, update `docs/options.ts` accordingly.
+2. If it's a new root route, register it in [app.ts](src/app.ts). Also, update [swaggerOptions.ts](src/lib/swaggerOptions.ts) accordingly.
 
 3. Create a `.json` schema in `docs/schemas`, naming it consistently with the route (or extend on an existing one if not a base route). Structure it according to [OpenAPI 3.0.3 standards](https://swagger.io/specification/).
 
